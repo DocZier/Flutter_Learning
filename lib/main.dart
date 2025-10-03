@@ -93,11 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-                    'Волков А.Э.\n'
-                    'ИКБО-06-22\n'
-                    '22И1610',
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center
+                  'Волков А.Э.\n'
+                  'ИКБО-06-22\n'
+                  '22И1610',
+              style: Theme.of(context).textTheme.headlineLarge?.apply(
+                color: Colors.deepPurple
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
