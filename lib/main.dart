@@ -92,15 +92,19 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-                  'Волков А.Э.\n'
-                  'ИКБО-06-22\n'
-                  '22И1610',
-              style: Theme.of(context).textTheme.headlineLarge?.apply(
-                color: Colors.deepPurple
+            ElevatedButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.lightGreen),
               ),
-              textAlign: TextAlign.center,
-            ),
+              child: Text(
+                  "Кнопка",
+                  style: Theme.of(context).textTheme.bodyLarge?.apply(
+                      color: Colors.deepPurple.shade900
+                  ),
+                  textAlign: TextAlign.center,
+              ),
+            )
           ],
         ),
       ),
