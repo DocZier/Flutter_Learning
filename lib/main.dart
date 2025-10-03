@@ -92,8 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(16.0),
+            Container(
+              padding: EdgeInsets.all(32.0),
+              color: Colors.lightGreen,
               child: Text(
                 'Волков А.Э.\n'
                     'ИКБО-06-22\n'
