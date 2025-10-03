@@ -92,18 +92,18 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Волков А.Э.\n'
-                  'ИКБО-06-22\n'
-                  '22И1610',
-              style: Theme.of(context).textTheme.headlineLarge?.apply(
-                  color: Colors.deepPurple
-              ),
-              textAlign: TextAlign.center,
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Волков А.Э.\n'
+                    'ИКБО-06-22\n'
+                    '22И1610',
+                style: Theme.of(context).textTheme.headlineLarge?.apply(
+                    color: Colors.deepPurple
+                ),
+                textAlign: TextAlign.center,
+              )
             ),
-            SizedBox(
-              height: 150,
-              width: 150),
             ElevatedButton(
               onPressed: () {},
               style: ButtonStyle(
