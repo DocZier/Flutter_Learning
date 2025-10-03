@@ -1,46 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/FifthScreen/FifthScreen.dart';
 
-class ChangeTextScreen extends StatefulWidget {
-  const ChangeTextScreen({
+class Question3Screen extends StatefulWidget {
+  const Question3Screen({
     super.key,
-    required this.currentColor,
-    required this.currentSize,
+    required this.answer1,
+    required this.answer2,
   });
 
-  final Color currentColor;
-  final double currentSize;
+  final String answer1;
+  final String answer2;
 
   @override
-  State<ChangeTextScreen> createState() => _ChangeTextScreenState();
+  State<Question3Screen> createState() => _Question3ScreenState();
 }
 
-class _ChangeTextScreenState extends State<ChangeTextScreen> {
-  late Color _selectedColor;
-  late double _fontSize;
+class _Question3ScreenState extends State<Question3Screen> {
+  int _counter = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedColor = widget.currentColor;
-    _fontSize = widget.currentSize;
-  }
-
-  void _selectColor(Color color) {
+  void _incrementCounter() {
     setState(() {
-      _selectedColor = color;
+      _counter++;
     });
   }
 
-  void _updateFontSize(double value) {
+  void _decrementCounter() {
     setState(() {
-      _fontSize = value;
-    });
-  }
-
-  void _confirmChanges() {
-    Navigator.pop(context, {
-      'color': _selectedColor,
-      'size': _fontSize
+      _counter--;
     });
   }
 
@@ -48,60 +34,57 @@ class _ChangeTextScreenState extends State<ChangeTextScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Настройка текста'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Вопрос 3'),
       ),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Цвет текста:'),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildColorOption(Colors.black),
-                  _buildColorOption(Colors.red.shade900)
-                ],
-              ),
-              const SizedBox(height: 20),
-              const Text('Размер текста:'),
-              const SizedBox(height: 10),
-              Slider(
-                value: _fontSize,
-                min: 12,
-                max: 24,
-                divisions: 12,
-                label: _fontSize.round().toString(),
-                onChanged: _updateFontSize,
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _confirmChanges,
-                child: const Text('Применить'),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildColorOption(Color color) {
-    return GestureDetector(
-      onTap: () => _selectColor(color),
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-          border: Border.all(
-            color: _selectedColor == color ? Colors.black : Colors.transparent,
-            width: 2.0,
-          ),
+      body: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+                  'Сколько основных контейнеров было'
+                  ' рассмотрено в методическом указании?',
+              style: const TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            Text(
+              '$_counter',
+              style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _decrementCounter,
+                  child: const Text('-'),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: _incrementCounter,
+                  child: const Text('+'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ResultScreen(
+                      answer1: widget.answer1,
+                      answer2: widget.answer2,
+                      answer3: _counter.toString(),
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Проверить'),
+            ),
+          ],
         ),
       ),
     );

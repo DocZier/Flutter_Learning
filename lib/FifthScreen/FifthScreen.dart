@@ -1,64 +1,67 @@
 import 'package:flutter/material.dart';
 
-class AddDescriptionScreen extends StatefulWidget {
-  const AddDescriptionScreen({
+class ResultScreen extends StatelessWidget {
+  const ResultScreen({
     super.key,
-    required this.currentDescription,
+    required this.answer1,
+    required this.answer2,
+    required this.answer3,
   });
 
-  final String currentDescription;
-
-  @override
-  State<AddDescriptionScreen> createState() => _AddDescriptionScreenState();
-}
-
-class _AddDescriptionScreenState extends State<AddDescriptionScreen> {
-  late TextEditingController _descriptionController;
-
-  @override
-  void initState() {
-    super.initState();
-    _descriptionController = TextEditingController(text: widget.currentDescription);
-  }
-
-  @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
-  }
-
-  void _saveDescription() {
-    Navigator.pop(context, _descriptionController.text);
-  }
+  final String answer1;
+  final String answer2;
+  final String answer3;
 
   @override
   Widget build(BuildContext context) {
+    int correctAnswers = 0;
+
+    if (answer1 == 'Text') correctAnswers++;
+    if (answer2.contains('Column')
+        && answer2.contains('Row')
+        && !answer2.contains('Container')) {
+      correctAnswers++;
+    }
+    if (answer3 == '2') correctAnswers++;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Добавить описание'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Результаты'),
       ),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  hintText: 'Введите описание...',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveDescription,
-                child: const Text('Сохранить'),
-              )
-            ],
-          ),
+      body: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Вы ответили правильно на $correctAnswers из 3 вопросов',
+              style: const TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Ваш ответ на 1 вопрос: $answer1',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Ваш ответ на 2 вопрос: $answer2',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Ваш ответ на 3 вопрос: $answer3',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.popUntil(context, (route) => route.isFirst);
+              },
+              child: const Text('Пройти тест еще раз'),
+            ),
+          ],
         ),
       ),
     );

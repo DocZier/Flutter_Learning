@@ -1,101 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/ThirdScreen/ThirdScreen.dart';
 
-class ChangeNameScreen extends StatefulWidget {
-  const ChangeNameScreen({
-    super.key,
-    required this.currentName,
-    required this.currentNickname,
-  });
-
-  final String currentName;
-  final String currentNickname;
+class Question1Screen extends StatefulWidget {
+  const Question1Screen({super.key});
 
   @override
-  State<ChangeNameScreen> createState() => _ChangeNameScreenState();
+  State<Question1Screen> createState() => _Question1ScreenState();
 }
 
-class _ChangeNameScreenState extends State<ChangeNameScreen> {
-  late TextEditingController _nameController;
-  late TextEditingController _nicknameController;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.currentName);
-    _nicknameController = TextEditingController(text: widget.currentNickname);
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _nicknameController.dispose();
-    super.dispose();
-  }
-
-  void _handleSubmit() {
-    final newName = _nameController.text;
-    final newNickname = _nicknameController.text;
-
-    Navigator.pop(context, {
-      'name': newName,
-      'nickname': newNickname
-    });
-  }
-
+class _Question1ScreenState extends State<Question1Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Изменить данные'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Вопрос 1'),
       ),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _buildTextField(
-                controller: _nameController,
-                labelText: 'Имя',
-                hintText: 'Введите ваше имя',
-              ),
-              const SizedBox(height: 20),
-
-              _buildTextField(
-                controller: _nicknameController,
-                labelText: 'Никнейм',
-                hintText: 'Введите ваш никнейм',
-              ),
-              const SizedBox(height: 30),
-
-              ElevatedButton(
-                onPressed: _handleSubmit,
-                child: const Text(
-                  'Подтвердить изменения',
-                  textAlign: TextAlign.center,
-                ),
-              )
-            ],
-          ),
+      body: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Какой виджет используется для отображения текстовой информации?',
+              style: const TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Question2Screen(answer1: 'Text'),
+                  ),
+                );
+              },
+              child: const Text('Text'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Question2Screen(answer1: 'Button'),
+                  ),
+                );
+              },
+              child: const Text('Button'),
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    required String hintText,
-  }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        border: const OutlineInputBorder(),
-      ),
-      style: const TextStyle(fontSize: 16.0),
     );
   }
 }

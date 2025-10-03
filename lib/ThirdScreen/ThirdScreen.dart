@@ -1,84 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/FourthScreen/FourthScreen.dart';
 
-class ChangeBackgroundScreen extends StatefulWidget {
-  const ChangeBackgroundScreen({
-    super.key,
-    required this.currentColor,
-  });
+class Question2Screen extends StatefulWidget {
+  const Question2Screen({super.key, required this.answer1});
 
-  final Color currentColor;
+  final String answer1;
 
   @override
-  State<ChangeBackgroundScreen> createState() => _ChangeBackgroundScreenState();
+  State<Question2Screen> createState() => _Question2ScreenState();
 }
 
-class _ChangeBackgroundScreenState extends State<ChangeBackgroundScreen> {
-  late Color _selectedColor;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedColor = widget.currentColor;
-  }
-
-  void _selectColor(Color color) {
-    setState(() {
-      _selectedColor = color;
-    });
-  }
-
-  void _confirmSelection() {
-    Navigator.pop(context, _selectedColor);
-  }
+class _Question2ScreenState extends State<Question2Screen> {
+  bool _isOption1Selected = false;
+  bool _isOption2Selected = false;
+  bool _isOption3Selected = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Выбор фона'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Вопрос 2'),
       ),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Выберите цвет фона:'),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildColorOption(Colors.deepPurple),
-                  _buildColorOption(Colors.indigoAccent),
-                  _buildColorOption(Colors.lightGreen),
-                ],
+      body: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Какие виджеты используются для расположения элементов?',
+              style: const TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _isOption1Selected = !_isOption1Selected;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _isOption1Selected ? Colors.blue : null,
               ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _confirmSelection,
-                child: const Text('Применить'),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildColorOption(Color color) {
-    return GestureDetector(
-      onTap: () => _selectColor(color),
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-          border: Border.all(
-            color: _selectedColor == color ? Colors.black : Colors.transparent,
-            width: 2.0,
-          ),
+              child: const Text('Column'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _isOption2Selected = !_isOption2Selected;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _isOption2Selected ? Colors.blue : null,
+              ),
+              child: const Text('Row'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _isOption3Selected = !_isOption3Selected;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _isOption3Selected ? Colors.blue : null,
+              ),
+              child: const Text('Container'),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Question3Screen(
+                      answer1: widget.answer1,
+                      answer2: [
+                        if (_isOption1Selected) 'Column',
+                        if (_isOption2Selected) 'Row',
+                        if (_isOption3Selected) 'Container'
+                      ].join(', '),
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Далее'),
+            ),
+          ],
         ),
       ),
     );
