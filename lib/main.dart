@@ -41,16 +41,13 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: items.map((item) => Text(
-              item,
+      body: ListView.builder(
+        itemBuilder: (_, index) => Text(
+              items[index],
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center,
-            )).toList(),
-        ),
+            ),
+        itemCount: items.length,
       ),
     );
   }
