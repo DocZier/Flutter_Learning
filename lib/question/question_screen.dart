@@ -78,24 +78,24 @@ class _QuestionScreenState extends State<QuestionScreen> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: _questions.map((question) =>
+            child: ListView.builder(
+              itemCount: _questions.length,
+              itemBuilder: (_, index) =>
                     Card(
-                      key: ValueKey(question),
+                      key: ValueKey(_questions[index]),
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
-                        title: Text(question.text),
+                        title: Text(_questions[index].text),
                         subtitle: Text(
-                            '${question.answers.length} ответов'),
+                            '${_questions[index].answers.length} ответов'),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () => _removeQuestion(_questions.indexOf(question)),
+                          onPressed: () => _removeQuestion(index),
                         ),
                     ),
                   )
-              ).toList(),
+              )
             ),
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
