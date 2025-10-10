@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/test/test_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,27 +32,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  final items = List.generate(55, (index) => 'Элемент №${index+1}');
-
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: ListView(
-        children: items.map((item) => GestureDetector(
-          key: ValueKey(item),
-          onTap: () => setState(() => items.remove(item)),
-          child: Text(
-            item,
-            style: Theme.of(context).textTheme.headlineMedium,
-            textAlign: TextAlign.center,
-          )
-        )).toList(),
-      ),
-    );
+    return TestScreen(title: 'Тесты');
   }
 }
