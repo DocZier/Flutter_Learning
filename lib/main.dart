@@ -31,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  final items = List.generate(10, (index) => 'Элемент №${index+1}');
+  final items = List.generate(55, (index) => 'Элемент №${index+1}');
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +41,15 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              items.map((item) => Text(
-                  item,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  textAlign: TextAlign.center
-              )).toList()
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: items.map((item) => Text(
+              item,
+              style: Theme.of(context).textTheme.headlineMedium,
+              textAlign: TextAlign.center,
+            )).toList(),
         ),
       ),
     );
