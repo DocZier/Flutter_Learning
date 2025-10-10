@@ -41,14 +41,15 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: ListView.separated(
-        itemBuilder: (_, index) => Text(
-              items[index],
-              style: Theme.of(context).textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
-        separatorBuilder: (_,__) => const Divider(height: 16,),
-        itemCount: items.length,
+      body: ListView(
+        children: items.map((item) => GestureDetector(
+          onTap: () => setState(() => items.remove(item)),
+          child: Text(
+            item,
+            style: Theme.of(context).textTheme.headlineMedium,
+            textAlign: TextAlign.center,
+          )
+        )).toList(),
       ),
     );
   }
