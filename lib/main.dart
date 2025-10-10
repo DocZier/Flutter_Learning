@@ -43,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         children: items.map((item) => GestureDetector(
+          key: ValueKey(item),
           onTap: () => setState(() => items.remove(item)),
           child: Text(
             item,
