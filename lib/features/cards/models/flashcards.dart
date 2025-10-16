@@ -4,7 +4,7 @@ class Flashcard {
   String answer;
   //Интервал измеряется в днях
   int interval;
-  DateTime nextReview;
+  DateTime? nextReview;
   double easeFactor;
 
   Flashcard({
@@ -12,7 +12,6 @@ class Flashcard {
     required this.question,
     required this.answer,
     required this.interval,
-    required this.nextReview,
     required this.easeFactor,
   });
 
