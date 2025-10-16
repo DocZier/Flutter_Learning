@@ -4,11 +4,15 @@ import 'package:test_practic/features/cards/models/flashcards.dart';
 import 'package:test_practic/features/cards/widgets/deck_view.dart';
 
 class StudyScreen extends StatefulWidget {
-  final String deckId;
+  final Deck deck;
+  final void Function(Flashcard card, int quality) updateCard;
+  final void Function() navigateToList;
 
   const StudyScreen({
     super.key,
-    required this.deckId
+    required this.deck,
+    required this.updateCard,
+    required this.navigateToList
   });
 
   @override
@@ -16,19 +20,6 @@ class StudyScreen extends StatefulWidget {
 }
 
 class _StudyScreenState extends State<StudyScreen> {
-  Deck deck = Deck(
-      id: '261839',
-      title: 'Новая колода',
-      description: 'Описание новой колоды',
-      flashcards: [
-        Flashcard(
-            id: '124',
-            question: "Вопрос",
-            answer: "Ответ",
-            interval: 0,
-            easeFactor: 0
-        )
-      ]);
   List<Flashcard> dueCards = [];
   Flashcard? currentCard;
   bool isFlipped = false;
@@ -40,7 +31,7 @@ class _StudyScreenState extends State<StudyScreen> {
   }
 
   void _loadCards() {
-    dueCards = deck.flashcards.where(
+    dueCards = widget.deck.flashcards.where(
             (flashcard) =>
             flashcard.nextReview == null ||
         flashcard.nextReview == DateTime.now()
@@ -55,7 +46,7 @@ class _StudyScreenState extends State<StudyScreen> {
 
   void _handleAnswer(int quality) {
     if (currentCard != null) {
-      currentCard!.updateCard(quality);
+      widget.updateCard(currentCard!, quality);
       dueCards.removeAt(0);
 
       if (dueCards.isNotEmpty) {
@@ -111,9 +102,7 @@ class _StudyScreenState extends State<StudyScreen> {
                   style: TextStyle(fontSize: 24),
                 ),
                 ElevatedButton(
-                  onPressed: () => {
-                    //TODO return to home
-                  },
+                  onPressed: () => widget.navigateToList(),
                   child: Text('Вернуться назад'),
                 ),
               ],

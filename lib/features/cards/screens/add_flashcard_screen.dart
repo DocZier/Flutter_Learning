@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:test_practic/features/cards/models/decks.dart';
+import 'package:test_practic/features/cards/models/flashcards.dart';
 import 'package:test_practic/features/cards/widgets/deck_view.dart';
 
 class AddCardScreen extends StatefulWidget {
   final String deckId;
+  final void Function(String deckId, Flashcard card) addCard;
+  final void Function() navigateToList;
 
   const AddCardScreen({
     super.key,
-    required this.deckId
+    required this.deckId,
+    required this.addCard,
+    required this.navigateToList
   });
 
   @override
@@ -49,12 +54,33 @@ class _AddCardScreenState extends State<AddCardScreen> {
               Spacer(),
               ElevatedButton(
                 onPressed: () {
-                  //TODO add flashcard to deck
+                  widget.addCard(widget.deckId,
+                      Flashcard(
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          question: _questionController.text,
+                          answer: _answerController.text,
+                          interval: 0,
+                          easeFactor: 0)
+                  );
+                  SnackBar(
+                    content: Text("Карточка добавлена"
+                    ),
+                  );
+                  _questionController.clear();
+                  _answerController.clear();
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50),
                 ),
                 child: Text('Добавить карточку'),
+              ),
+              Divider(height: 8.0,),
+              ElevatedButton(
+                onPressed: () => widget.navigateToList(),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 50),
+                ),
+                child: Text('Вернуться на главный экран'),
               ),
             ],
           ),

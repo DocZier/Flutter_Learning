@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:test_practic/features/cards/models/decks.dart';
 
-Widget DeckView(BuildContext context, List<Deck> decks) {
+Widget DeckView(
+    BuildContext context,
+    List<Deck> decks,
+    void Function(String deckId) onTapEmpty,
+    void Function(String deckId) onTapFull) {
   if (decks.isEmpty) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.deck, size: 80, color: Colors.grey),
-          SizedBox(height: 20),
           Text(
             'Отсутствуют колоды',
             style: TextStyle(fontSize: 18, color: Colors.grey),
@@ -20,7 +22,7 @@ Widget DeckView(BuildContext context, List<Deck> decks) {
 
   return ListView.builder(
     itemCount: decks.length,
-    itemBuilder: (context, index) {
+    itemBuilder: (_, index) {
       final deck = decks[index];
       final dueCount = deck.flashcards
           .where((flashcard) =>
@@ -32,35 +34,39 @@ Widget DeckView(BuildContext context, List<Deck> decks) {
           .length;
 
       return Card(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: InkWell(
-          onTap: () {
-            /*
-            TODO
-             if deck is empty - then create flashcards
-             else - start test
-             */
-          },
-          child: Row(
-            spacing: 8.0,
-            children: [
-              Text(deck.title),
-              Expanded(
-                flex: 2,
-                child: SizedBox.shrink(),
-              ),
-              Text(
-                totalCount.toString(),
-                style: TextStyle(color: totalCount > 0 ? Colors.green : Colors.grey),
-              ),
-              Text(
-                dueCount.toString(),
-                style: TextStyle(color: dueCount > 0 ? Colors.blue : Colors.grey),
+            child: InkWell(
+              onTap: () => deck.flashcards.isEmpty ?
+              onTapEmpty(deck.id) : onTapFull(deck.id),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                child: Row(
+                  spacing: 8.0,
+                  children: [
+                    Text(
+                        deck.title,
+                        style: Theme.of(context).textTheme.headlineSmall
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: SizedBox(),
+                    ),
+                    Text(
+                      totalCount.toString(),
+                      style: Theme.of(context).textTheme.headlineSmall?.apply(
+                        color: totalCount > 0 ? Colors.green : Colors.grey
+                      )
+                    ),
+                    Text(
+                      dueCount.toString(),
+                      style: Theme.of(context).textTheme.headlineSmall?.apply(
+                          color: dueCount > 0 ? Colors.blue : Colors.grey
+                      )
+                    )
+                  ],
+                ),
               )
-            ],
-          ),
-        ),
-      );
+            ),
+        );
     },
   );
 }
