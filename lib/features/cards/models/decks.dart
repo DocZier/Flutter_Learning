@@ -12,4 +12,13 @@ class Deck {
     required this.description,
     required this.flashcards
   });
+
+  Deck copyWith({String? name, List<Flashcard>? cards}) {
+    return Deck(
+      id: id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      flashcards: flashcards ?? [...this.flashcards],
+    );
+  }
 }
