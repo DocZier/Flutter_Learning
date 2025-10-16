@@ -27,6 +27,14 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {
+          //TODO create deck
+        },
+        child: Icon(
+          Icons.add
+        ),
+      ),
     );
   }
 }

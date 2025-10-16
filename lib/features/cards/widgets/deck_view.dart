@@ -34,7 +34,13 @@ Widget DeckView(BuildContext context, List<Deck> decks) {
       return Card(
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            /*
+            TODO
+             if deck is empty - then create flashcards
+             else - start test
+             */
+          },
           child: Row(
             spacing: 8.0,
             children: [
