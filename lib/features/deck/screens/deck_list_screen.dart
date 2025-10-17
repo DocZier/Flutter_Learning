@@ -92,19 +92,6 @@ class HomeScreen extends StatelessWidget {
               itemCount: decks.length,
               itemBuilder: (_, index) {
                 final deck = decks[index];
-                final dueCount = deck.flashcards
-                    .where(
-                      (flashcard) =>
-                          flashcard.nextReview.isBefore(DateTime.now()),
-                    )
-                    .length;
-                final totalCount = deck.flashcards
-                    .where(
-                      (flashcard) =>
-                          flashcard.nextReview.isAfter(DateTime.now()),
-                    )
-                    .length;
-
                 return DeckListItem(
                   deck: deck,
                   onTapEmpty: onTapEmpty,
