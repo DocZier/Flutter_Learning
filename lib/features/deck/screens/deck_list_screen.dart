@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/cards/models/decks.dart';
-import 'package:test_practic/features/cards/widgets/deck_view.dart';
+import 'package:test_practic/models/decks.dart';
+import 'package:test_practic/features/deck/widgets/deck_view.dart';
 
 class HomeScreen extends StatelessWidget {
   final List<Deck> decks;
@@ -55,12 +55,12 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               if (deckName.isNotEmpty) {
                 addDeck(
-                    Deck(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      title: deckName,
-                      description: deckDescription,
-                      flashcards: [],
-                    )
+                  Deck(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    title: deckName,
+                    description: deckDescription,
+                    flashcards: [],
+                  ),
                 );
               }
               Navigator.pop(context);
@@ -76,23 +76,46 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Колоды')),
-      body: Center(
-          child:
-          DeckView(
-              context,
-              decks,
-              onTapEmpty,
-              onTapFull,
-              onLongPress
+      body: decks.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Отсутствуют колоды',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                ],
+              ),
             )
-      ),
+          : ListView.builder(
+              itemCount: decks.length,
+              itemBuilder: (_, index) {
+                final deck = decks[index];
+                final dueCount = deck.flashcards
+                    .where(
+                      (flashcard) =>
+                          flashcard.nextReview.isBefore(DateTime.now()),
+                    )
+                    .length;
+                final totalCount = deck.flashcards
+                    .where(
+                      (flashcard) =>
+                          flashcard.nextReview.isAfter(DateTime.now()),
+                    )
+                    .length;
+
+                return DeckListItem(
+                  deck: deck,
+                  onTapEmpty: onTapEmpty,
+                  onTapFull: onTapFull,
+                  onLongPress: onLongPress,
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          _createNewDeck(context)
-        },
-        child: Icon(
-          Icons.add
-        ),
+        onPressed: () => {_createNewDeck(context)},
+        child: Icon(Icons.add),
       ),
     );
   }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/cards/models/decks.dart';
-import 'package:test_practic/features/cards/models/flashcards.dart';
-import 'package:test_practic/features/cards/screens/add_flashcard_screen.dart';
-import 'package:test_practic/features/cards/screens/deck_list_screen.dart';
-import 'package:test_practic/features/cards/screens/study_screen.dart';
-import 'package:test_practic/features/cards/screens/deck_detail_screen.dart';
+import 'package:test_practic/models/decks.dart';
+import 'package:test_practic/models/flashcards.dart';
+import 'package:test_practic/features/flashcard/screens/study_screen.dart';
+import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
+import 'package:test_practic/features/deck/screens/deck_list_screen.dart';
+import 'package:test_practic/features/deck/screens/deck_detail_screen.dart';
 
 enum Screen {list, form, study, view}
 
