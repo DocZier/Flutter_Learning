@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_practic/features/cards/models/decks.dart';
 import 'package:test_practic/features/cards/models/flashcards.dart';
-import 'package:test_practic/features/cards/widgets/deck_view.dart';
 
 class StudyScreen extends StatefulWidget {
   final Deck deck;
@@ -32,9 +31,7 @@ class _StudyScreenState extends State<StudyScreen> {
 
   void _loadCards() {
     dueCards = widget.deck.flashcards.where(
-            (flashcard) =>
-            flashcard.nextReview == null ||
-        flashcard.nextReview == DateTime.now()
+            (flashcard) => flashcard.nextReview.isBefore( DateTime.now())
     ).toList();
     currentCard = dueCards.isNotEmpty ? dueCards[0] : null;
     setState(() {});
@@ -47,7 +44,7 @@ class _StudyScreenState extends State<StudyScreen> {
   void _handleAnswer(int quality) {
     if (currentCard != null) {
       widget.updateCard(currentCard!, quality);
-      dueCards.removeAt(0);
+      if(currentCard!.nextReview.isAfter( DateTime.now())) dueCards.removeAt(0);
 
       if (dueCards.isNotEmpty) {
         currentCard = dueCards[0];
@@ -124,7 +121,6 @@ class _StudyScreenState extends State<StudyScreen> {
             ),
           ),
         ),
-        //TODO Change button style
         bottomNavigationBar: isFlipped
             ? Container(
           padding: EdgeInsets.all(16),

@@ -6,6 +6,7 @@ class HomeScreen extends StatelessWidget {
   final List<Deck> decks;
   final void Function(String deckId) onTapEmpty;
   final void Function(String deckId) onTapFull;
+  final void Function(String deckId) onLongPress;
   final void Function(Deck newDeck) addDeck;
 
   const HomeScreen({
@@ -14,6 +15,7 @@ class HomeScreen extends StatelessWidget {
     required this.addDeck,
     required this.onTapEmpty,
     required this.onTapFull,
+    required this.onLongPress,
   });
 
   void _createNewDeck(BuildContext context) {
@@ -80,7 +82,8 @@ class HomeScreen extends StatelessWidget {
               context,
               decks,
               onTapEmpty,
-              onTapFull
+              onTapFull,
+              onLongPress
             )
       ),
       floatingActionButton: FloatingActionButton(

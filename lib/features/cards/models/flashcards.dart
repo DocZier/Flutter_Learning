@@ -4,7 +4,7 @@ class Flashcard {
   String answer;
   //Интервал измеряется в днях
   int interval;
-  DateTime? nextReview;
+  DateTime nextReview;
   double easeFactor;
 
   Flashcard({
@@ -13,6 +13,7 @@ class Flashcard {
     required this.answer,
     required this.interval,
     required this.easeFactor,
+    required this.nextReview
   });
 
   // Алгоритм интервального повторения SM-2
@@ -22,7 +23,6 @@ class Flashcard {
     } else {
       interval = (interval * easeFactor).round();
     }
-
     easeFactor += (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
     if (easeFactor < 1.3) easeFactor = 1.3;
 

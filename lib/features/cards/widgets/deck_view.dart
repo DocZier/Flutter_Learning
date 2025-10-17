@@ -5,7 +5,8 @@ Widget DeckView(
     BuildContext context,
     List<Deck> decks,
     void Function(String deckId) onTapEmpty,
-    void Function(String deckId) onTapFull) {
+    void Function(String deckId) onTapFull,
+    void Function(String deckId) onLongPress) {
   if (decks.isEmpty) {
     return Center(
       child: Column(
@@ -26,17 +27,19 @@ Widget DeckView(
       final deck = decks[index];
       final dueCount = deck.flashcards
           .where((flashcard) =>
-      flashcard.nextReview == DateTime.now())
+          flashcard.nextReview.isBefore( DateTime.now())
+      )
           .length;
       final totalCount = deck.flashcards
           .where((flashcard) =>
-      flashcard.nextReview == null)
+      flashcard.nextReview.isAfter( DateTime.now()))
           .length;
 
       return Card(
             child: InkWell(
               onTap: () => deck.flashcards.isEmpty ?
               onTapEmpty(deck.id) : onTapFull(deck.id),
+              onLongPress: () => onLongPress(deck.id),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
                 child: Row(

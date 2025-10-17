@@ -4,7 +4,7 @@ import 'package:test_practic/features/cards/models/flashcards.dart';
 import 'package:test_practic/features/cards/screens/add_flashcard_screen.dart';
 import 'package:test_practic/features/cards/screens/deck_list_screen.dart';
 import 'package:test_practic/features/cards/screens/study_screen.dart';
-import 'package:test_practic/features/cards/widgets/deck_view.dart';
+import 'package:test_practic/features/cards/screens/deck_detail_screen.dart';
 
 enum Screen {list, form, study, view}
 
@@ -38,12 +38,16 @@ class _FlashcardContainerState extends State<FlashcardContainer> {
     });
   }
 
-  void _navigateToView() {
-    setState(() => _currentScreen = Screen.view);
+  void _navigateToView(String deckId) {
+    setState(() {
+      _currentScreen = Screen.view;
+      _currentDeck = deckId;
+    });
   }
 
   void _deleteDeck(String id){
     setState(() {
+      _currentScreen = Screen.list;
       _decks.removeWhere((deck) => deck.id == id);
     });
   }
@@ -83,6 +87,7 @@ class _FlashcardContainerState extends State<FlashcardContainer> {
           addDeck: (Deck newDeck) => _addDeck(newDeck),
           onTapEmpty: (deckId) => _navigateToForm(deckId),
           onTapFull: (deckId) => _navigateToStudy(deckId),
+          onLongPress: (deckId) => _navigateToView(deckId),
         );
       case Screen.study:
         return StudyScreen(
@@ -97,11 +102,12 @@ class _FlashcardContainerState extends State<FlashcardContainer> {
           navigateToList: () => _navigateToList(),
         );
       case Screen.view:
-        //TODO create and return screen
-        return AddCardScreen(
-          deckId: '',
-          addCard: (String deckId, Flashcard card) {  },
-          navigateToList: () => _navigateToList(),
+        return DeckDetailsScreen(
+          deck: _decks.where((deck) => deck.id == _currentDeck).first, 
+          navigateToForm: (deckId) => _navigateToForm(deckId),
+          navigateToStudy: (deckId) => _navigateToStudy(deckId),
+          deleteCard: (String deckId, String cardId) => _deleteCard(deckId, cardId),
+          deleteDeck: (String deckId) => _deleteDeck(deckId),
         );
     }
   }

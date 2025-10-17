@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/cards/models/decks.dart';
 import 'package:test_practic/features/cards/models/flashcards.dart';
-import 'package:test_practic/features/cards/widgets/deck_view.dart';
 
 class AddCardScreen extends StatefulWidget {
   final String deckId;
@@ -59,12 +57,17 @@ class _AddCardScreenState extends State<AddCardScreen> {
                           id: DateTime.now().millisecondsSinceEpoch.toString(),
                           question: _questionController.text,
                           answer: _answerController.text,
-                          interval: 0,
-                          easeFactor: 0)
+                          interval: 1,
+                          easeFactor: 2.5,
+                          nextReview: DateTime.now()
+                      )
                   );
-                  SnackBar(
-                    content: Text("Карточка добавлена"
-                    ),
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Карточка добавлена",
+                      ),
+                    )
                   );
                   _questionController.clear();
                   _answerController.clear();
