@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/models/flashcards.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+const finaleIcon = 'https://cdn-icons-png.flaticon.com/512/9092/9092852.png';
 
 class StudyScreen extends StatefulWidget {
   final Deck deck;
@@ -92,6 +95,16 @@ class _StudyScreenState extends State<StudyScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  CachedNetworkImage(
+                    imageUrl: finaleIcon,
+                    height: 160,
+                    width: 160,
+                    placeholder: (context, url) =>
+                        Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        Center(child: Icon(Icons.error)),
+                    fit: BoxFit.contain,
+                  ),
                   Text(
                     'Все карточки изучены.\nПриходите завтра.',
                     textAlign: TextAlign.center,
