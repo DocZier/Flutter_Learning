@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
+import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
 
 class DeckDetailsScreen extends StatefulWidget {
   final Deck deck;
@@ -29,6 +30,17 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
       appBar: AppBar(
         title: Text(widget.deck.title),
         actions: [
+          IconButton(
+            icon: Icon(Icons.show_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeckStatisticsScreen(deck: widget.deck),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: Icon(Icons.play_arrow),
             onPressed: () => widget.navigateToStudy(widget.deck.id),
