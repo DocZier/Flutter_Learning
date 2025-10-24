@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/decks.dart';
+import 'package:test_practic/state/data_container.dart';
 import 'package:test_practic/features/deck/widgets/deck_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-const deckIcon =
-    'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
+const deckIcon = 'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
 const emptyListIcon =
     'https://cdn-icons-png.flaticon.com/512/18895/18895859.png';
-const addDeckIcon =
-    'https://cdn-icons-png.flaticon.com/512/2311/2311991.png';
+const addDeckIcon = 'https://cdn-icons-png.flaticon.com/512/2311/2311991.png';
+
+class HomeScreenWrapper extends StatelessWidget {
+  final AppData appData;
+
+  const HomeScreenWrapper({super.key, required this.appData});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: appData,
+      builder: (context, child) {
+        return HomeScreen(
+          appData: appData,
+        );
+      },
+    );
+  }
+}
+
 
 class HomeScreen extends StatelessWidget {
-  final List<Deck> decks;
-  final void Function(String deckId) onTapEmpty;
-  final void Function(String deckId) onTapFull;
-  final void Function(String deckId) onLongPress;
-  final void Function(Deck newDeck) addDeck;
+  final AppData appData;
 
-  const HomeScreen({
-    super.key,
-    required this.decks,
-    required this.addDeck,
-    required this.onTapEmpty,
-    required this.onTapFull,
-    required this.onLongPress,
-  });
+  const HomeScreen({super.key, required this.appData});
 
   void _createNewDeck(BuildContext context) {
     String deckName = '';
@@ -62,7 +70,7 @@ class HomeScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               if (deckName.isNotEmpty) {
-                addDeck(
+                appData.addDeck(
                   Deck(
                     id: DateTime.now().millisecondsSinceEpoch.toString(),
                     title: deckName,
@@ -100,7 +108,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: decks.isEmpty
+      body: appData.decks.isEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,19 +131,27 @@ class HomeScreen extends StatelessWidget {
               ),
             )
           : ListView.builder(
-              itemCount: decks.length,
+              itemCount: appData.decks.length,
               itemBuilder: (_, index) {
-                final deck = decks[index];
+                final deck = appData.decks[index];
                 return DeckListItem(
                   deck: deck,
-                  onTapEmpty: onTapEmpty,
-                  onTapFull: onTapFull,
-                  onLongPress: onLongPress,
+                  onTapEmpty: (test) {
+                    context.go('/add_flashcard', extra: {'deckId': deck.id});
+                  },
+                  onTapFull: (test) {
+                    //TODO Add navigation to the study screen
+                  },
+                  onLongPress: (test) {
+                    //TODO Add navigation to detail screen
+                  },
                 );
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {_createNewDeck(context)},
+        onPressed: ()  {
+          _createNewDeck(context);
+        },
         child: CachedNetworkImage(
           imageUrl: addDeckIcon,
           height: 40,
