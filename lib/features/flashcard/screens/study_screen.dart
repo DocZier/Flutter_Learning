@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/models/flashcards.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -119,9 +120,17 @@ class _StudyScreenState extends State<StudyScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () => {
-                      //TODO Add navigation to home screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DeckStatisticsScreen(
+                            appData: widget.appData,
+                            currentDeck: widget.currentDeck,
+                          ),
+                        ),
+                      )
                     },
-                    child: Text('Вернуться назад'),
+                    child: Text('Статистика'),
                   ),
                 ],
               ),

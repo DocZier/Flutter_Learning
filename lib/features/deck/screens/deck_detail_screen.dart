@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
+import 'package:test_practic/features/flashcard/screens/study_screen.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
 import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
@@ -28,27 +30,35 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
           IconButton(
             icon: Icon(Icons.show_chart),
             onPressed: () {
-              //TODO Add navigation to statistic screen
-             /* Navigator.push(
+             Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DeckStatisticsScreen(
-                  widget.appData,
-                  widget.currentDeck
+                      appData: widget.appData,
+                      currentDeck: widget.currentDeck
                   ),
                 ),
-              );*/
+              );
             },
           ),
           IconButton(
             icon: Icon(Icons.play_arrow),
             onPressed: () => {
-              //TODO ADd navigation to study screen
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StudyScreen(
+                    appData: widget.appData,
+                    currentDeck: widget.currentDeck,
+                  ),
+                ),
+              )
             },
           ),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
+              Navigator.pop(context);
               widget.appData.deleteDeck(widget.currentDeck);
             },
           ),
@@ -92,7 +102,15 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
-          //TODO Add navigation to add flashcard screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddCardScreen(
+                appData: widget.appData,
+                currentDeck: widget.currentDeck,
+              ),
+            ),
+          )
         },
         child: Icon(Icons.add),
       ),

@@ -5,6 +5,9 @@ import 'package:test_practic/state/data_container.dart';
 import 'package:test_practic/features/deck/widgets/deck_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../flashcard/screens/study_screen.dart';
+import 'deck_detail_screen.dart';
+
 const deckIcon = 'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
 const emptyListIcon =
     'https://cdn-icons-png.flaticon.com/512/18895/18895859.png';
@@ -140,10 +143,26 @@ class HomeScreen extends StatelessWidget {
                     context.go('/add_flashcard', extra: {'deckId': deck.id});
                   },
                   onTapFull: (test) {
-                    //TODO Add navigation to the study screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StudyScreen(
+                          appData: appData,
+                          currentDeck: deck.id,
+                        ),
+                      ),
+                    );
                   },
                   onLongPress: (test) {
-                    //TODO Add navigation to detail screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DeckDetailsScreen(
+                          appData: appData,
+                          currentDeck: deck.id,
+                        ),
+                      ),
+                    );
                   },
                 );
               },
