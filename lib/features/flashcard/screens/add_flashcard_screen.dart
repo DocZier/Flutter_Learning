@@ -98,7 +98,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
               Divider(height: 8.0),
               ElevatedButton(
                 onPressed: () => {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => HomeScreenWrapper(appData: widget.appData),

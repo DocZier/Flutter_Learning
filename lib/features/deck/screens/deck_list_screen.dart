@@ -139,7 +139,7 @@ class HomeScreen extends StatelessWidget {
                 return DeckListItem(
                   deck: deck,
                   onTapEmpty: (test) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AddCardScreen(
