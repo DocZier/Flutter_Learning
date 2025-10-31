@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:test_practic/features/deck/screens/deck_list_screen.dart';
 import 'package:test_practic/models/flashcards.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:test_practic/state/data_container.dart';
@@ -97,7 +97,14 @@ class _AddCardScreenState extends State<AddCardScreen> {
               ),
               Divider(height: 8.0),
               ElevatedButton(
-                onPressed: () => context.go('/home'),
+                onPressed: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreenWrapper(appData: widget.appData),
+                    ),
+                  ),
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50),
                 ),

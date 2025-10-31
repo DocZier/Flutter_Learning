@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
 import 'package:test_practic/features/flashcard/screens/study_screen.dart';
-import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
 import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
 import 'package:test_practic/state/data_container.dart';
@@ -50,28 +48,31 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.appData.decks.where((deck) => deck.id == widget.currentDeck).first.title),
+        title: Text(
+          widget.appData.decks
+              .where((deck) => deck.id == widget.currentDeck)
+              .first
+              .title,
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.show_chart),
             onPressed: () {
-              context.push('/deck_stats', extra: {'deckId': widget.currentDeck});
-            /* Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DeckStatisticsScreen(
-                      appData: widget.appData,
-                      currentDeck: widget.currentDeck
+                    appData: widget.appData,
+                    currentDeck: widget.currentDeck,
                   ),
                 ),
-              );*/
+              );
             },
           ),
           IconButton(
             icon: Icon(Icons.play_arrow),
             onPressed: () {
-              context.pushReplacement('/study', extra: {'deckId': widget.currentDeck});
-             /* Navigator.pushReplacement(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => StudyScreen(
@@ -79,14 +80,13 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                     currentDeck: widget.currentDeck,
                   ),
                 ),
-              )*/
+              );
             },
           ),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              context.go('/home');
-              /*Navigator.pop(context);*/
+              Navigator.pop(context);
               widget.appData.deleteDeck(widget.currentDeck);
             },
           ),
@@ -97,13 +97,21 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
           Container(
             padding: EdgeInsets.all(16),
             child: Text(
-              widget.appData.decks.where((deck) => deck.id == widget.currentDeck).first.description,
+              widget.appData.decks
+                  .where((deck) => deck.id == widget.currentDeck)
+                  .first
+                  .description,
               style: TextStyle(color: Colors.grey),
             ),
           ),
           Divider(height: 8),
           Expanded(
-            child: widget.appData.decks.where((deck) => deck.id == widget.currentDeck).first.flashcards.isEmpty
+            child:
+                widget.appData.decks
+                    .where((deck) => deck.id == widget.currentDeck)
+                    .first
+                    .flashcards
+                    .isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -113,10 +121,17 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                     ),
                   )
                 : ListView.separated(
-                    itemCount: widget.appData.decks.where((deck) => deck.id == widget.currentDeck).first.flashcards.length,
+                    itemCount: widget.appData.decks
+                        .where((deck) => deck.id == widget.currentDeck)
+                        .first
+                        .flashcards
+                        .length,
                     separatorBuilder: (context, index) => Divider(height: 8),
                     itemBuilder: (context, index) {
-                      final card = widget.appData.decks.where((deck) => deck.id == widget.currentDeck).first.flashcards[index];
+                      final card = widget.appData.decks
+                          .where((deck) => deck.id == widget.currentDeck)
+                          .first
+                          .flashcards[index];
 
                       return CardListItem(
                         deckId: widget.currentDeck,
@@ -130,8 +145,7 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go('/add_flashcard', extra: {'deckId': widget.currentDeck});
-         /* Navigator.push(
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => AddCardScreen(
@@ -139,7 +153,7 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                 currentDeck: widget.currentDeck,
               ),
             ),
-          )*/
+          );
         },
         child: Icon(Icons.add),
       ),

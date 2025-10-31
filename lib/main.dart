@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/features/deck/screens/deck_list_screen.dart';
 import 'package:test_practic/state/data_container.dart';
-import 'package:test_practic/state/flashcard_container.dart';
-import 'package:test_practic/navigation/app_router.dart';
 
 void main() {
   AppData appData = AppData();
@@ -19,12 +18,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      routerConfig: AppRouter(appData: appData).getRouter(),
+      home: HomeScreenWrapper(appData: appData),
     );
   }
 }

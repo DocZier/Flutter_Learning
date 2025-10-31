@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/state/data_container.dart';
 import 'package:test_practic/features/deck/widgets/deck_view.dart';
@@ -30,7 +30,6 @@ class HomeScreenWrapper extends StatelessWidget {
     );
   }
 }
-
 
 class HomeScreen extends StatelessWidget {
   final AppData appData;
@@ -67,10 +66,7 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => {
-              context.pop()
-              /*Navigator.pop(context)*/
-            },
+            onPressed: () => {Navigator.pop(context)},
             child: Text('Отмена'),
           ),
           ElevatedButton(
@@ -85,8 +81,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 );
               }
-              context.pop();
-              /*Navigator.pop(context);*/
+              Navigator.pop(context);
             },
             child: Text('Создать'),
           ),
@@ -144,37 +139,41 @@ class HomeScreen extends StatelessWidget {
                 return DeckListItem(
                   deck: deck,
                   onTapEmpty: (test) {
-                    context.go('/add_flashcard', extra: {'deckId': deck.id});
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddCardScreen(
+                          appData: appData,
+                          currentDeck: deck.id,
+                        ),
+                      ),
+                    );
                   },
                   onTapFull: (test) {
-                    context.push('/study', extra: {'deckId': deck.id});
-                   /* Navigator.push(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => StudyScreen(
-                          appData: appData,
-                          currentDeck: deck.id,
-                        ),
+                        builder: (context) =>
+                            StudyScreen(appData: appData, currentDeck: deck.id),
                       ),
-                    );*/
+                    );
                   },
                   onLongPress: (test) {
-                    context.push('/deck_detail', extra: {'deckId': deck.id});
-                    /*Navigator.push(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DeckDetailsScreen(
+                        builder: (context) => DeckDetailsScreenWrapper(
                           appData: appData,
                           currentDeck: deck.id,
                         ),
                       ),
-                    );*/
+                    );
                   },
                 );
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()  {
+        onPressed: () {
           _createNewDeck(context);
         },
         child: CachedNetworkImage(
