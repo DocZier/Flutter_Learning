@@ -67,7 +67,10 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => {
+              context.pop()
+              /*Navigator.pop(context)*/
+            },
             child: Text('Отмена'),
           ),
           ElevatedButton(
@@ -82,7 +85,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                 );
               }
-              Navigator.pop(context);
+              context.pop();
+              /*Navigator.pop(context);*/
             },
             child: Text('Создать'),
           ),
@@ -143,7 +147,8 @@ class HomeScreen extends StatelessWidget {
                     context.go('/add_flashcard', extra: {'deckId': deck.id});
                   },
                   onTapFull: (test) {
-                    Navigator.push(
+                    context.push('/study', extra: {'deckId': deck.id});
+                   /* Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => StudyScreen(
@@ -151,10 +156,11 @@ class HomeScreen extends StatelessWidget {
                           currentDeck: deck.id,
                         ),
                       ),
-                    );
+                    );*/
                   },
                   onLongPress: (test) {
-                    Navigator.push(
+                    context.push('/deck_detail', extra: {'deckId': deck.id});
+                    /*Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DeckDetailsScreen(
@@ -162,7 +168,7 @@ class HomeScreen extends StatelessWidget {
                           currentDeck: deck.id,
                         ),
                       ),
-                    );
+                    );*/
                   },
                 );
               },

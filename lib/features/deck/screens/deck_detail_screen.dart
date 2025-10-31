@@ -1,10 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
 import 'package:test_practic/features/flashcard/screens/study_screen.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
 import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
 import 'package:test_practic/state/data_container.dart';
+
+class DeckDetailsScreenWrapper extends StatelessWidget {
+  final AppData appData;
+  final String currentDeck;
+
+  const DeckDetailsScreenWrapper({
+    super.key,
+    required this.appData,
+    required this.currentDeck
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: appData,
+      builder: (context, child) {
+        return DeckDetailsScreen(
+          appData: appData,
+          currentDeck: currentDeck,
+        );
+      },
+    );
+  }
+}
 
 class DeckDetailsScreen extends StatefulWidget {
   final AppData appData;
@@ -30,7 +55,8 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
           IconButton(
             icon: Icon(Icons.show_chart),
             onPressed: () {
-             Navigator.push(
+              context.push('/deck_stats', extra: {'deckId': widget.currentDeck});
+            /* Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DeckStatisticsScreen(
@@ -38,13 +64,14 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                       currentDeck: widget.currentDeck
                   ),
                 ),
-              );
+              );*/
             },
           ),
           IconButton(
             icon: Icon(Icons.play_arrow),
-            onPressed: () => {
-              Navigator.pushReplacement(
+            onPressed: () {
+              context.pushReplacement('/study', extra: {'deckId': widget.currentDeck});
+             /* Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => StudyScreen(
@@ -52,13 +79,14 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                     currentDeck: widget.currentDeck,
                   ),
                 ),
-              )
+              )*/
             },
           ),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              Navigator.pop(context);
+              context.go('/home');
+              /*Navigator.pop(context);*/
               widget.appData.deleteDeck(widget.currentDeck);
             },
           ),
@@ -101,8 +129,9 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.push(
+        onPressed: () {
+          context.go('/add_flashcard', extra: {'deckId': widget.currentDeck});
+         /* Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => AddCardScreen(
@@ -110,7 +139,7 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                 currentDeck: widget.currentDeck,
               ),
             ),
-          )
+          )*/
         },
         child: Icon(Icons.add),
       ),

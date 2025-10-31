@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/models/flashcards.dart';
@@ -88,7 +89,10 @@ class _StudyScreenState extends State<StudyScreen> {
                   ),
                   actions: [
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => {
+                        context.go
+                        /*Navigator.pop(context)*/
+                      },
                       child: Text('OK'),
                     ),
                   ],
@@ -120,7 +124,8 @@ class _StudyScreenState extends State<StudyScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () => {
-                      Navigator.push(
+                      context.pushReplacement('/deck_stats', extra: {'deckId': widget.currentDeck})
+                     /* Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DeckStatisticsScreen(
@@ -128,7 +133,7 @@ class _StudyScreenState extends State<StudyScreen> {
                             currentDeck: widget.currentDeck,
                           ),
                         ),
-                      )
+                      )*/
                     },
                     child: Text('Статистика'),
                   ),
