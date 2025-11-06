@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/flashcards.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:test_practic/state/data_container.dart';
 
+import '../../../models/decks.dart';
+import '../../../state/data_provider.dart';
+import '../../../state/data_repository.dart';
+
 const finaleIcon = 'https://cdn-icons-png.flaticon.com/512/9092/9092852.png';
 
 class StudyScreen extends StatefulWidget {
-  final AppData appData;
   final String currentDeck;
 
   const StudyScreen({
     super.key,
-    required this.appData,
     required this.currentDeck,
   });
 
@@ -21,20 +23,13 @@ class StudyScreen extends StatefulWidget {
 }
 
 class _StudyScreenState extends State<StudyScreen> {
+
   List<Flashcard> dueCards = [];
   Flashcard? currentCard;
   bool isFlipped = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadCards();
-  }
-
-  void _loadCards() {
-    dueCards = widget.appData.decks
-        .where((deck) => deck.id == widget.currentDeck)
-        .first
+  void _loadCards(Deck deck) {
+    dueCards = deck
         .flashcards
         .where((flashcard) => flashcard.nextReview.isBefore(DateTime.now()))
         .toList();
@@ -46,9 +41,9 @@ class _StudyScreenState extends State<StudyScreen> {
     setState(() => isFlipped = !isFlipped);
   }
 
-  void _handleAnswer(int quality) {
+  void _handleAnswer(int quality, void Function(Flashcard card, int quality) updateCard) {
     if (currentCard != null) {
-      widget.appData.updateCard(currentCard!, quality);
+      updateCard(currentCard!, quality);
       if (currentCard!.nextReview.isAfter(DateTime.now())) dueCards.removeAt(0);
 
       if (dueCards.isNotEmpty) {
@@ -63,12 +58,14 @@ class _StudyScreenState extends State<StudyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appData = AppDataLogic.of(context).appData;
+
+    _loadCards(appData.getDeckById(widget.currentDeck));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.appData.decks
-              .where((deck) => deck.id == widget.currentDeck)
-              .first
+          appData.getDeckById(widget.currentDeck)
               .title,
         ),
         actions: [
@@ -87,7 +84,10 @@ class _StudyScreenState extends State<StudyScreen> {
                   ),
                   actions: [
                     TextButton(
-                      onPressed: () => {Navigator.pop(context)},
+                      onPressed: () => {
+                        context.pop()
+                        /*Navigator.pop(context)*/
+                      },
                       child: Text('OK'),
                     ),
                   ],
@@ -119,15 +119,9 @@ class _StudyScreenState extends State<StudyScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () => {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DeckStatisticsScreen(
-                            appData: widget.appData,
-                            currentDeck: widget.currentDeck,
-                          ),
-                        ),
-                      ),
+                      Router.neglect(context, () {
+                        context.pushReplacement('/deck_stats', extra: {'deckId': widget.currentDeck});
+                      })
                     },
                     child: Text('Статистика'),
                   ),
@@ -157,15 +151,15 @@ class _StudyScreenState extends State<StudyScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () => _handleAnswer(2),
+                    onPressed: () => _handleAnswer(2,  AppDataLogic.of(context).appDataRepository.updateCard),
                     child: Text('Сложно'),
                   ),
                   ElevatedButton(
-                    onPressed: () => _handleAnswer(4),
+                    onPressed: () => _handleAnswer(4,  AppDataLogic.of(context).appDataRepository.updateCard),
                     child: Text('Хорошо'),
                   ),
                   ElevatedButton(
-                    onPressed: () => _handleAnswer(5),
+                    onPressed: () => _handleAnswer(5,  AppDataLogic.of(context).appDataRepository.updateCard),
                     child: Text('Легко'),
                   ),
                 ],

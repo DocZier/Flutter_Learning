@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/models/flashcards.dart';
@@ -8,7 +9,6 @@ import 'package:test_practic/features/deck/screens/deck_detail_screen.dart';
 
 enum Screen {list, form, study, view}
 
-/*
 class FlashcardContainer extends StatefulWidget{
   const FlashcardContainer({super.key});
 

@@ -4,13 +4,15 @@ import 'package:test_practic/features/statistic/widgets/metric_bar_card.dart';
 import 'package:test_practic/models/metric.dart';
 import 'package:test_practic/state/data_container.dart';
 
+import '../../../models/decks.dart';
+import '../../../state/data_provider.dart';
+import '../../../state/data_repository.dart';
+
 class DeckStatisticsScreen extends StatefulWidget {
-  final AppData appData;
   final String currentDeck;
 
   const DeckStatisticsScreen({
     super.key,
-    required this.appData,
     required this.currentDeck,
   });
 
@@ -27,32 +29,19 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
   int todayReviews = 0;
   int totalReviews = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _calculateStats();
-  }
-
-  void _calculateStats() {
-    totalCards = widget.appData.decks
-        .where((deck) => deck.id == widget.currentDeck)
-        .first
+  void _calculateStats(Deck deck) {
+    totalCards = deck
         .flashcards
         .length;
 
     if (totalCards != 0) {
-      dueCards = widget.appData.decks
-          .where((deck) => deck.id == widget.currentDeck)
-          .first
+      dueCards = deck
           .flashcards
           .where((card) => card.nextReview.isBefore(DateTime.now()))
           .length;
       learnedCards = totalCards - dueCards;
 
-      averageInterval =
-          widget.appData.decks
-              .where((deck) => deck.id == widget.currentDeck)
-              .first
+      averageInterval = deck
               .flashcards
               .map((card) => card.interval.toDouble())
               .reduce((a, b) => a + b) /
@@ -60,16 +49,12 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
 
       retentionRate = (learnedCards / totalCards) * 100;
 
-      todayReviews = widget.appData.decks
-          .where((deck) => deck.id == widget.currentDeck)
-          .first
+      todayReviews = deck
           .flashcards
           .where((card) => card.nextReview.day == DateTime.now().day)
           .length;
 
-      totalReviews = widget.appData.decks
-          .where((deck) => deck.id == widget.currentDeck)
-          .first
+      totalReviews = deck
           .flashcards
           .where((card) => card.interval > 0)
           .length;
@@ -78,6 +63,10 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appData = AppDataLogic.of(context).appData;
+
+    _calculateStats(appData.getDeckById(widget.currentDeck));
+
     final intervalBuckets = <String, int>{
       '0-1 дней': 0,
       '2-7 дней': 0,
@@ -86,9 +75,7 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
     };
 
     for (var card
-        in widget.appData.decks
-            .where((deck) => deck.id == widget.currentDeck)
-            .first
+        in appData.getDeckById(widget.currentDeck)
             .flashcards) {
       if (card.interval <= 1) {
         intervalBuckets['0-1 дней'] = intervalBuckets['0-1 дней']! + 1;
@@ -104,7 +91,7 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Статистика ${widget.appData.decks.where((deck) => deck.id == widget.currentDeck).first.title}',
+          'Статистика ${appData.getDeckById(widget.currentDeck).title}',
         ),
       ),
       body: totalCards == 0

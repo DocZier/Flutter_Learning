@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/deck/screens/deck_list_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/flashcards.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:test_practic/state/data_container.dart';
 
+import '../../../state/data_provider.dart';
+import '../../../state/data_repository.dart';
+
 const flashcardIcon = 'https://cdn-icons-png.flaticon.com/512/6726/6726775.png';
 
 class AddCardScreen extends StatefulWidget {
-  final AppData appData;
   final String currentDeck;
 
   const AddCardScreen({
     super.key,
-    required this.appData,
     required this.currentDeck,
   });
 
@@ -27,6 +28,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -72,7 +74,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
               Spacer(),
               ElevatedButton(
                 onPressed: () {
-                  widget.appData.addCard(
+                  AppDataLogic.of(context).appDataRepository.addCard(
                     widget.currentDeck,
                     Flashcard(
                       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -97,14 +99,9 @@ class _AddCardScreenState extends State<AddCardScreen> {
               ),
               Divider(height: 8.0),
               ElevatedButton(
-                onPressed: () => {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreenWrapper(appData: widget.appData),
-                    ),
-                  ),
-                },
+                onPressed: () => Router.neglect(context, () {
+                  context.go('/home');
+                }),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50),
                 ),
