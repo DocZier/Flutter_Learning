@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/models/flashcards.dart';
 

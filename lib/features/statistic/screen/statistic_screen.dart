@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:test_practic/features/statistic/widgets/metric_table.dart';
 import 'package:test_practic/features/statistic/widgets/metric_bar_card.dart';
 import 'package:test_practic/models/metric.dart';
 import 'package:test_practic/state/data_container.dart';
-
 import '../../../models/decks.dart';
-import '../../../state/data_provider.dart';
 import '../../../state/data_repository.dart';
 
 class DeckStatisticsScreen extends StatefulWidget {
   final String currentDeck;
 
-  const DeckStatisticsScreen({
-    super.key,
-    required this.currentDeck,
-  });
+  const DeckStatisticsScreen({super.key, required this.currentDeck});
 
   @override
   State<DeckStatisticsScreen> createState() => _DeckStatisticsScreenState();
 }
 
 class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
+  void update() => setState(() => {});
+
+  @override
+  void initState() {
+    GetIt.I.isReady<AppDataRepository>().then(
+      (_) => GetIt.I<AppDataRepository>().addListener(update),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    GetIt.I<AppDataRepository>().removeListener(update);
+    super.dispose();
+  }
+
   int totalCards = 0;
   int dueCards = 0;
   int learnedCards = 0;
@@ -30,40 +42,33 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
   int totalReviews = 0;
 
   void _calculateStats(Deck deck) {
-    totalCards = deck
-        .flashcards
-        .length;
+    totalCards = deck.flashcards.length;
 
     if (totalCards != 0) {
-      dueCards = deck
-          .flashcards
+      dueCards = deck.flashcards
           .where((card) => card.nextReview.isBefore(DateTime.now()))
           .length;
       learnedCards = totalCards - dueCards;
 
-      averageInterval = deck
-              .flashcards
+      averageInterval =
+          deck.flashcards
               .map((card) => card.interval.toDouble())
               .reduce((a, b) => a + b) /
           totalCards;
 
       retentionRate = (learnedCards / totalCards) * 100;
 
-      todayReviews = deck
-          .flashcards
+      todayReviews = deck.flashcards
           .where((card) => card.nextReview.day == DateTime.now().day)
           .length;
 
-      totalReviews = deck
-          .flashcards
-          .where((card) => card.interval > 0)
-          .length;
+      totalReviews = deck.flashcards.where((card) => card.interval > 0).length;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final appData = AppDataLogic.of(context).appData;
+    final appData = GetIt.I<AppData>();
 
     _calculateStats(appData.getDeckById(widget.currentDeck));
 
@@ -74,9 +79,7 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
       '31+ дней': 0,
     };
 
-    for (var card
-        in appData.getDeckById(widget.currentDeck)
-            .flashcards) {
+    for (var card in appData.getDeckById(widget.currentDeck).flashcards) {
       if (card.interval <= 1) {
         intervalBuckets['0-1 дней'] = intervalBuckets['0-1 дней']! + 1;
       } else if (card.interval <= 7) {
@@ -176,7 +179,7 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
                                 style: TextStyle(color: Colors.grey),
                               ),
                               Text(
-                                'Не изучена: $dueCards',
+                                'Не изучено: $dueCards',
                                 style: TextStyle(
                                   color: dueCards > 0
                                       ? Colors.red

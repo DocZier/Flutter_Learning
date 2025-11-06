@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/state/data_container.dart';
 import 'package:test_practic/features/deck/widgets/deck_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../../state/data_provider.dart';
 import '../../../state/data_repository.dart';
-import '../../flashcard/screens/study_screen.dart';
-import 'deck_detail_screen.dart';
 
 const deckIcon = 'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
 const emptyListIcon =
@@ -16,7 +13,6 @@ const emptyListIcon =
 const addDeckIcon = 'https://cdn-icons-png.flaticon.com/512/2311/2311991.png';
 
 class HomeScreen extends StatefulWidget {
-
   const HomeScreen({super.key});
 
   @override
@@ -24,6 +20,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void update() => setState(() => {});
+
+  @override
+  void initState() {
+    GetIt.I.isReady<AppDataRepository>().then(
+      (_) => GetIt.I<AppDataRepository>().addListener(update),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    GetIt.I<AppDataRepository>().removeListener(update);
+    super.dispose();
+  }
 
   void _createNewDeck(BuildContext context, void Function(Deck deck) addDeck) {
     String deckName = '';
@@ -54,12 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => {
-              context.pop()
-            },
-            child: Text('Отмена'),
-          ),
+          TextButton(onPressed: () => {context.pop()}, child: Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               if (deckName.isNotEmpty) {
@@ -85,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appData = AppDataLogic.of(context).appData;
+    final appData = GetIt.I<AppData>();
 
     return Scaffold(
       appBar: AppBar(
@@ -130,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
           : ListView.builder(
               itemCount: appData.getLength(),
               itemBuilder: (_, index) {
-                final deck =  appData.getDeckByIndex(index);
+                final deck = appData.getDeckByIndex(index);
                 return DeckListItem(
                   deck: deck,
                   onTapEmpty: (test) {
@@ -148,8 +154,8 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()  {
-          _createNewDeck(context,  AppDataLogic.of(context).appDataRepository.addDeck);
+        onPressed: () {
+          _createNewDeck(context, GetIt.I<AppDataRepository>().addDeck);
         },
         child: CachedNetworkImage(
           imageUrl: addDeckIcon,

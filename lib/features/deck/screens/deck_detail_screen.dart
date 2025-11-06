@@ -1,25 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
 import 'package:test_practic/state/data_repository.dart';
-import '../../../state/data_provider.dart';
+import '../../../state/data_container.dart';
 
 class DeckDetailsScreen extends StatefulWidget {
   final String currentDeck;
 
-  const DeckDetailsScreen({
-    super.key,
-    required this.currentDeck,
-  });
+  const DeckDetailsScreen({super.key, required this.currentDeck});
 
   @override
   State<DeckDetailsScreen> createState() => _DeckDetailsScreenState();
 }
 
 class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
+  void update() => setState(() => {});
+
+  @override
+  void initState() {
+    GetIt.I.isReady<AppDataRepository>().then(
+      (_) => GetIt.I<AppDataRepository>().addListener(update),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    GetIt.I<AppDataRepository>().removeListener(update);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final appData = AppDataLogic.of(context).appData;
+    final appData = GetIt.I<AppData>();
+    final appDataRepository = GetIt.I<AppDataRepository>();
 
     return Scaffold(
       appBar: AppBar(
@@ -28,22 +43,30 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
           IconButton(
             icon: Icon(Icons.show_chart),
             onPressed: () {
-              context.push('/deck_stats', extra: {'deckId': widget.currentDeck});
+              context.push(
+                '/deck_stats',
+                extra: {'deckId': widget.currentDeck},
+              );
             },
           ),
           IconButton(
             icon: Icon(Icons.play_arrow),
             onPressed: () {
               Router.neglect(context, () {
-                context.pushReplacement('/study', extra: {'deckId': widget.currentDeck});
+                context.pushReplacement(
+                  '/study',
+                  extra: {'deckId': widget.currentDeck},
+                );
               });
             },
           ),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              Router.neglect(context, () {context.go('/home');});
-              AppDataLogic.of(context).appDataRepository.deleteDeck(widget.currentDeck);
+              Router.neglect(context, () {
+                context.go('/home');
+              });
+              appDataRepository.deleteDeck(widget.currentDeck);
             },
           ),
         ],
@@ -69,17 +92,22 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                     ),
                   )
                 : ListView.separated(
-                    itemCount: appData.getDeckById(widget.currentDeck).flashcards.length,
+                    itemCount: appData
+                        .getDeckById(widget.currentDeck)
+                        .flashcards
+                        .length,
                     separatorBuilder: (context, index) => Divider(height: 8),
                     itemBuilder: (context, index) {
-                      final card = appData.getDeckById(widget.currentDeck).flashcards[index];
+                      final card = appData
+                          .getDeckById(widget.currentDeck)
+                          .flashcards[index];
 
                       return CardListItem(
                         deckId: widget.currentDeck,
                         card: card,
-                        deleteCard:  (deckId, cardId) {
+                        deleteCard: (deckId, cardId) {
                           setState(() {
-                            AppDataLogic.of(context).appDataRepository.deleteCard(deckId, cardId);
+                            appDataRepository.deleteCard(deckId, cardId);
                           });
                         },
                       );

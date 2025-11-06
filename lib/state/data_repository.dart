@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:test_practic/state/data_container.dart';
 import '../models/decks.dart';
 import '../models/flashcards.dart';
 
-abstract class AppDataRepository {
+abstract class AppDataRepository extends ChangeNotifier{
   void deleteDeck(String id);
   void addDeck(Deck newDeck);
   void deleteCard(String deckId, String cardId);
@@ -10,7 +11,7 @@ abstract class AppDataRepository {
   void addCard(String deckId, Flashcard card);
 }
 
-class AppDataRepositoryImpl implements AppDataRepository {
+class AppDataRepositoryImpl extends AppDataRepository {
   final AppData appData;
 
   AppDataRepositoryImpl({required this.appData});
@@ -18,11 +19,13 @@ class AppDataRepositoryImpl implements AppDataRepository {
   @override
   void deleteDeck(String id) {
     appData.decks.removeWhere((deck) => deck.id == id);
+    notifyListeners();
   }
 
   @override
   void addDeck(Deck newDeck) {
     appData.decks.add(newDeck);
+    notifyListeners();
   }
 
   @override
@@ -32,15 +35,18 @@ class AppDataRepositoryImpl implements AppDataRepository {
         .first
         .flashcards
         .removeWhere((card) => card.id == cardId);
+    notifyListeners();
   }
 
   @override
   void updateCard(Flashcard card, int quality) {
     card.updateCard(quality);
+    notifyListeners();
   }
 
   @override
   void addCard(String deckId, Flashcard card) {
     appData.decks.where((deck) => deck.id == deckId).first.flashcards.add(card);
+    notifyListeners();
   }
 }
