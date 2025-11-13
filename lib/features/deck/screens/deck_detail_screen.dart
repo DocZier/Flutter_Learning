@@ -1,51 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
+import 'package:test_practic/provider/app_data_provider.dart';
 import 'package:test_practic/state/data_repository.dart';
 import '../../../state/data_container.dart';
+import '../../provider/deck_id_provider.dart';
 
-class DeckDetailsScreen extends StatefulWidget {
+class DeckDetailsScreen extends ConsumerWidget {
   final String currentDeck;
 
   const DeckDetailsScreen({super.key, required this.currentDeck});
 
   @override
-  State<DeckDetailsScreen> createState() => _DeckDetailsScreenState();
-}
-
-class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
-  void update() => setState(() => {});
-
-  @override
-  void initState() {
-    GetIt.I.isReady<AppDataRepository>().then(
-      (_) => GetIt.I<AppDataRepository>().addListener(update),
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    GetIt.I<AppDataRepository>().removeListener(update);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final appData = GetIt.I<AppData>();
-    final appDataRepository = GetIt.I<AppDataRepository>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final deck = ref.watch(deckByIdProvider(id: currentDeck));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(appData.getDeckById(widget.currentDeck).title),
+        title: Text(deck.title),
         actions: [
           IconButton(
             icon: Icon(Icons.show_chart),
             onPressed: () {
               context.push(
                 '/deck_stats',
-                extra: {'deckId': widget.currentDeck},
+                extra: {'deckId': currentDeck},
               );
             },
           ),
@@ -55,7 +36,7 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
               Router.neglect(context, () {
                 context.pushReplacement(
                   '/study',
-                  extra: {'deckId': widget.currentDeck},
+                  extra: {'deckId': currentDeck},
                 );
               });
             },
@@ -66,7 +47,7 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
               Router.neglect(context, () {
                 context.go('/home');
               });
-              appDataRepository.deleteDeck(widget.currentDeck);
+              ref.read(appDataProvider.notifier).deleteDeck(currentDeck);
             },
           ),
         ],
@@ -76,13 +57,13 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
           Container(
             padding: EdgeInsets.all(16),
             child: Text(
-              appData.getDeckById(widget.currentDeck).description,
+              deck.description,
               style: TextStyle(color: Colors.grey),
             ),
           ),
           Divider(height: 8),
           Expanded(
-            child: appData.getDeckById(widget.currentDeck).flashcards.isEmpty
+            child: deck.flashcards.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -92,23 +73,19 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                     ),
                   )
                 : ListView.separated(
-                    itemCount: appData
-                        .getDeckById(widget.currentDeck)
+                    itemCount: deck
                         .flashcards
                         .length,
                     separatorBuilder: (context, index) => Divider(height: 8),
                     itemBuilder: (context, index) {
-                      final card = appData
-                          .getDeckById(widget.currentDeck)
+                      final card = deck
                           .flashcards[index];
 
                       return CardListItem(
-                        deckId: widget.currentDeck,
+                        deckId: currentDeck,
                         card: card,
                         deleteCard: (deckId, cardId) {
-                          setState(() {
-                            appDataRepository.deleteCard(deckId, cardId);
-                          });
+                          ref.read(appDataProvider.notifier).deleteCard(currentDeck, cardId);
                         },
                       );
                     },
@@ -119,7 +96,7 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Router.neglect(context, () {
-            context.go('/add_flashcard', extra: {'deckId': widget.currentDeck});
+            context.go('/add_flashcard', extra: {'deckId': currentDeck});
           });
         },
         child: Icon(Icons.add),

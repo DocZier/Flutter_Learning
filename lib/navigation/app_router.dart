@@ -4,7 +4,6 @@ import 'package:test_practic/features/deck/screens/deck_list_screen.dart';
 import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
 import 'package:test_practic/features/flashcard/screens/study_screen.dart';
 import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
-import 'package:test_practic/state/data_container.dart';
 
 class AppRouter {
 

@@ -1,44 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/flashcards.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:test_practic/provider/app_data_provider.dart';
 import '../../../state/data_repository.dart';
 
 const flashcardIcon = 'https://cdn-icons-png.flaticon.com/512/6726/6726775.png';
 
-class AddCardScreen extends StatefulWidget {
+class AddCardScreen extends ConsumerWidget {
   final String currentDeck;
 
-  const AddCardScreen({super.key, required this.currentDeck});
+  AddCardScreen({super.key, required this.currentDeck});
 
-  @override
-  State<AddCardScreen> createState() => _AddCardScreenState();
-}
-
-class _AddCardScreenState extends State<AddCardScreen> {
   final _formKey = GlobalKey<FormState>();
   final _questionController = TextEditingController();
   final _answerController = TextEditingController();
 
-  void update() => setState(() => {});
 
   @override
-  void initState() {
-    GetIt.I.isReady<AppDataRepository>().then(
-      (_) => GetIt.I<AppDataRepository>().addListener(update),
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    GetIt.I<AppDataRepository>().removeListener(update);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -84,8 +66,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
               Spacer(),
               ElevatedButton(
                 onPressed: () {
-                  GetIt.I<AppDataRepository>().addCard(
-                    widget.currentDeck,
+                  ref.read(appDataProvider.notifier).addCard(
+                    currentDeck,
                     Flashcard(
                       id: DateTime.now().millisecondsSinceEpoch.toString(),
                       question: _questionController.text,

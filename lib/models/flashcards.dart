@@ -1,31 +1,56 @@
 class Flashcard {
   final String id;
-  String question;
-  String answer;
-  //Интервал измеряется в днях
-  int interval;
-  DateTime nextReview;
-  double easeFactor;
+  final String question;
+  final String answer;
+  final int interval;
+  final DateTime nextReview;
+  final double easeFactor;
 
-  Flashcard({
+  const Flashcard({
     required this.id,
     required this.question,
     required this.answer,
     required this.interval,
     required this.easeFactor,
-    required this.nextReview
+    required this.nextReview,
   });
 
-  // Алгоритм интервального повторения SM-2
-  void updateCard(int quality) {
-    if (quality <= 3) {
-      interval = 1;
-    } else {
-      interval = (interval * easeFactor).round();
-    }
-    easeFactor += (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
-    if (easeFactor < 1.3) easeFactor = 1.3;
+  Flashcard copyWith({
+    String? question,
+    String? answer,
+    int? interval,
+    DateTime? nextReview,
+    double? easeFactor,
+  }) {
+    return Flashcard(
+      id: id,
+      question: question ?? this.question,
+      answer: answer ?? this.answer,
+      interval: interval ?? this.interval,
+      nextReview: nextReview ?? this.nextReview,
+      easeFactor: easeFactor ?? this.easeFactor,
+    );
+  }
 
-    nextReview = DateTime.now().add(Duration(days: interval));
+  Flashcard applyQuality(int quality) {
+    int newInterval = interval;
+    double newEF = easeFactor;
+
+    if (quality <= 3) {
+      newInterval = 1;
+    } else {
+      newInterval = (newInterval * newEF).round();
+    }
+
+    newEF += (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+    if (newEF < 1.3) newEF = 1.3;
+
+    final newNextReview = DateTime.now().add(Duration(days: newInterval));
+
+    return copyWith(
+      interval: newInterval,
+      easeFactor: newEF,
+      nextReview: newNextReview,
+    );
   }
 }
