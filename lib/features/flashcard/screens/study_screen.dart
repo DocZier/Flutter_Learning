@@ -71,14 +71,14 @@ class _StudyScreenState extends State<StudyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appData = GetIt.I<AppData>();
+    final deck = GetIt.I<AppData>().getDeckById(widget.currentDeck);
     final appDataRepository = GetIt.I<AppDataRepository>();
 
-    _loadCards(appData.getDeckById(widget.currentDeck));
+    _loadCards(deck);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(appData.getDeckById(widget.currentDeck).title),
+        title: Text(deck.title),
         actions: [
           IconButton(
             icon: Icon(Icons.info),

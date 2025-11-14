@@ -68,9 +68,9 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appData = GetIt.I<AppData>();
+    final deck = GetIt.I<AppData>().getDeckById(widget.currentDeck);
 
-    _calculateStats(appData.getDeckById(widget.currentDeck));
+    _calculateStats(deck);
 
     final intervalBuckets = <String, int>{
       '0-1 дней': 0,
@@ -79,7 +79,7 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
       '31+ дней': 0,
     };
 
-    for (var card in appData.getDeckById(widget.currentDeck).flashcards) {
+    for (var card in deck.flashcards) {
       if (card.interval <= 1) {
         intervalBuckets['0-1 дней'] = intervalBuckets['0-1 дней']! + 1;
       } else if (card.interval <= 7) {
@@ -94,7 +94,7 @@ class _DeckStatisticsScreenState extends State<DeckStatisticsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Статистика ${appData.getDeckById(widget.currentDeck).title}',
+          'Статистика ${deck.title}',
         ),
       ),
       body: totalCards == 0
