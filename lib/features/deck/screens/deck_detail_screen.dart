@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
 import 'package:test_practic/provider/app_data_provider.dart';
-import 'package:test_practic/state/data_repository.dart';
-import '../../../state/data_container.dart';
 import '../../provider/deck_id_provider.dart';
 
 class DeckDetailsScreen extends ConsumerWidget {
@@ -96,7 +93,7 @@ class DeckDetailsScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Router.neglect(context, () {
-            context.go('/add_flashcard', extra: {'deckId': currentDeck});
+            context.push('/add_flashcard', extra: {'deckId': currentDeck});
           });
         },
         child: Icon(Icons.add),

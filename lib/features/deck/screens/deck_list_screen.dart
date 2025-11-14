@@ -98,7 +98,7 @@ class HomeScreen extends ConsumerWidget {
           deck: deck,
           onTapEmpty: (test) {
             Router.neglect(context, () {
-              context.go('/add_flashcard', extra: {'deckId': deck.id});
+              context.push('/add_flashcard', extra: {'deckId': deck.id});
             });
           },
           onTapFull: (test) {

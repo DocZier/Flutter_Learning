@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/flashcards.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:test_practic/provider/app_data_provider.dart';
-import '../../../state/data_repository.dart';
+import '../provider/form_provider.dart';
 
 const flashcardIcon = 'https://cdn-icons-png.flaticon.com/512/6726/6726775.png';
 
 class AddCardScreen extends ConsumerWidget {
   final String currentDeck;
 
-  AddCardScreen({super.key, required this.currentDeck});
-
-  final _formKey = GlobalKey<FormState>();
-  final _questionController = TextEditingController();
-  final _answerController = TextEditingController();
-
+  const AddCardScreen({super.key, required this.currentDeck});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final form = ref.watch(addCardFormProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -43,35 +38,53 @@ class AddCardScreen extends ConsumerWidget {
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Form(
-          key: _formKey,
+          key:  form.formKey,
           child: Column(
             children: [
               TextFormField(
-                controller: _questionController,
+                controller: form.question,
                 decoration: InputDecoration(
                   labelText: 'Вопрос',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 4,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите вопрос';
+                  }
+                  return null;
+                },
               ),
+
               SizedBox(height: 20),
               TextFormField(
-                controller: _answerController,
+                controller: form.answer,
                 decoration: InputDecoration(
                   labelText: 'Ответ',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 4,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите ответ';
+                  }
+                  return null;
+                },
               ),
+
               Spacer(),
               ElevatedButton(
                 onPressed: () {
+                  if (!form.formKey.currentState!.validate()) {
+                    return;
+                  }
+
                   ref.read(appDataProvider.notifier).addCard(
                     currentDeck,
                     Flashcard(
                       id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      question: _questionController.text,
-                      answer: _answerController.text,
+                      question: form.question.text,
+                      answer: form.answer.text,
                       interval: 1,
                       easeFactor: 2.5,
                       nextReview: DateTime.now(),
@@ -81,24 +94,15 @@ class AddCardScreen extends ConsumerWidget {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(SnackBar(content: Text("Карточка добавлена")));
-                  _questionController.clear();
-                  _answerController.clear();
+                  form.question.clear();
+                  form.answer.clear();
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50),
                 ),
                 child: Text('Добавить карточку'),
               ),
-              Divider(height: 8.0),
-              ElevatedButton(
-                onPressed: () => Router.neglect(context, () {
-                  context.go('/home');
-                }),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
-                ),
-                child: Text('Вернуться на главный экран'),
-              ),
+              SizedBox(height: 32)
             ],
           ),
         ),
