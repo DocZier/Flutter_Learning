@@ -81,11 +81,47 @@ class AppDataNotifier extends _$AppDataNotifier {
         }).toList(),
       ),
     );
+
     _syncUserWithServer();
   }
 
   void setUser(UserData user) {
     state = state.copyWith(user: user);
+  }
+
+  UserData getUser() {
+    return state.user!;
+  }
+
+  bool updateUserFields({
+    String? username,
+    String? password,
+  }) {
+
+    state = state.copyWith(
+      user: state.user!.copyWith(
+        username: username ?? state.user!.username,
+        password: password ?? state.user!.password,
+        decks: state.user!.decks,
+      ),
+    );
+
+    final auth = GetIt.I<AuthService>();
+    final updated = auth.updateUser(state.user!);
+
+    return updated != null;
+  }
+
+  bool deleteUser() {
+    state = state.copyWith(user: null);
+    final auth = GetIt.I<AuthService>();
+    return auth.deleteUser(state.user!);
+  }
+
+  bool resetUser() {
+    state = state.copyWith(user: state.user!.copyWith(decks: []));
+    final auth = GetIt.I<AuthService>();
+    return auth.resetUser(state.user!);
   }
 
   void logout() {

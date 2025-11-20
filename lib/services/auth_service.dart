@@ -4,6 +4,8 @@ abstract class AuthService {
   UserData? registerUser(UserData userData);
   UserData? loginUser(String email, String password);
   UserData? updateUser(UserData userData);
+  bool deleteUser(UserData userData);
+  bool resetUser(UserData userData);
 }
 
 class AuthServiceImpl extends AuthService {
@@ -19,7 +21,6 @@ class AuthServiceImpl extends AuthService {
   @override
   UserData? registerUser(UserData userData) {
     final exists = serverData.users.where((user) => user.email == userData.email).firstOrNull;
-    print(exists);
     if (exists != null) return null;
 
     serverData.users.add(userData);
@@ -36,5 +37,29 @@ class AuthServiceImpl extends AuthService {
 
     serverData.users[index] = userData;
     return userData;
+  }
+
+  @override
+  bool deleteUser(UserData userData) {
+    final index = serverData.users.indexWhere(
+          (user) => user.email == userData.email,
+    );
+
+    if (index == -1) return false;
+
+    serverData.users.removeAt(index);
+    return true;
+  }
+
+  @override
+  bool resetUser(UserData userData) {
+    final index = serverData.users.indexWhere(
+          (user) => user.email == userData.email,
+    );
+
+    if (index == -1) return false;
+
+    serverData.users[index] = userData.copyWith(decks: []);
+    return true;
   }
 }

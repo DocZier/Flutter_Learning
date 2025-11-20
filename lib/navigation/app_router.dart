@@ -6,12 +6,20 @@ import 'package:test_practic/features/flashcards/deck/screens/deck_list_screen.d
 import 'package:test_practic/features/flashcards/flashcard/screens/add_flashcard_screen.dart';
 import 'package:test_practic/features/flashcards/flashcard/screens/study_screen.dart';
 import 'package:test_practic/features/flashcards/statistic/screen/statistic_screen.dart';
+import 'package:test_practic/features/profile/screens/profile_screen.dart';
 
 class AppRouter {
 
   late final GoRouter _router = GoRouter(
     initialLocation: '/login',
     routes: <RouteBase>[
+      GoRoute(
+        path: '/profile',
+        name: 'profile',
+        builder: (context, state) {
+          return ProfileScreen();
+        },
+      ),
       GoRoute(
         path: '/login',
         name: 'login',
