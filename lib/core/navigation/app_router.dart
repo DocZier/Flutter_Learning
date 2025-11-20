@@ -7,9 +7,9 @@ import 'package:test_practic/features/flashcards/flashcard/screens/add_flashcard
 import 'package:test_practic/features/flashcards/flashcard/screens/study_screen.dart';
 import 'package:test_practic/features/flashcards/statistic/screen/statistic_screen.dart';
 import 'package:test_practic/features/profile/screens/profile_screen.dart';
+import 'package:test_practic/features/settings/screens/settings_screen.dart';
 
 class AppRouter {
-
   late final GoRouter _router = GoRouter(
     initialLocation: '/login',
     routes: <RouteBase>[
@@ -39,6 +39,13 @@ class AppRouter {
         name: 'home',
         builder: (context, state) {
           return HomeScreen();
+        },
+      ),
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) {
+          return SettingsScreen();
         },
       ),
       GoRoute(

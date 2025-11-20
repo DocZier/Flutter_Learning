@@ -15,7 +15,6 @@ class LoginScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Вход'),
       ),
-      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),

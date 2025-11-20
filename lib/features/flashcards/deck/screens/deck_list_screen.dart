@@ -141,6 +141,12 @@ class HomeScreen extends ConsumerWidget {
               context.push('/profile');
             },
           ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              context.push('/settings');
+            },
+          ),
         ],
       ),
       body: decks.isEmpty ? _emptyScreen() : _listScreen(context, decks),
