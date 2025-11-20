@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_practic/core/constants/settings_constants.dart';
-import 'package:test_practic/features/settings/provider/settings_provider.dart';
+import 'package:test_practic/features/settings/presentation/provider/settings_provider.dart';
 
 import '../state/theme_state.dart';
 

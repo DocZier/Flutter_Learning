@@ -1,22 +1,21 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:test_practic/shared/providers/auth_provider.dart';
 
-import '../provider/register_provider.dart';
+import '../provider/login_provider.dart';
 
-class RegistrationScreen extends ConsumerWidget {
-  const RegistrationScreen({super.key});
+class LoginScreen extends ConsumerWidget {
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final form = ref.watch(registrationFormProvider.notifier);
+    final form = ref.watch(loginProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Регистрация'),
+        title: const Text('Вход'),
       ),
-      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -36,7 +35,7 @@ class RegistrationScreen extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
-                          "Регистрация",
+                          "Вход",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -44,22 +43,6 @@ class RegistrationScreen extends ConsumerWidget {
                         ),
 
                         const SizedBox(height: 24),
-
-                        TextFormField(
-                          controller: form.username,
-                          decoration: const InputDecoration(
-                            labelText: 'Логин',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Введите логин';
-                            }
-                            return null;
-                          },
-                        ),
-
-                        const SizedBox(height: 16),
 
                         TextFormField(
                           controller: form.email,
@@ -92,26 +75,6 @@ class RegistrationScreen extends ConsumerWidget {
                             if (value == null || value.trim().isEmpty) {
                               return 'Введите пароль';
                             }
-                            if (value.length < 6) {
-                              return 'Минимум 6 символов';
-                            }
-                            return null;
-                          },
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          controller: form.confirmPassword,
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Подтверждение пароля',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value != form.password.text) {
-                              return 'Пароли не совпадают';
-                            }
                             return null;
                           },
                         ),
@@ -127,24 +90,33 @@ class RegistrationScreen extends ConsumerWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    final registered = form.validateAndRegister();
-                    if (!registered) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Аккаунт не создан!")),
-                      );
-                      return;
-                    }
+                    ref.read(loginProvider.notifier).login(
+                      onError: (error) => ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(error))),
+                      onSuccess: () {
+                        context.go('/home');
 
-                    context.go('/home');
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Аккаунт создан!")),
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Вход выполнен!")),
+                        );
+                      },
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  child: const Text('Создать аккаунт'),
+                  child: const Text('Войти'),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              TextButton(
+                onPressed: () => context.push('/register'),
+                child: const Text(
+                  "Зарегистрироваться",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),
             ],

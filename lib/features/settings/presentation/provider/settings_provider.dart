@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:get_it/get_it.dart';
-import '../data/model/settings_model.dart';
-import '../data/repositories/settings_repository.dart';
-import '../presentation/states/settings_state.dart';
+import '../../data/model/settings_model.dart';
+import '../../data/repositories/settings_repository.dart';
+import '../states/settings_state.dart';
 
 part 'settings_provider.g.dart';
 

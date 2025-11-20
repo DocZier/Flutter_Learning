@@ -4,7 +4,7 @@ import 'package:test_practic/core/navigation/app_router.dart';
 import 'package:test_practic/shared/providers/theme_provider.dart';
 
 import 'core/di/di_module.dart';
-import 'features/settings/provider/settings_provider.dart';
+import 'features/settings/presentation/provider/settings_provider.dart';
 
 void main() {
   registerModule();
