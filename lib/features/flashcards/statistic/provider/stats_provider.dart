@@ -1,12 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../models/statistic.dart';
-import '../../provider/deck_id_provider.dart';
+import '../../../../models/statistic.dart';
+import '../../../../provider/app_data_provider.dart';
 
 part 'stats_provider.g.dart';
 
 @riverpod
 DeckStatistics deckStatistics(Ref ref, {required String deckId}) {
-  final deck = ref.watch(deckByIdProvider(id: deckId));
+  final deck = ref.read(appDataProvider.notifier).getDeckById(deckId);
   final cards = deck.flashcards;
 
   final now = DateTime.now();

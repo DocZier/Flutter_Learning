@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:test_practic/features/provider/deck_id_provider.dart';
-import 'package:test_practic/features/statistic/provider/stats_provider.dart';
-import 'package:test_practic/features/statistic/widgets/metric_table.dart';
-import 'package:test_practic/features/statistic/widgets/metric_bar_card.dart';
+import 'package:test_practic/features/flashcards/statistic/provider/stats_provider.dart';
+import 'package:test_practic/features/flashcards/statistic/widgets/metric_table.dart';
+import 'package:test_practic/features/flashcards/statistic/widgets/metric_bar_card.dart';
 import 'package:test_practic/models/metric.dart';
-import 'package:test_practic/state/data_container.dart';
-import '../../../models/decks.dart';
-import '../../../models/statistic.dart';
-import '../../../state/data_repository.dart';
+import 'package:test_practic/provider/app_data_provider.dart';
+import '../../../../models/decks.dart';
+import '../../../../models/statistic.dart';
 
 class DeckStatisticsScreen extends ConsumerWidget {
   final String currentDeck;
@@ -177,7 +174,7 @@ class DeckStatisticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final deck = ref.watch(deckByIdProvider(id: currentDeck));
+    final deck = ref.watch(appDataProvider.notifier).getDeckById(currentDeck);
     final stats = ref.watch(deckStatisticsProvider(deckId: currentDeck));
 
     return Scaffold(

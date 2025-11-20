@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
+import 'package:test_practic/features/flashcards/flashcard/widgets/flashcard_view.dart';
 import 'package:test_practic/provider/app_data_provider.dart';
-import '../../provider/deck_id_provider.dart';
 
 class DeckDetailsScreen extends ConsumerWidget {
   final String currentDeck;
@@ -12,7 +11,7 @@ class DeckDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final deck = ref.watch(deckByIdProvider(id: currentDeck));
+    final deck = ref.watch(appDataProvider.notifier).getDeckById(currentDeck);
 
     return Scaffold(
       appBar: AppBar(

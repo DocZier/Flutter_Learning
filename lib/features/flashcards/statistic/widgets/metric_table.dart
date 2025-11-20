@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/statistic/widgets/metric_bar_view.dart';
-import 'package:test_practic/models/metric.dart';
+import 'package:test_practic/features/flashcards/statistic/widgets/metric_item_view.dart';
 
-class MetricBarCard extends StatelessWidget {
+class MetricTable extends StatelessWidget {
   final String title;
-  final List<Metric> metrics;
+  final Map<String, String> metrics;
 
-  const MetricBarCard({
-    super.key,
-    required this.title,
-    required this.metrics,
-  });
+  const MetricTable({super.key, required this.title, required this.metrics});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return
+      Column(
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
@@ -27,7 +23,6 @@ class MetricBarCard extends StatelessWidget {
             ),
           ),
         ),
-
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -36,12 +31,14 @@ class MetricBarCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              children:
-                metrics.map( (metric) => MetricBarItem(
-                    name: metric.title,
+              children: [
+                ...metrics.entries.map((metric) {
+                  return MetricItem(
+                    title: metric.key,
                     value: metric.value,
-                    max: metric.max,
-                  )).toList(),
+                  );
+                }),
+              ],
             ),
           ),
         ),

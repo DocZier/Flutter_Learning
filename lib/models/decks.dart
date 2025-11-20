@@ -25,4 +25,7 @@ class Deck {
       flashcards: flashcards ?? this.flashcards,
     );
   }
+
+  @override
+  String toString() => 'Deck(id: $id, title: $title, description: $description, flashcards: $flashcards)';
 }

@@ -4,7 +4,7 @@ import 'package:test_practic/models/flashcards.dart';
 class CardListItem extends StatelessWidget {
   final String deckId;
   final Flashcard card;
-  final void Function(String deckId, String cardID) deleteCard;
+  final void Function(String deckd, String cardID) deleteCard;
 
   const CardListItem({
     super.key,

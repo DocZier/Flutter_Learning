@@ -53,4 +53,7 @@ class Flashcard {
       nextReview: newNextReview,
     );
   }
+
+  @override
+  String toString() => 'Flashcard(id: $id, question: $question, answer: $answer, interval: $interval, nextReview: $nextReview, easeFactor: $easeFactor)';
 }

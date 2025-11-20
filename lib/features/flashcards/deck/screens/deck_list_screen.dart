@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/provider/app_data_provider.dart';
-import 'package:test_practic/features/deck/widgets/deck_view.dart';
+import 'package:test_practic/features/flashcards/deck/widgets/deck_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 const deckIcon = 'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
@@ -47,14 +47,16 @@ class HomeScreen extends ConsumerWidget {
           ElevatedButton(
             onPressed: () {
               if (deckName.isNotEmpty) {
-                  ref.read(appDataProvider.notifier).addDeck(
-                    Deck(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      title: deckName,
-                      description: deckDescription,
-                      flashcards: [],
-                    ),
-                  );
+                ref
+                    .read(appDataProvider.notifier)
+                    .addDeck(
+                      Deck(
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        title: deckName,
+                        description: deckDescription,
+                        flashcards: [],
+                      ),
+                    );
               }
               context.pop();
             },
@@ -65,7 +67,7 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _emptyScreen(){
+  Widget _emptyScreen() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +91,7 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _listScreen(BuildContext context, List<Deck> decks){
+  Widget _listScreen(BuildContext context, List<Deck> decks) {
     return ListView.builder(
       itemCount: decks.length,
       itemBuilder: (_, index) {
@@ -114,7 +116,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final decks = ref.watch(appDataProvider).decks;
+    final decks = ref.watch(appDataProvider).user!.decks;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -132,13 +134,20 @@ class HomeScreen extends ConsumerWidget {
             Text('Колоды'),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              context.go('/login');
+              ref.read(appDataProvider.notifier).logout();
+            },
+          ),
+        ],
       ),
-      body: decks.isEmpty
-          ? _emptyScreen()
-          : _listScreen(context, decks),
+      body: decks.isEmpty ? _emptyScreen() : _listScreen(context, decks),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _createNewDeck(context,ref);
+          _createNewDeck(context, ref);
         },
         child: CachedNetworkImage(
           imageUrl: addDeckIcon,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:test_practic/features/flashcard/provider/study_provider.dart';
-import 'package:test_practic/features/provider/deck_id_provider.dart';
+import 'package:test_practic/features/flashcards/flashcard/provider/study_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:test_practic/provider/app_data_provider.dart';
 
@@ -36,7 +35,7 @@ class StudyScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final deck = ref.watch(deckByIdProvider(id: currentDeck));
+    final deck = ref.read(appDataProvider.notifier).getDeckById(currentDeck);
     final isFlipped = ref.watch(studyProvider);
 
     final dueCards = deck.flashcards
@@ -118,7 +117,7 @@ class StudyScreen extends ConsumerWidget {
                   padding: EdgeInsets.all(32),
                   child: Center(
                     child: Text(
-                      isFlipped ? currentCard!.answer : currentCard!.question,
+                      isFlipped ? currentCard.answer : currentCard.question,
                       style: TextStyle(fontSize: 28),
                       textAlign: TextAlign.center,
                     ),

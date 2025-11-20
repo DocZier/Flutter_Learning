@@ -66,7 +66,7 @@ final class DeckStatisticsProvider
   }
 }
 
-String _$deckStatisticsHash() => r'744935ab03e7328b3cf7ce6dc20472c419343f12';
+String _$deckStatisticsHash() => r'1624f28d866b809ed8636b26dc3fb5ffe69e8374';
 
 final class DeckStatisticsFamily extends $Family
     with $FunctionalFamilyOverride<DeckStatistics, String> {
