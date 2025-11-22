@@ -1,62 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:test_practic/models/flashcards.dart';
+import 'package:test_practic/features/flashcard/provider/study_provider.dart';
+import 'package:test_practic/features/provider/deck_id_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:test_practic/state/data_container.dart';
-import '../../../models/decks.dart';
-import '../../../state/data_repository.dart';
+import 'package:test_practic/provider/app_data_provider.dart';
 
 const finaleIcon = 'https://cdn-icons-png.flaticon.com/512/9092/9092852.png';
 
-class StudyScreen extends StatefulWidget {
+class StudyScreen extends ConsumerWidget {
   final String currentDeck;
 
   const StudyScreen({super.key, required this.currentDeck});
 
-  @override
-  State<StudyScreen> createState() => _StudyScreenState();
-}
-
-class _StudyScreenState extends State<StudyScreen> {
-  void update() => setState(() => {});
-
-  @override
-  void initState() {
-    GetIt.I.isReady<AppDataRepository>().then(
-      (_) => GetIt.I<AppDataRepository>().addListener(update),
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    GetIt.I<AppDataRepository>().removeListener(update);
-    super.dispose();
-  }
-
-  List<Flashcard> dueCards = [];
-  Flashcard? currentCard;
-  bool isFlipped = false;
-
-  void _loadCards(Deck deck) {
-    dueCards = deck.flashcards
-        .where((flashcard) => flashcard.nextReview.isBefore(DateTime.now()))
-        .toList();
-    currentCard = dueCards.isNotEmpty ? dueCards[0] : null;
-    setState(() {});
-  }
-
-  void _flipCard() {
-    setState(() => isFlipped = !isFlipped);
-  }
-
   void _handleAnswer(
     int quality,
-    void Function(Flashcard card, int quality) updateCard,
+    currentCard,
+    dueCards,
+    WidgetRef ref,
   ) {
     if (currentCard != null) {
-      updateCard(currentCard!, quality);
+      ref.read(studyProvider.notifier).flip();
+      ref.read(appDataProvider.notifier).updateCard(currentDeck, currentCard!, quality);
       if (currentCard!.nextReview.isAfter(DateTime.now())) dueCards.removeAt(0);
 
       if (dueCards.isNotEmpty) {
@@ -64,17 +29,20 @@ class _StudyScreenState extends State<StudyScreen> {
       } else {
         currentCard = null;
       }
-      isFlipped = false;
-      setState(() {});
+
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final deck = GetIt.I<AppData>().getDeckById(widget.currentDeck);
-    final appDataRepository = GetIt.I<AppDataRepository>();
 
-    _loadCards(deck);
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final deck = ref.watch(deckByIdProvider(id: currentDeck));
+    final isFlipped = ref.watch(studyProvider);
+
+    final dueCards = deck.flashcards
+        .where((flashcard) => flashcard.nextReview.isBefore(DateTime.now()))
+        .toList();
+    final currentCard = dueCards.isNotEmpty ? dueCards[0] : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -133,7 +101,7 @@ class _StudyScreenState extends State<StudyScreen> {
                       Router.neglect(context, () {
                         context.pushReplacement(
                           '/deck_stats',
-                          extra: {'deckId': widget.currentDeck},
+                          extra: {'deckId': currentDeck},
                         );
                       }),
                     },
@@ -142,8 +110,8 @@ class _StudyScreenState extends State<StudyScreen> {
                 ],
               ),
             )
-          : GestureDetector(
-              onTap: _flipCard,
+          : InkWell(
+              onTap: () {ref.read(studyProvider.notifier).flip();},
               child: Card(
                 margin: EdgeInsets.all(24),
                 child: Padding(
@@ -166,17 +134,17 @@ class _StudyScreenState extends State<StudyScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () =>
-                        _handleAnswer(2, appDataRepository.updateCard),
+                        _handleAnswer(2, currentCard, dueCards, ref ),
                     child: Text('Сложно'),
                   ),
                   ElevatedButton(
                     onPressed: () =>
-                        _handleAnswer(4, appDataRepository.updateCard),
+                        _handleAnswer(4, currentCard, dueCards, ref ),
                     child: Text('Хорошо'),
                   ),
                   ElevatedButton(
                     onPressed: () =>
-                        _handleAnswer(5, appDataRepository.updateCard),
+                        _handleAnswer(5, currentCard, dueCards, ref ),
                     child: Text('Легко'),
                   ),
                 ],

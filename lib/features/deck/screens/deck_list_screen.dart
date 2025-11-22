@@ -1,42 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/decks.dart';
-import 'package:test_practic/state/data_container.dart';
+import 'package:test_practic/provider/app_data_provider.dart';
 import 'package:test_practic/features/deck/widgets/deck_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../state/data_repository.dart';
 
 const deckIcon = 'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
 const emptyListIcon =
     'https://cdn-icons-png.flaticon.com/512/18895/18895859.png';
 const addDeckIcon = 'https://cdn-icons-png.flaticon.com/512/2311/2311991.png';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  void update() => setState(() => {});
-
-  @override
-  void initState() {
-    GetIt.I.isReady<AppDataRepository>().then(
-      (_) => GetIt.I<AppDataRepository>().addListener(update),
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    GetIt.I<AppDataRepository>().removeListener(update);
-    super.dispose();
-  }
-
-  void _createNewDeck(BuildContext context, void Function(Deck deck) addDeck) {
+  void _createNewDeck(BuildContext context, WidgetRef ref) {
     String deckName = '';
     String deckDescription = '';
 
@@ -69,8 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ElevatedButton(
             onPressed: () {
               if (deckName.isNotEmpty) {
-                setState(() {
-                  addDeck(
+                  ref.read(appDataProvider.notifier).addDeck(
                     Deck(
                       id: DateTime.now().millisecondsSinceEpoch.toString(),
                       title: deckName,
@@ -78,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       flashcards: [],
                     ),
                   );
-                });
               }
               context.pop();
             },
@@ -89,10 +65,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final appData = GetIt.I<AppData>();
+  Widget _emptyScreen(){
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CachedNetworkImage(
+            imageUrl: emptyListIcon,
+            height: 160,
+            width: 160,
+            placeholder: (context, url) =>
+                Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) =>
+                Center(child: Icon(Icons.error)),
+            fit: BoxFit.contain,
+          ),
+          Text(
+            'Отсутствуют колоды',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget _listScreen(BuildContext context, List<Deck> decks){
+    return ListView.builder(
+      itemCount: decks.length,
+      itemBuilder: (_, index) {
+        final deck = decks[index];
+        return DeckListItem(
+          deck: deck,
+          onTapEmpty: (test) {
+            Router.neglect(context, () {
+              context.push('/add_flashcard', extra: {'deckId': deck.id});
+            });
+          },
+          onTapFull: (test) {
+            context.push('/study', extra: {'deckId': deck.id});
+          },
+          onLongPress: (test) {
+            context.push('/deck_detail', extra: {'deckId': deck.id});
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final decks = ref.watch(appDataProvider).decks;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -111,51 +133,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: appData.isEmpty()
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: emptyListIcon,
-                    height: 160,
-                    width: 160,
-                    placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        Center(child: Icon(Icons.error)),
-                    fit: BoxFit.contain,
-                  ),
-                  Text(
-                    'Отсутствуют колоды',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
-              itemCount: appData.getLength(),
-              itemBuilder: (_, index) {
-                final deck = appData.getDeckByIndex(index);
-                return DeckListItem(
-                  deck: deck,
-                  onTapEmpty: (test) {
-                    Router.neglect(context, () {
-                      context.go('/add_flashcard', extra: {'deckId': deck.id});
-                    });
-                  },
-                  onTapFull: (test) {
-                    context.push('/study', extra: {'deckId': deck.id});
-                  },
-                  onLongPress: (test) {
-                    context.push('/deck_detail', extra: {'deckId': deck.id});
-                  },
-                );
-              },
-            ),
+      body: decks.isEmpty
+          ? _emptyScreen()
+          : _listScreen(context, decks),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _createNewDeck(context, GetIt.I<AppDataRepository>().addDeck);
+          _createNewDeck(context,ref);
         },
         child: CachedNetworkImage(
           imageUrl: addDeckIcon,

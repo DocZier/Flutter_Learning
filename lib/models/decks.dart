@@ -2,23 +2,27 @@ import 'flashcards.dart';
 
 class Deck {
   final String id;
-  String title;
-  String description;
-  List<Flashcard> flashcards;
+  final String title;
+  final String description;
+  final List<Flashcard> flashcards;
 
-  Deck({
+  const Deck({
     required this.id,
     required this.title,
     required this.description,
-    required this.flashcards
+    required this.flashcards,
   });
 
-  Deck copyWith({String? name, List<Flashcard>? cards}) {
+  Deck copyWith({
+    String? title,
+    String? description,
+    List<Flashcard>? flashcards,
+  }) {
     return Deck(
       id: id,
       title: title ?? this.title,
       description: description ?? this.description,
-      flashcards: flashcards ?? [...this.flashcards],
+      flashcards: flashcards ?? this.flashcards,
     );
   }
 }

@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:test_practic/state/data_container.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_practic/navigation/app_router.dart';
-import 'package:test_practic/state/data_repository.dart';
+
 
 void main() {
-  GetIt.I.registerSingleton<AppData>(
-    AppData(),
-    signalsReady: true,
+  runApp(
+      ProviderScope(child: MyApp())
   );
-
-  GetIt.I.registerSingleton<AppDataRepository>(
-    AppDataRepositoryImpl(appData: GetIt.I<AppData>()),
-    signalsReady: true,
-  );
-  
-  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
