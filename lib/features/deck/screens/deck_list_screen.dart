@@ -1,42 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
+import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/state/data_container.dart';
 import 'package:test_practic/features/deck/widgets/deck_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../flashcard/screens/study_screen.dart';
-import 'deck_detail_screen.dart';
+import '../../../state/data_repository.dart';
 
 const deckIcon = 'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
 const emptyListIcon =
     'https://cdn-icons-png.flaticon.com/512/18895/18895859.png';
 const addDeckIcon = 'https://cdn-icons-png.flaticon.com/512/2311/2311991.png';
 
-class HomeScreenWrapper extends StatelessWidget {
-  final AppData appData;
-
-  const HomeScreenWrapper({super.key, required this.appData});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: appData,
-      builder: (context, child) {
-        return HomeScreen(
-          appData: appData,
-        );
-      },
-    );
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class HomeScreen extends StatelessWidget {
-  final AppData appData;
+class _HomeScreenState extends State<HomeScreen> {
+  void update() => setState(() => {});
 
-  const HomeScreen({super.key, required this.appData});
+  @override
+  void initState() {
+    GetIt.I.isReady<AppDataRepository>().then(
+      (_) => GetIt.I<AppDataRepository>().addListener(update),
+    );
+    super.initState();
+  }
 
-  void _createNewDeck(BuildContext context) {
+  @override
+  void dispose() {
+    GetIt.I<AppDataRepository>().removeListener(update);
+    super.dispose();
+  }
+
+  void _createNewDeck(BuildContext context, void Function(Deck deck) addDeck) {
     String deckName = '';
     String deckDescription = '';
 
@@ -65,23 +65,22 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => {Navigator.pop(context)},
-            child: Text('Отмена'),
-          ),
+          TextButton(onPressed: () => {context.pop()}, child: Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               if (deckName.isNotEmpty) {
-                appData.addDeck(
-                  Deck(
-                    id: DateTime.now().millisecondsSinceEpoch.toString(),
-                    title: deckName,
-                    description: deckDescription,
-                    flashcards: [],
-                  ),
-                );
+                setState(() {
+                  addDeck(
+                    Deck(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      title: deckName,
+                      description: deckDescription,
+                      flashcards: [],
+                    ),
+                  );
+                });
               }
-              Navigator.pop(context);
+              context.pop();
             },
             child: Text('Создать'),
           ),
@@ -92,6 +91,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appData = GetIt.I<AppData>();
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -110,7 +111,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: appData.decks.isEmpty
+      body: appData.isEmpty()
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -133,48 +134,28 @@ class HomeScreen extends StatelessWidget {
               ),
             )
           : ListView.builder(
-              itemCount: appData.decks.length,
+              itemCount: appData.getLength(),
               itemBuilder: (_, index) {
-                final deck = appData.decks[index];
+                final deck = appData.getDeckByIndex(index);
                 return DeckListItem(
                   deck: deck,
                   onTapEmpty: (test) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddCardScreen(
-                          appData: appData,
-                          currentDeck: deck.id,
-                        ),
-                      ),
-                    );
+                    Router.neglect(context, () {
+                      context.go('/add_flashcard', extra: {'deckId': deck.id});
+                    });
                   },
                   onTapFull: (test) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            StudyScreen(appData: appData, currentDeck: deck.id),
-                      ),
-                    );
+                    context.push('/study', extra: {'deckId': deck.id});
                   },
                   onLongPress: (test) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DeckDetailsScreenWrapper(
-                          appData: appData,
-                          currentDeck: deck.id,
-                        ),
-                      ),
-                    );
+                    context.push('/deck_detail', extra: {'deckId': deck.id});
                   },
                 );
               },
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _createNewDeck(context);
+          _createNewDeck(context, GetIt.I<AppDataRepository>().addDeck);
         },
         child: CachedNetworkImage(
           imageUrl: addDeckIcon,

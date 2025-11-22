@@ -1,93 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
-import 'package:test_practic/features/flashcard/screens/study_screen.dart';
+import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
-import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
-import 'package:test_practic/state/data_container.dart';
-
-class DeckDetailsScreenWrapper extends StatelessWidget {
-  final AppData appData;
-  final String currentDeck;
-
-  const DeckDetailsScreenWrapper({
-    super.key,
-    required this.appData,
-    required this.currentDeck
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: appData,
-      builder: (context, child) {
-        return DeckDetailsScreen(
-          appData: appData,
-          currentDeck: currentDeck,
-        );
-      },
-    );
-  }
-}
+import 'package:test_practic/state/data_repository.dart';
+import '../../../state/data_container.dart';
 
 class DeckDetailsScreen extends StatefulWidget {
-  final AppData appData;
   final String currentDeck;
 
-  const DeckDetailsScreen({
-    super.key,
-    required this.appData,
-    required this.currentDeck,
-  });
+  const DeckDetailsScreen({super.key, required this.currentDeck});
 
   @override
   State<DeckDetailsScreen> createState() => _DeckDetailsScreenState();
 }
 
 class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
+  void update() => setState(() => {});
+
+  @override
+  void initState() {
+    GetIt.I.isReady<AppDataRepository>().then(
+      (_) => GetIt.I<AppDataRepository>().addListener(update),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    GetIt.I<AppDataRepository>().removeListener(update);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final deck = GetIt.I<AppData>().getDeckById(widget.currentDeck);
+    final appDataRepository = GetIt.I<AppDataRepository>();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.appData.decks
-              .where((deck) => deck.id == widget.currentDeck)
-              .first
-              .title,
-        ),
+        title: Text(deck.title),
         actions: [
           IconButton(
             icon: Icon(Icons.show_chart),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DeckStatisticsScreen(
-                    appData: widget.appData,
-                    currentDeck: widget.currentDeck,
-                  ),
-                ),
+              context.push(
+                '/deck_stats',
+                extra: {'deckId': widget.currentDeck},
               );
             },
           ),
           IconButton(
             icon: Icon(Icons.play_arrow),
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StudyScreen(
-                    appData: widget.appData,
-                    currentDeck: widget.currentDeck,
-                  ),
-                ),
-              );
+              Router.neglect(context, () {
+                context.pushReplacement(
+                  '/study',
+                  extra: {'deckId': widget.currentDeck},
+                );
+              });
             },
           ),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              Navigator.pop(context);
-              widget.appData.deleteDeck(widget.currentDeck);
+              Router.neglect(context, () {
+                context.go('/home');
+              });
+              appDataRepository.deleteDeck(widget.currentDeck);
             },
           ),
         ],
@@ -97,21 +76,13 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
           Container(
             padding: EdgeInsets.all(16),
             child: Text(
-              widget.appData.decks
-                  .where((deck) => deck.id == widget.currentDeck)
-                  .first
-                  .description,
+              deck.description,
               style: TextStyle(color: Colors.grey),
             ),
           ),
           Divider(height: 8),
           Expanded(
-            child:
-                widget.appData.decks
-                    .where((deck) => deck.id == widget.currentDeck)
-                    .first
-                    .flashcards
-                    .isEmpty
+            child: deck.flashcards.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -121,22 +92,22 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                     ),
                   )
                 : ListView.separated(
-                    itemCount: widget.appData.decks
-                        .where((deck) => deck.id == widget.currentDeck)
-                        .first
+                    itemCount: deck
                         .flashcards
                         .length,
                     separatorBuilder: (context, index) => Divider(height: 8),
                     itemBuilder: (context, index) {
-                      final card = widget.appData.decks
-                          .where((deck) => deck.id == widget.currentDeck)
-                          .first
+                      final card = deck
                           .flashcards[index];
 
                       return CardListItem(
                         deckId: widget.currentDeck,
                         card: card,
-                        deleteCard: widget.appData.deleteCard,
+                        deleteCard: (deckId, cardId) {
+                          setState(() {
+                            appDataRepository.deleteCard(deckId, cardId);
+                          });
+                        },
                       );
                     },
                   ),
@@ -145,15 +116,9 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddCardScreen(
-                appData: widget.appData,
-                currentDeck: widget.currentDeck,
-              ),
-            ),
-          );
+          Router.neglect(context, () {
+            context.go('/add_flashcard', extra: {'deckId': widget.currentDeck});
+          });
         },
         child: Icon(Icons.add),
       ),

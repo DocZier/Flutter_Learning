@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/features/deck/screens/deck_list_screen.dart';
+import 'package:get_it/get_it.dart';
 import 'package:test_practic/state/data_container.dart';
+import 'package:test_practic/navigation/app_router.dart';
+import 'package:test_practic/state/data_repository.dart';
 
 void main() {
-  AppData appData = AppData();
+  GetIt.I.registerSingleton<AppData>(
+    AppData(),
+    signalsReady: true,
+  );
 
-  runApp(MyApp(appData: appData,));
+  GetIt.I.registerSingleton<AppDataRepository>(
+    AppDataRepositoryImpl(appData: GetIt.I<AppData>()),
+    signalsReady: true,
+  );
+  
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final AppData appData;
-
   const MyApp({
     super.key,
-    required this.appData
   });
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HomeScreenWrapper(appData: appData),
+      routerConfig: AppRouter().getRouter(),
     );
   }
 }
