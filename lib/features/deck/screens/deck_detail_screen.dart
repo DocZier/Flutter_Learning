@@ -1,21 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/models/decks.dart';
+import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
+import 'package:test_practic/features/flashcard/screens/study_screen.dart';
 import 'package:test_practic/features/flashcard/widgets/flashcard_view.dart';
+import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
+import 'package:test_practic/state/data_container.dart';
+
+class DeckDetailsScreenWrapper extends StatelessWidget {
+  final AppData appData;
+  final String currentDeck;
+
+  const DeckDetailsScreenWrapper({
+    super.key,
+    required this.appData,
+    required this.currentDeck
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: appData,
+      builder: (context, child) {
+        return DeckDetailsScreen(
+          appData: appData,
+          currentDeck: currentDeck,
+        );
+      },
+    );
+  }
+}
 
 class DeckDetailsScreen extends StatefulWidget {
-  final Deck deck;
-  final void Function(String deckId) navigateToForm;
-  final void Function(String deckId, String cardId) deleteCard;
-  final void Function(String deckId) deleteDeck;
-  final void Function(String deckId) navigateToStudy;
+  final AppData appData;
+  final String currentDeck;
 
   const DeckDetailsScreen({
     super.key,
-    required this.deck,
-    required this.navigateToForm,
-    required this.navigateToStudy,
-    required this.deleteCard,
-    required this.deleteDeck,
+    required this.appData,
+    required this.currentDeck,
   });
 
   @override
@@ -27,16 +48,46 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.deck.title),
+        title: Text(
+          widget.appData.decks
+              .where((deck) => deck.id == widget.currentDeck)
+              .first
+              .title,
+        ),
         actions: [
           IconButton(
+            icon: Icon(Icons.show_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeckStatisticsScreen(
+                    appData: widget.appData,
+                    currentDeck: widget.currentDeck,
+                  ),
+                ),
+              );
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.play_arrow),
-            onPressed: () => widget.navigateToStudy(widget.deck.id),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StudyScreen(
+                    appData: widget.appData,
+                    currentDeck: widget.currentDeck,
+                  ),
+                ),
+              );
+            },
           ),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              widget.deleteDeck(widget.deck.id);
+              Navigator.pop(context);
+              widget.appData.deleteDeck(widget.currentDeck);
             },
           ),
         ],
@@ -46,13 +97,21 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
           Container(
             padding: EdgeInsets.all(16),
             child: Text(
-              widget.deck.description,
+              widget.appData.decks
+                  .where((deck) => deck.id == widget.currentDeck)
+                  .first
+                  .description,
               style: TextStyle(color: Colors.grey),
             ),
           ),
           Divider(height: 8),
           Expanded(
-            child: widget.deck.flashcards.isEmpty
+            child:
+                widget.appData.decks
+                    .where((deck) => deck.id == widget.currentDeck)
+                    .first
+                    .flashcards
+                    .isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -62,15 +121,22 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
                     ),
                   )
                 : ListView.separated(
-                    itemCount: widget.deck.flashcards.length,
+                    itemCount: widget.appData.decks
+                        .where((deck) => deck.id == widget.currentDeck)
+                        .first
+                        .flashcards
+                        .length,
                     separatorBuilder: (context, index) => Divider(height: 8),
                     itemBuilder: (context, index) {
-                      final card = widget.deck.flashcards[index];
+                      final card = widget.appData.decks
+                          .where((deck) => deck.id == widget.currentDeck)
+                          .first
+                          .flashcards[index];
 
                       return CardListItem(
-                        deckId: widget.deck.id,
+                        deckId: widget.currentDeck,
                         card: card,
-                        deleteCard: widget.deleteCard,
+                        deleteCard: widget.appData.deleteCard,
                       );
                     },
                   ),
@@ -78,7 +144,17 @@ class _DeckDetailsScreenState extends State<DeckDetailsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => widget.navigateToForm(widget.deck.id),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddCardScreen(
+                appData: widget.appData,
+                currentDeck: widget.currentDeck,
+              ),
+            ),
+          );
+        },
         child: Icon(Icons.add),
       ),
     );

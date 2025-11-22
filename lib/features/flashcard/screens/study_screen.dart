@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/models/decks.dart';
+import 'package:test_practic/features/statistic/screen/statistic_screen.dart';
 import 'package:test_practic/models/flashcards.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:test_practic/state/data_container.dart';
 
 const finaleIcon = 'https://cdn-icons-png.flaticon.com/512/9092/9092852.png';
 
 class StudyScreen extends StatefulWidget {
-  final Deck deck;
-  final void Function(Flashcard card, int quality) updateCard;
-  final void Function() navigateToList;
+  final AppData appData;
+  final String currentDeck;
 
   const StudyScreen({
     super.key,
-    required this.deck,
-    required this.updateCard,
-    required this.navigateToList,
+    required this.appData,
+    required this.currentDeck,
   });
 
   @override
@@ -33,7 +32,10 @@ class _StudyScreenState extends State<StudyScreen> {
   }
 
   void _loadCards() {
-    dueCards = widget.deck.flashcards
+    dueCards = widget.appData.decks
+        .where((deck) => deck.id == widget.currentDeck)
+        .first
+        .flashcards
         .where((flashcard) => flashcard.nextReview.isBefore(DateTime.now()))
         .toList();
     currentCard = dueCards.isNotEmpty ? dueCards[0] : null;
@@ -46,7 +48,7 @@ class _StudyScreenState extends State<StudyScreen> {
 
   void _handleAnswer(int quality) {
     if (currentCard != null) {
-      widget.updateCard(currentCard!, quality);
+      widget.appData.updateCard(currentCard!, quality);
       if (currentCard!.nextReview.isAfter(DateTime.now())) dueCards.removeAt(0);
 
       if (dueCards.isNotEmpty) {
@@ -63,7 +65,12 @@ class _StudyScreenState extends State<StudyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.deck.title}'),
+        title: Text(
+          widget.appData.decks
+              .where((deck) => deck.id == widget.currentDeck)
+              .first
+              .title,
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.info),
@@ -80,7 +87,7 @@ class _StudyScreenState extends State<StudyScreen> {
                   ),
                   actions: [
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => {Navigator.pop(context)},
                       child: Text('OK'),
                     ),
                   ],
@@ -111,8 +118,18 @@ class _StudyScreenState extends State<StudyScreen> {
                     style: TextStyle(fontSize: 24),
                   ),
                   ElevatedButton(
-                    onPressed: () => widget.navigateToList(),
-                    child: Text('Вернуться назад'),
+                    onPressed: () => {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DeckStatisticsScreen(
+                            appData: widget.appData,
+                            currentDeck: widget.currentDeck,
+                          ),
+                        ),
+                      ),
+                    },
+                    child: Text('Статистика'),
                   ),
                 ],
               ),

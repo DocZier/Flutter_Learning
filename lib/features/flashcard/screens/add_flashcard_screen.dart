@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/features/deck/screens/deck_list_screen.dart';
 import 'package:test_practic/models/flashcards.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:test_practic/state/data_container.dart';
 
 const flashcardIcon = 'https://cdn-icons-png.flaticon.com/512/6726/6726775.png';
 
 class AddCardScreen extends StatefulWidget {
-  final String deckId;
-  final void Function(String deckId, Flashcard card) addCard;
-  final void Function() navigateToList;
+  final AppData appData;
+  final String currentDeck;
 
   const AddCardScreen({
     super.key,
-    required this.deckId,
-    required this.addCard,
-    required this.navigateToList,
+    required this.appData,
+    required this.currentDeck,
   });
 
   @override
@@ -28,21 +28,23 @@ class _AddCardScreenState extends State<AddCardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( title: Row(
-        spacing: 8,
-        children: [
-          CachedNetworkImage(
-            imageUrl: flashcardIcon,
-            height: 30,
-            width: 30,
-            placeholder: (context, url) =>
-                Center(child: CircularProgressIndicator()),
-            errorWidget: (context, url, error) =>
-                Center(child: Icon(Icons.error)),
-            fit: BoxFit.contain,
-          ),
-          Text('Создать новую карточку')
-      ])
+      appBar: AppBar(
+        title: Row(
+          spacing: 8,
+          children: [
+            CachedNetworkImage(
+              imageUrl: flashcardIcon,
+              height: 30,
+              width: 30,
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) =>
+                  Center(child: Icon(Icons.error)),
+              fit: BoxFit.contain,
+            ),
+            Text('Создать новую карточку'),
+          ],
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
@@ -70,8 +72,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
               Spacer(),
               ElevatedButton(
                 onPressed: () {
-                  widget.addCard(
-                    widget.deckId,
+                  widget.appData.addCard(
+                    widget.currentDeck,
                     Flashcard(
                       id: DateTime.now().millisecondsSinceEpoch.toString(),
                       question: _questionController.text,
@@ -95,7 +97,14 @@ class _AddCardScreenState extends State<AddCardScreen> {
               ),
               Divider(height: 8.0),
               ElevatedButton(
-                onPressed: () => widget.navigateToList(),
+                onPressed: () => {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreenWrapper(appData: widget.appData),
+                    ),
+                  ),
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50),
                 ),

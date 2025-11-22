@@ -8,6 +8,7 @@ import 'package:test_practic/features/deck/screens/deck_detail_screen.dart';
 
 enum Screen {list, form, study, view}
 
+/*
 class FlashcardContainer extends StatefulWidget{
   const FlashcardContainer({super.key});
 
@@ -103,7 +104,7 @@ class _FlashcardContainerState extends State<FlashcardContainer> {
         );
       case Screen.view:
         return DeckDetailsScreen(
-          deck: _decks.where((deck) => deck.id == _currentDeck).first, 
+          deck: _decks.where((deck) => deck.id == _currentDeck).first,
           navigateToForm: (deckId) => _navigateToForm(deckId),
           navigateToStudy: (deckId) => _navigateToStudy(deckId),
           deleteCard: (String deckId, String cardId) => _deleteCard(deckId, cardId),
@@ -111,4 +112,4 @@ class _FlashcardContainerState extends State<FlashcardContainer> {
         );
     }
   }
-}
+}*/

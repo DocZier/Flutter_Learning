@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:test_practic/features/flashcard/screens/add_flashcard_screen.dart';
 import 'package:test_practic/models/decks.dart';
+import 'package:test_practic/state/data_container.dart';
 import 'package:test_practic/features/deck/widgets/deck_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-const deckIcon =
-    'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
+import '../../flashcard/screens/study_screen.dart';
+import 'deck_detail_screen.dart';
+
+const deckIcon = 'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
 const emptyListIcon =
     'https://cdn-icons-png.flaticon.com/512/18895/18895859.png';
-const addDeckIcon =
-    'https://cdn-icons-png.flaticon.com/512/2311/2311991.png';
+const addDeckIcon = 'https://cdn-icons-png.flaticon.com/512/2311/2311991.png';
+
+class HomeScreenWrapper extends StatelessWidget {
+  final AppData appData;
+
+  const HomeScreenWrapper({super.key, required this.appData});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: appData,
+      builder: (context, child) {
+        return HomeScreen(
+          appData: appData,
+        );
+      },
+    );
+  }
+}
 
 class HomeScreen extends StatelessWidget {
-  final List<Deck> decks;
-  final void Function(String deckId) onTapEmpty;
-  final void Function(String deckId) onTapFull;
-  final void Function(String deckId) onLongPress;
-  final void Function(Deck newDeck) addDeck;
+  final AppData appData;
 
-  const HomeScreen({
-    super.key,
-    required this.decks,
-    required this.addDeck,
-    required this.onTapEmpty,
-    required this.onTapFull,
-    required this.onLongPress,
-  });
+  const HomeScreen({super.key, required this.appData});
 
   void _createNewDeck(BuildContext context) {
     String deckName = '';
@@ -56,13 +66,13 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => {Navigator.pop(context)},
             child: Text('Отмена'),
           ),
           ElevatedButton(
             onPressed: () {
               if (deckName.isNotEmpty) {
-                addDeck(
+                appData.addDeck(
                   Deck(
                     id: DateTime.now().millisecondsSinceEpoch.toString(),
                     title: deckName,
@@ -100,7 +110,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: decks.isEmpty
+      body: appData.decks.isEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,19 +133,49 @@ class HomeScreen extends StatelessWidget {
               ),
             )
           : ListView.builder(
-              itemCount: decks.length,
+              itemCount: appData.decks.length,
               itemBuilder: (_, index) {
-                final deck = decks[index];
+                final deck = appData.decks[index];
                 return DeckListItem(
                   deck: deck,
-                  onTapEmpty: onTapEmpty,
-                  onTapFull: onTapFull,
-                  onLongPress: onLongPress,
+                  onTapEmpty: (test) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddCardScreen(
+                          appData: appData,
+                          currentDeck: deck.id,
+                        ),
+                      ),
+                    );
+                  },
+                  onTapFull: (test) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            StudyScreen(appData: appData, currentDeck: deck.id),
+                      ),
+                    );
+                  },
+                  onLongPress: (test) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DeckDetailsScreenWrapper(
+                          appData: appData,
+                          currentDeck: deck.id,
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {_createNewDeck(context)},
+        onPressed: () {
+          _createNewDeck(context);
+        },
         child: CachedNetworkImage(
           imageUrl: addDeckIcon,
           height: 40,
