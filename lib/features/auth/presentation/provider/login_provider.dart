@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../../../provider/app_data_provider.dart';
-import '../../../../services/auth_service.dart';
 import '../../../../shared/data/user_model.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/state/auth_state.dart';
@@ -45,14 +42,6 @@ class Login extends _$Login {
     if (!formKey.currentState!.validate()) {
       return;
     }
-    /*final authService = GetIt.I<AuthService>();
-    final user =  authService.loginUser(email.text, password.text);
-    if (user != null) {
-      ref.read(appDataProvider.notifier).setUser(user);
-      return true;
-    }
-    return false;
-*/
     try {
       _isSubmitting = true;
 
@@ -65,6 +54,7 @@ class Login extends _$Login {
         ref
             .read(authProvider.notifier)
             .updateState(Authenticated(user: User.fromEntity(user)));
+
         onSuccess();
       } else {
         onError('Login failed');

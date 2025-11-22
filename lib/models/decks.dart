@@ -1,5 +1,6 @@
 import 'flashcards.dart';
 
+/*
 class Deck {
   final String id;
   final String title;
@@ -28,4 +29,4 @@ class Deck {
 
   @override
   String toString() => 'Deck(id: $id, title: $title, description: $description, flashcards: $flashcards)';
-}
+}*/

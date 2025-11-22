@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../../../provider/app_data_provider.dart';
-import '../../../../services/auth_service.dart';
 import '../../../../shared/data/user_model.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/state/auth_state.dart';
-import '../../../../state/data_container.dart';
 import '../../data/repositories/auth_repository.dart';
 
 part 'register_provider.g.dart';

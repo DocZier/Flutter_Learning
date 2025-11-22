@@ -1,13 +1,14 @@
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/auth/presentation/screens/login_screen.dart';
 import 'package:test_practic/features/auth/presentation/screens/register_screen.dart';
-import 'package:test_practic/features/flashcards/deck/screens/deck_detail_screen.dart';
-import 'package:test_practic/features/flashcards/deck/screens/deck_list_screen.dart';
-import 'package:test_practic/features/flashcards/flashcard/screens/add_flashcard_screen.dart';
-import 'package:test_practic/features/flashcards/flashcard/screens/study_screen.dart';
-import 'package:test_practic/features/flashcards/statistic/screen/statistic_screen.dart';
+import 'package:test_practic/features/flashcards/presentation/screens/deck/deck_detail_screen.dart';
+import 'package:test_practic/features/flashcards/presentation/screens/deck/deck_list_screen.dart';
+import 'package:test_practic/features/flashcards/presentation/screens/flashcard/add_flashcard_screen.dart';
+import 'package:test_practic/features/flashcards/presentation/screens/flashcard/study_screen.dart';
 import 'package:test_practic/features/profile/screens/profile_screen.dart';
 import 'package:test_practic/features/settings/presentation/screens/settings_screen.dart';
+
+import '../../features/flashcards/presentation/screens/statistic/statistic_screen.dart';
 
 class AppRouter {
   late final GoRouter _router = GoRouter(

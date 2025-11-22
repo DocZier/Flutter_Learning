@@ -18,7 +18,7 @@ class AuthRemoteDataSource {
     await Future.delayed(const Duration(milliseconds: 500));
 
     final user = _users.firstWhere(
-          (u) => u['login'] == login && u['password'] == password,
+          (u) => u['email'] == login && u['password'] == password,
       orElse: () => throw Exception('Данные неверны'),
     );
 

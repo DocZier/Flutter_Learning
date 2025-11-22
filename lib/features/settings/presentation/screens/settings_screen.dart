@@ -33,9 +33,11 @@ class SettingsScreen extends ConsumerWidget {
           }
 
           final settings = state.settings;
+
           if (settings == null) {
             return const Center(child: Text('Настройки недоступны'));
           }
+
           return Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

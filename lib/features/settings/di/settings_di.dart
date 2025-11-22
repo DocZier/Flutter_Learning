@@ -14,8 +14,8 @@ void registerSettingsDependencies() {
 
   GetIt.I.registerLazySingleton<SettingsRepository>(
         () => SettingsRepositoryImpl(
-      SettingsLocalDataSource(),
-      SettingsRemoteDataSource(),
+          GetIt.I(),
+          GetIt.I(),
     ),
   );
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:get_it/get_it.dart';
+import '../../../../shared/providers/auth_provider.dart';
+import '../../../../shared/state/auth_state.dart';
 import '../../data/model/settings_model.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../states/settings_state.dart';
@@ -14,11 +16,14 @@ class Settings extends _$Settings {
   @override
   Future<SettingsState> build() async {
     _settingsRepository = GetIt.I<SettingsRepository>();
-    final settings = await _loadSettings();
-    return SettingsState(settings: settings);
+    final settings = _loadSettings();
+
+    return SettingsState(
+        settings: settings
+    );
   }
 
-  Future<AppSettings> _loadSettings() async {
+  AppSettings _loadSettings() {
     try {
       final entity = _settingsRepository.getLocalSettings();
       if (entity == null) {
@@ -33,7 +38,9 @@ class Settings extends _$Settings {
   Future<void> updateSettings(AppSettings settings) async {
     state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
-      final user = 1; //(ref.read(authProvider) as Authenticated).user;
+      print(ref.read(authProvider));
+      final user = (ref.read(authProvider) as Authenticated).user.id;
+
       await _settingsRepository.saveSettings(settings.toEntity(), user);
       state = AsyncValue.data(
           state.value!.copyWith(settings: settings)
@@ -46,19 +53,19 @@ class Settings extends _$Settings {
 
   Future<void> resetSettings() async {
     state = AsyncValue.data(state.value!.copyWith(isLoading: true));
-    //final user = ref.read(authProvider);
+    final user = ref.read(authProvider);
     try {
-      final userId = 1; //(user as Authenticated).user.id;
+      final userId = (user as Authenticated).user.id;
       await _settingsRepository.resetSettings(userId);
       state = AsyncValue.data(
           state.value!.copyWith(settings: AppSettings.defaultSettings())
       );
     } catch (e) {
-     /* if (user is Unauthenticated) {
+      if (user is Unauthenticated) {
         state = AsyncValue.data(
             state.value!.copyWith(settings: AppSettings.defaultSettings())
         );
-      }*/
+      }
     }
     state = AsyncValue.data(state.value!.copyWith(isLoading: false));
   }

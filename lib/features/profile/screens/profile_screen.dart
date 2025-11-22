@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../provider/app_data_provider.dart';
 import '../provider/profile_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -9,7 +8,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(appDataProvider.select((data) => data.user))!;
+    /*final userData = ref.watch(appDataProvider.select((data) => data.user))!;*/
 
     return Scaffold(
       appBar: AppBar(title: const Text("Профиль")),
@@ -34,7 +33,7 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          userData.username,
+                          "",
                           style: const TextStyle(fontSize: 18),
                         ),
                       ],
@@ -64,7 +63,7 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          userData.email,
+                          "",
                           style: const TextStyle(fontSize: 18),
                         ),
                       ],
@@ -90,7 +89,7 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                         userData.password,
+                        "",
                           style: const TextStyle(fontSize: 18),
                         ),
                       ],
@@ -124,7 +123,7 @@ class ProfileScreen extends ConsumerWidget {
 
               TextButton(
                 onPressed: () {
-                  ref.read(profileProvider.notifier).logout();
+
                   context.go('/login');
                 },
                 child: const Text("Выйти из аккаунта"),
