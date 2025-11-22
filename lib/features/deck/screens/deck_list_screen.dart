@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:test_practic/models/decks.dart';
 import 'package:test_practic/features/deck/widgets/deck_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+const deckIcon =
+    'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
+const emptyListIcon =
+    'https://cdn-icons-png.flaticon.com/512/18895/18895859.png';
+const addDeckIcon =
+    'https://cdn-icons-png.flaticon.com/512/2311/2311991.png';
 
 class HomeScreen extends StatelessWidget {
   final List<Deck> decks;
@@ -75,12 +83,38 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Колоды')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            CachedNetworkImage(
+              imageUrl: deckIcon,
+              height: 24,
+              width: 24,
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) =>
+                  Center(child: Icon(Icons.error)),
+              fit: BoxFit.contain,
+            ),
+            Text('Колоды'),
+          ],
+        ),
+      ),
       body: decks.isEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  CachedNetworkImage(
+                    imageUrl: emptyListIcon,
+                    height: 160,
+                    width: 160,
+                    placeholder: (context, url) =>
+                        Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        Center(child: Icon(Icons.error)),
+                    fit: BoxFit.contain,
+                  ),
                   Text(
                     'Отсутствуют колоды',
                     style: TextStyle(fontSize: 18, color: Colors.grey),
@@ -102,7 +136,16 @@ class HomeScreen extends StatelessWidget {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {_createNewDeck(context)},
-        child: Icon(Icons.add),
+        child: CachedNetworkImage(
+          imageUrl: addDeckIcon,
+          height: 40,
+          width: 40,
+          placeholder: (context, url) =>
+              Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) =>
+              Center(child: Icon(Icons.error)),
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

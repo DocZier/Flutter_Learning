@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:test_practic/models/flashcards.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+const flashcardIcon = 'https://cdn-icons-png.flaticon.com/512/6726/6726775.png';
 
 class AddCardScreen extends StatefulWidget {
   final String deckId;
@@ -25,7 +28,22 @@ class _AddCardScreenState extends State<AddCardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Создать новую карточку')),
+      appBar: AppBar( title: Row(
+        spacing: 8,
+        children: [
+          CachedNetworkImage(
+            imageUrl: flashcardIcon,
+            height: 30,
+            width: 30,
+            placeholder: (context, url) =>
+                Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) =>
+                Center(child: Icon(Icons.error)),
+            fit: BoxFit.contain,
+          ),
+          Text('Создать новую карточку')
+      ])
+      ),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Form(
