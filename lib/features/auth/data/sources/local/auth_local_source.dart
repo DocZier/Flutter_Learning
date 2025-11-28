@@ -2,7 +2,6 @@ import '../../../domain/entities/user_entity.dart';
 
 class AuthLocalDataSource {
   static const _currentUserKey = 'current_user';
-  static const _tokenKey = 'auth_token';
 
   static final Map<String, dynamic> _storage = <String, dynamic>{};
 
@@ -28,16 +27,7 @@ class AuthLocalDataSource {
     return null;
   }
 
-  void saveToken(String token) {
-    _storage[_tokenKey] = token;
-  }
-
-  String? getToken() {
-    return _storage[_tokenKey] as String?;
-  }
-
   void clearAuthData() {
     _storage.remove(_currentUserKey);
-    _storage.remove(_tokenKey);
   }
 }

@@ -25,9 +25,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<UserEntity> getProfile(int userId) async {
     try {
       final remoteProfile = await _remoteDataSource.getProfileById(userId);
+      print("Remote answer: ${remoteProfile.toString()}");
       if (remoteProfile != null) {
         _localDataSource.saveProfile(remoteProfile);
-        return remoteProfile;
+        print("Local answer: ${_localDataSource.getProfile().toString()}");
       }
 
       return _localDataSource.getProfile();

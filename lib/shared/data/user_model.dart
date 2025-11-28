@@ -35,6 +35,11 @@ class User extends UserEntity {
     };
   }
 
+  @override
+  String toString() {
+    return 'User(id: $id, login: $login, email: $email, createdAt: $createdAt)';
+  }
+
   User copyWith({
     String? login,
   }) {

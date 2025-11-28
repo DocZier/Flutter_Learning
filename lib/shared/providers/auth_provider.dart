@@ -7,7 +7,7 @@ import '../state/auth_state.dart';
 
 part 'auth_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Auth extends _$Auth {
 
   late final AuthRepository _repository;
@@ -18,9 +18,11 @@ class Auth extends _$Auth {
     final user = _repository.checkAuthStatus();
 
     if (user != null) {
+      print("If statement: ${user.toString()}");
       return Authenticated(user: User.fromEntity(user));
     }
-    return const Unauthenticated();
+    print("Else statement: ${user.toString()}");
+    return Unauthenticated();
   }
 
   void updateState(AuthState state) {

@@ -19,6 +19,7 @@ class Profile extends _$Profile {
 
   @override
   Future<ProfileState> build() async {
+    print("Profile build");
     _profileRepository = GetIt.I<ProfileRepository>();
     final user = await _loadProfile();
     username = TextEditingController(text: user.user.login);
@@ -33,12 +34,15 @@ class Profile extends _$Profile {
 
   Future<ProfileState> _loadProfile() async {
     try {
-      final user = ref.read(authProvider);
-      final userId = (user as Authenticated).user.id;
-      final entity = await _profileRepository.getProfile(userId);
+      print(ref.read(authProvider));
+      final userId = (ref.read(authProvider) as Authenticated).user.id;
+      print((ref.read(authProvider) as Authenticated).user.toString());
+      print(userId);
+      final entity = await _profileRepository.getProfile((ref.read(authProvider) as Authenticated).user.id);
 
       return ProfileState(user: User.fromEntity(entity));
     } catch (e) {
+      print("Profile catch $e");
       rethrow;
     }
   }
@@ -56,7 +60,9 @@ class Profile extends _$Profile {
 
       final entity = await _profileRepository.getProfile(user.id);
 
-      ProfileState(user: User.fromEntity(entity));
+      state = AsyncValue.data(
+          ProfileState(user: User.fromEntity(entity))
+      );
     } catch (e) {
       rethrow;
     }
@@ -65,6 +71,7 @@ class Profile extends _$Profile {
   Future<void> deleteProfile() async {
     try {
       final user = (ref.read(authProvider) as Authenticated).user;
+      ref.read(authProvider.notifier).deleteAccount();
       await _profileRepository.deleteProfile(user.id);
       _profileRepository.logout();
 

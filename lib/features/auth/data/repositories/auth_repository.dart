@@ -26,7 +26,6 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = await _remoteDataSource.login(login, password);
       if (user != null) {
         _localDataSource.saveCurrentUser(user);
-        _localDataSource.saveToken('token: ${user.id}');
       }
       return user;
     } catch (e) {
@@ -47,7 +46,6 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
       _localDataSource.saveCurrentUser(user);
-      _localDataSource.saveToken('token: ${user.id}');
       return user;
     } catch (e) {
       throw Exception('Ошибка регистрации: ${e.toString()}');
@@ -65,8 +63,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  void deleteAccount(int userId) {
-    _remoteDataSource.deleteAccount(userId);
+  void deleteAccount(int userId) async {
+    await _remoteDataSource.deleteAccount(userId);
     _localDataSource.clearAuthData();
   }
 }

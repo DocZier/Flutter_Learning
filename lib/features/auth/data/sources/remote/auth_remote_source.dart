@@ -46,7 +46,7 @@ class AuthRemoteDataSource {
     }
 
     final Map<String, String> newUser = {
-      'id': '${DateTime.now().millisecondsSinceEpoch}',
+      'id': '${_users.length + 1}',
       'login': login,
       'email': email.toString(),
       'password': password,
@@ -64,6 +64,6 @@ class AuthRemoteDataSource {
   }
 
   Future<void> deleteAccount(int userId) async {
-    _users.removeWhere((u) => u['id'] == userId);
+    _users.removeWhere((u) => u['id'] == userId.toString());
   }
 }

@@ -18,6 +18,8 @@ class ProfileLocalDataSource {
    _storage['login'] = user.login;
    _storage['email'] = user.email;
    _storage['created_at'] = user.createdAt.toIso8601String();
+
+   print(_storage.toString());
   }
 
   void clearProfile() {

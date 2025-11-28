@@ -15,6 +15,8 @@ class ProfileScreen extends ConsumerWidget {
         appBar: AppBar(title: const Text("Профиль")),
         body: profileState.when(
         data: (state) {
+          final user = state.user;
+          print(user.toString());
           return Center(
             child: Padding(
               padding: EdgeInsets.all(16),
@@ -36,7 +38,7 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              ref.watch(profileProvider).value!.user.login,
+                              user.login,
                               style: const TextStyle(fontSize: 18),
                             ),
                           ],
@@ -66,7 +68,7 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              ref.watch(profileProvider).value!.user.email,
+                              user.email,
                               style: const TextStyle(fontSize: 18),
                             ),
                           ],
@@ -166,9 +168,8 @@ class ProfileScreen extends ConsumerWidget {
               Navigator.pop(context);
               bool isDeleted = false;
               try {
-                context.go('/login');
                 ref.read(profileProvider.notifier).deleteProfile();
-                ref.read(authProvider.notifier).deleteAccount();
+                context.go('/login');
                 isDeleted = true;
               }
               catch (e) {
