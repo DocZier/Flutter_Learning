@@ -5,7 +5,7 @@ import 'package:test_practic/features/flashcards/presentation/screens/deck/deck_
 import 'package:test_practic/features/flashcards/presentation/screens/deck/deck_list_screen.dart';
 import 'package:test_practic/features/flashcards/presentation/screens/flashcard/add_flashcard_screen.dart';
 import 'package:test_practic/features/flashcards/presentation/screens/flashcard/study_screen.dart';
-import 'package:test_practic/features/profile/screens/profile_screen.dart';
+import 'package:test_practic/features/profile/presentation/screens/profile_screen.dart';
 import 'package:test_practic/features/settings/presentation/screens/settings_screen.dart';
 
 import '../../features/flashcards/presentation/screens/statistic/statistic_screen.dart';

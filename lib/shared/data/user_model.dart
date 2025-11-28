@@ -34,4 +34,15 @@ class User extends UserEntity {
       'created_at': createdAt.toIso8601String(),
     };
   }
+
+  User copyWith({
+    String? login,
+  }) {
+    return User(
+      id: id,
+      login: login ?? this.login,
+      email: email,
+      createdAt: createdAt ,
+    );
+  }
 }

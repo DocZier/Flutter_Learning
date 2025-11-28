@@ -4,12 +4,10 @@ import '../sources/remote/auth_remote_source.dart';
 
 abstract class AuthRepository {
   Future<UserEntity?> login(String login, String password);
-
   Future<UserEntity?> register(String login, String email, String password);
-
   void logout();
-
   UserEntity? checkAuthStatus();
+  void deleteAccount(int userId);
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -64,5 +62,11 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   UserEntity? checkAuthStatus() {
     return _localDataSource.getCurrentUser();
+  }
+
+  @override
+  void deleteAccount(int userId) {
+    _remoteDataSource.deleteAccount(userId);
+    _localDataSource.clearAuthData();
   }
 }

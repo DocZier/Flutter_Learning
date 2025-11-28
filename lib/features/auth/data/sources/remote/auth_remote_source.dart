@@ -62,4 +62,8 @@ class AuthRemoteDataSource {
       createdAt: DateTime.parse(newUser['created_at']!),
     );
   }
+
+  Future<void> deleteAccount(int userId) async {
+    _users.removeWhere((u) => u['id'] == userId);
+  }
 }

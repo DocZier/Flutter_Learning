@@ -6,7 +6,7 @@ import '../data/user_model.dart';
 import '../state/auth_state.dart';
 
 part 'auth_provider.g.dart';
-//TODO rework to UseCase
+
 @riverpod
 class Auth extends _$Auth {
 
@@ -16,6 +16,7 @@ class Auth extends _$Auth {
   AuthState build() {
     _repository = GetIt.I<AuthRepository>();
     final user = _repository.checkAuthStatus();
+
     if (user != null) {
       return Authenticated(user: User.fromEntity(user));
     }
@@ -23,11 +24,16 @@ class Auth extends _$Auth {
   }
 
   void updateState(AuthState state) {
-    state = state;
+    this.state = state;
   }
 
   void logout() {
     GetIt.I<AuthRepository>().logout();
+    updateState(Unauthenticated());
+  }
+  
+  void deleteAccount() {
+    _repository.deleteAccount((state as Authenticated).user.id);
     updateState(Unauthenticated());
   }
 }

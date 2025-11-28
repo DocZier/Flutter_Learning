@@ -120,8 +120,6 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final deckState = ref.watch(deckProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: Row(
