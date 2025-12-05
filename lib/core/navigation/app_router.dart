@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/auth/presentation/screens/login_screen.dart';
 import 'package:test_practic/features/auth/presentation/screens/register_screen.dart';
+import 'package:test_practic/features/dictionary/presentation/screens/detail_screen.dart';
 import 'package:test_practic/features/flashcards/presentation/screens/deck/deck_detail_screen.dart';
 import 'package:test_practic/features/flashcards/presentation/screens/deck/deck_list_screen.dart';
 import 'package:test_practic/features/flashcards/presentation/screens/flashcard/add_flashcard_screen.dart';
@@ -8,6 +9,7 @@ import 'package:test_practic/features/flashcards/presentation/screens/flashcard/
 import 'package:test_practic/features/profile/presentation/screens/profile_screen.dart';
 import 'package:test_practic/features/settings/presentation/screens/settings_screen.dart';
 
+import '../../features/dictionary/presentation/screens/search_screen.dart';
 import '../../features/flashcards/presentation/screens/statistic/statistic_screen.dart';
 
 class AppRouter {
@@ -26,6 +28,21 @@ class AppRouter {
         name: 'login',
         builder: (context, state) {
           return LoginScreen();
+        },
+      ),
+      GoRoute(
+        path: '/search',
+        name: 'search',
+        builder: (context, state) {
+          return SearchScreen();
+        },
+      ),
+      GoRoute(
+        path: '/word',
+        name: 'word',
+        builder: (context, state) {
+          final wordId = state.extra as Map<String, dynamic>;
+          return WordDetailScreen(wordId: wordId['wordId']);
         },
       ),
       GoRoute(

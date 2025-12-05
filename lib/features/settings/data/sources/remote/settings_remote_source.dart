@@ -6,7 +6,6 @@ import '../../../domain/entities/settings_entity.dart';
 class SettingsRemoteDataSource {
   static final List<Map<String, dynamic>> _settings = [
     {
-      //TODO Add User info (through id)
       'id': '1',
       'userId': '1',
       'theme': 'system',

@@ -18,5 +18,4 @@ class AppSettingsEntity {
       startOfTheDay: startOfTheDay ?? this.startOfTheDay,
     );
   }
-
 }
