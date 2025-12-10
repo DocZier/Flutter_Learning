@@ -11,10 +11,13 @@ import 'package:test_practic/features/settings/presentation/screens/settings_scr
 
 import '../../features/dictionary/presentation/screens/search_screen.dart';
 import '../../features/flashcards/presentation/screens/statistic/statistic_screen.dart';
+import '../../features/lessons/presentation/screens/lesson_screen.dart';
+import '../../features/lessons/presentation/screens/lessons_list_screen.dart';
+import '../../features/lessons/presentation/screens/test_screen.dart';
 
 class AppRouter {
   late final GoRouter _router = GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/lessons',
     routes: <RouteBase>[
       GoRoute(
         path: '/profile',
@@ -37,6 +40,28 @@ class AppRouter {
           return SearchScreen();
         },
       ),
+      GoRoute(
+        path: '/lessons',
+        name: 'lessons',
+        builder: (context, state) {
+          return LessonsListScreen();
+        },
+      ),
+      GoRoute(
+        path: '/lesson',
+        name: 'lesson',
+        builder: (context, state) {
+          final lessonId = state.extra as Map<String, dynamic>;
+          return LessonScreen(lessonId: lessonId['id']);
+        },
+      ),
+      GoRoute(
+          path: '/test',
+          name: 'test',
+          builder: (context, state) {
+            final lessonId = state.extra as Map<String, dynamic>;
+            return TestScreen(lessonId: lessonId['id']);
+          }),
       GoRoute(
         path: '/word',
         name: 'word',
