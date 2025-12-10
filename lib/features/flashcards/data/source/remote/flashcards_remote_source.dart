@@ -4,17 +4,11 @@ import 'package:test_practic/features/flashcards/domain/entities/flashcard_entit
 class FlashcardsRemoteSource {
   static final List<Map<String, dynamic>> _remoteFlashcards = [];
 
-  Future<void> _delay() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-  }
-
   Future<List<FlashcardEntity>> getFlashcardsByDeckId(String deckId) async {
-    await _delay();
     return _remoteFlashcards.where((item) => item['deckId'] == deckId).map(_mapToEntity).toList();
   }
 
   Future<void> saveFlashcard(FlashcardEntity flashcard) async {
-    await _delay();
     final index = _remoteFlashcards.indexWhere(
           (item) => item['id'] == flashcard.id,
     );
@@ -50,12 +44,10 @@ class FlashcardsRemoteSource {
   }
 
   Future<void> removeFlashcard(String deckId, String id) async {
-    await _delay();
     _remoteFlashcards.removeWhere((item) => item['id'] == id && item['deckId'] == deckId);
   }
 
   Future<void> removeFlashcardsByDeckId(String deckId) async {
-    await _delay();
     _remoteFlashcards.removeWhere((item) => item['deckId'] == deckId);
   }
 

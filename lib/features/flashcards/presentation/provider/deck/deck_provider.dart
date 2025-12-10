@@ -13,14 +13,15 @@ part 'deck_provider.g.dart';
 @riverpod
 class DeckNotifier extends _$DeckNotifier {
   late final FlashcardRepository _repo;
+  late final int _userId;
 
   @override
   DeckState build() {
     _repo = GetIt.I<FlashcardRepository>();
+    final authState = ref.watch(authProvider);
+    _userId = (authState as Authenticated).user.id;
 
-    final userId = (ref.read(authProvider) as Authenticated).user.id;
-    final decks = _loadDecks(userId);
-
+    final decks = _loadDecks(_userId);
     return DeckState(
       decks: decks,
       isLoading: false,
@@ -33,38 +34,32 @@ class DeckNotifier extends _$DeckNotifier {
   }
 
   Future<void> addDeck(Deck deck) async {
-    state = state.copyWith(isLoading: true);
-
+    print('Provider add start');
     try {
       await _repo.saveDeck(deck.toEntity());
-      await _reloadDecks();
     } catch (e) {
       throw Exception("Не удалось создать колоду: $e");
+    } finally {
+      _reload();
     }
-
-    state = state.copyWith(isLoading: false);
   }
 
   Future<void> removeDeck(String deckId) async {
-    state = state.copyWith(isLoading: true);
-
-    final userId = (ref.read(authProvider) as Authenticated).user.id;
-
     try {
-      await _repo.removeDeck(userId, deckId);
-      await _reloadDecks();
+      await _repo.removeDeck(_userId, deckId);
     } catch (e) {
       throw Exception("Ошибка удаления: $e");
+    } finally {
+      _reload();
     }
-
-    state = state.copyWith(isLoading: false);
   }
 
-  Future<void> _reloadDecks() async {
-    final userId = (ref.read(authProvider) as Authenticated).user.id;
-    final decks = _loadDecks(userId);
-
-    state = state.copyWith(decks: decks);
+  void _reload() {
+    final decks = _loadDecks(_userId);
+    state = state.copyWith(
+      decks: decks,
+      isLoading: false,
+    );
   }
 
   bool isEmpty() {

@@ -13,64 +13,15 @@ class StudyScreen extends ConsumerWidget {
 
   const StudyScreen({super.key, required this.currentDeck});
 
-  void _handleAnswer(
-    int quality,
-    WidgetRef ref,
-  ) {
-    //TODO fix study through ref
-    final currentCard = ref.watch(studyProvider(currentDeck)).currentCard;
-    final dueCards = ref.watch(studyProvider(currentDeck)).dueCards;
-    if (currentCard != null) {
-      ref.read(studyProvider(currentDeck).notifier).updateCard(quality, currentDeck);
-
-      if (currentCard.nextReview.isAfter(DateTime.now())) {
-        ref.read(studyProvider(currentDeck).notifier).updateDueCards();
-      }
-
-      if (dueCards.isNotEmpty) {
-        ref.read(studyProvider(currentDeck).notifier).setCurrentCard(dueCards[0]);
-      } else {
-        ref.read(studyProvider(currentDeck).notifier).setCurrentCard(null);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyProvider(currentDeck));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(state.deckTitle),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.info),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Правила'),
-                  content: Text(
-                    '1. Прочитайте вопрос\n'
-                    '2. Ответьте на него\n'
-                    '3. Переверните карточку\n'
-                    '4. Оцените сложность\n',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => {
-                        context.pop(),
-                      },
-                      child: Text('OK'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
+        title: Text(state.deckTitle)
       ),
-      body: ref.watch(studyProvider(currentDeck)).currentCard == null
+      body: ref.watch(studyProvider(currentDeck)).remainingCards == 0
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -128,17 +79,17 @@ class StudyScreen extends ConsumerWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () =>
-                        _handleAnswer(2, ref ),
+                        ref.read(studyProvider(currentDeck).notifier).updateCard(2, currentDeck),
                     child: Text('Сложно'),
                   ),
                   ElevatedButton(
                     onPressed: () =>
-                        _handleAnswer(4,ref ),
+                        ref.read(studyProvider(currentDeck).notifier).updateCard(4, currentDeck),
                     child: Text('Хорошо'),
                   ),
                   ElevatedButton(
                     onPressed: () =>
-                        _handleAnswer(5, ref ),
+                        ref.read(studyProvider(currentDeck).notifier).updateCard(5, currentDeck),
                     child: Text('Легко'),
                   ),
                 ],
