@@ -3,6 +3,9 @@ import 'package:get_it/get_it.dart';
 import 'package:test_practic/features/lessons/data/model/test_model.dart';
 import 'package:test_practic/features/lessons/presentation/state/test_state.dart';
 
+import '../../../../shared/providers/auth_provider.dart';
+import '../../../../shared/state/auth_state.dart';
+import '../../data/repositories/lessons_repository.dart';
 import '../../data/repositories/test_repository.dart';
 
 part 'test_provider.g.dart';
@@ -10,11 +13,14 @@ part 'test_provider.g.dart';
 @riverpod
 class LessonTest extends _$LessonTest {
   late final TestsRepository _repo;
+  late final int _userId;
 
   @override
   Future<LessonTestState> build(int lessonId) async {
-    _repo = GetIt.I<TestsRepository>();
+    final authState = ref.watch(authProvider);
+    _userId = authState is Authenticated ? authState.user.id : -1;
 
+    _repo = GetIt.I<TestsRepository>();
     final questions = await _loadQuestions(lessonId);
 
     return LessonTestState(
@@ -27,33 +33,45 @@ class LessonTest extends _$LessonTest {
       translation: null,
       correct: false,
       mistakes: [],
-      finished: false,
+      finished: questions.isEmpty,
+      userId: _userId,
+      successful: questions.isEmpty,
     );
   }
 
   Future<List<TestModel>> _loadQuestions(int lessonId) async {
-    try {
-      final entities = await _repo.getQuestionsForLesson(lessonId);
-      final models = entities.map(TestModel.fromEntity).toList();
-      models.shuffle();
+
+      final entities = await _repo.getQuestionsForLesson(lessonId, userId: _userId);
+      final models = entities.map((entity) => TestModel(
+        id: entity.id,
+        lessonId: entity.lessonId,
+        question: entity.question,
+        options: entity.options,
+        correctOptionIndex: entity.correctOptionIndex,
+        shortTheory: entity.shortTheory,
+        translation: entity.translation,
+        nextReviewDate: entity.nextReviewDate,
+      )).toList();
+
+      if (models.isNotEmpty) {
+        models.shuffle();
+      }
       return models;
-    } catch (_) {
-      return [];
-    }
   }
+
   Future<void> selectOption(int answerIndex) async {
     final s = state.value!;
     final q = s.questions[s.index];
-
     final isCorrect = answerIndex == q.correctOptionIndex;
 
-    _repo.addStat(s.lessonId, correct: isCorrect);
+    _repo.addStat(s.userId, s.lessonId, correct: isCorrect);
 
     final updatedMistakes = List<int>.from(s.mistakes);
-
     if (!isCorrect) {
       updatedMistakes.add(s.index);
-      _repo.addToRepeat(s.lessonId, q.toEntity());
+      _repo.addToReviewQueue(s.userId, s.lessonId, q.toEntity(), interval: 1);
+    } else {
+      _repo.updateReviewInterval(s.userId, q.id, true);
     }
 
     state = AsyncValue.data(
@@ -68,24 +86,16 @@ class LessonTest extends _$LessonTest {
     );
   }
 
-  Future<void> dontKnow() async {
-    final s = state.value!;
-    final q = s.questions[s.index];
-    _repo.addToRepeat(s.lessonId, q.toEntity());
-
-    await next();
-  }
-
   Future<void> next() async {
     final s = state.value!;
-
     final isLast = s.index + 1 >= s.questions.length;
 
     if (isLast) {
-      _repo.clearRepeatQueue(s.lessonId);
+      final successRate = (s.questions.length - s.mistakes.length) / s.questions.length;
+      final isSuccessful = successRate >= 0.8;
 
       state = AsyncValue.data(
-        s.copyWith(finished: true),
+        s.copyWith(finished: true, successful: isSuccessful),
       );
       return;
     }

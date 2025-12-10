@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../provider/test_provider.dart';
-import '../state/test_state.dart';
 
 class TestScreen extends ConsumerWidget {
   final int lessonId;
@@ -11,10 +10,24 @@ class TestScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(lessonTestProvider(lessonId));
-
     return async.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (e, _) => Scaffold(body: Center(child: Text("Ошибка: $e"))),
+      error: (e, _) => Scaffold(
+        appBar: AppBar(title: Text("Тест урока $lessonId")),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Ошибка загрузки: $e", style: const TextStyle(color: Colors.red)),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => context.pop(),
+                child: const Text("Назад к урокам"),
+              ),
+            ],
+          ),
+        ),
+      ),
       data: (state) {
         if (state.finished) {
           return Scaffold(
@@ -23,8 +36,49 @@ class TestScreen extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text("Отличная работа!", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                  Text(
+                    state.successful ? "Отличная работа!" : "Нужно еще попрактиковаться",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: state.successful ? Colors.green : Colors.red,
+                    ),
+                  ),
                   const SizedBox(height: 20),
+                  if (!state.successful)
+                    Text(
+                      "Вы ответили правильно на ${(state.questions.length - state.mistakes.length)}/${state.questions.length} вопросов",
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  const SizedBox(height: 20),
+                  Text(
+                    state.successful
+                        ? "Урок успешно пройден!"
+                        : "Все неправильные ответы добавлены в очередь на повторение",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () => context.pop(),
+                    child: const Text("Назад к урокам"),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        if (state.questions.isEmpty) {
+          return Scaffold(
+            appBar: AppBar(title: Text("Тест урока $lessonId")),
+            body: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("Нет вопросов для этого урока", style: TextStyle(fontSize: 20)),
+                  const SizedBox(height: 20),
+                  const Text("Возможно, урок еще не подготовлен или произошла ошибка загрузки"),
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () => context.pop(),
                     child: const Text("Назад к урокам"),
@@ -37,7 +91,6 @@ class TestScreen extends ConsumerWidget {
 
         final notifier = ref.read(lessonTestProvider(lessonId).notifier);
         final q = state.questions[state.index];
-
         return Scaffold(
           appBar: AppBar(title: Text("Тест урока $lessonId")),
           body: Center(
@@ -53,16 +106,11 @@ class TestScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("${state.index + 1}/${state.questions.length}"),
-                        TextButton(
-                          onPressed: notifier.dontKnow,
-                          child: const Text("Не знаю"),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 20),
                     Text(q.question, style: const TextStyle(fontSize: 20), textAlign: TextAlign.center),
                     const SizedBox(height: 20),
-
                     if (!state.showCorrect)
                       ...q.options.asMap().entries.map(
                             (e) => Padding(
@@ -73,7 +121,6 @@ class TestScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-
                     if (state.showCorrect) ...[
                       Text(
                         state.correct ? "Верно!" : "Неверно. Правильный ответ: ${q.options[q.correctOptionIndex]}",
@@ -101,4 +148,3 @@ class TestScreen extends ConsumerWidget {
     );
   }
 }
-

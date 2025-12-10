@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../provider/lessons_list_provider.dart';
 import '../state/lessons_list_state.dart';
 
-
 class LessonsListScreen extends ConsumerWidget {
   const LessonsListScreen({super.key});
 

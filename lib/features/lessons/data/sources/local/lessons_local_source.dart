@@ -3,32 +3,29 @@ import '../../../domain/entities/lesson_entity.dart';
 import '../../model/lesson_model.dart';
 
 class LessonsLocalDataSource {
-  static final Map<int, int> _lessonProgress = {};
+  static final Map<int, Map<int, int>> _cachedPageIndexes = {};
+  static final Map<int, Map<int, bool>> _cachedCompletedStatus = {};
 
-  static final Set<int> _completedLessons = {};
-
-  int getLessonPageIndex(int lessonId) {
-    return _lessonProgress[lessonId] ?? 0;
+  int getLessonPageIndex(int userId, int lessonId) {
+    return _cachedPageIndexes[userId]?[lessonId] ?? 0;
   }
 
-  void saveLessonPageIndex(int lessonId, int pageIndex) {
-    _lessonProgress[lessonId] = pageIndex;
+  void saveLessonPageIndex(int userId, int lessonId, int pageIndex) {
+    _cachedPageIndexes.putIfAbsent(userId, () => {});
+    _cachedPageIndexes[userId]![lessonId] = pageIndex;
   }
 
-  bool isLessonCompleted(int lessonId) {
-    return _completedLessons.contains(lessonId);
+  bool isLessonCompleted(int userId, int lessonId) {
+    return _cachedCompletedStatus[userId]?[lessonId] ?? false;
   }
 
-  void markLessonCompleted(int lessonId) {
-    _completedLessons.add(lessonId);
+  void markLessonCompleted(int userId, int lessonId) {
+    _cachedCompletedStatus.putIfAbsent(userId, () => {});
+    _cachedCompletedStatus[userId]![lessonId] = true;
   }
 
-  void unmarkLessonCompleted(int lessonId) {
-    _completedLessons.remove(lessonId);
-  }
-
-  void clearAllProgress() {
-    _lessonProgress.clear();
-    _completedLessons.clear();
+  void clearUserProgress(int userId) {
+    _cachedPageIndexes.remove(userId);
+    _cachedCompletedStatus.remove(userId);
   }
 }

@@ -17,6 +17,7 @@ class StudyScreen extends ConsumerWidget {
     int quality,
     WidgetRef ref,
   ) {
+    //TODO fix study through ref
     final currentCard = ref.watch(studyProvider(currentDeck)).currentCard;
     final dueCards = ref.watch(studyProvider(currentDeck)).dueCards;
     if (currentCard != null) {

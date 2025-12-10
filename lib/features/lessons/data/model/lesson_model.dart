@@ -1,7 +1,6 @@
 import '../../domain/entities/lesson_entity.dart';
 
 class LessonModel extends LessonEntity {
-  final bool completed;
 
   const LessonModel({
     required super.id,
@@ -9,7 +8,7 @@ class LessonModel extends LessonEntity {
     required super.description,
     required super.theory,
     required super.level,
-    this.completed = false,
+    required super.completed
   });
 
   factory LessonModel.fromJson(Map<String, dynamic> json) {
@@ -18,7 +17,8 @@ class LessonModel extends LessonEntity {
       title: json['title'],
       description: json['description'],
       theory: json['theory'],
-        level: json['level']
+        level: json['level'],
+        completed: json['completed']
     );
   }
 
@@ -27,6 +27,8 @@ class LessonModel extends LessonEntity {
     'title': title,
     'description': description,
     'theory': theory,
+    'level': level,
+    'completed': completed
   };
 
   factory LessonModel.fromEntity(LessonEntity entity) {
@@ -35,7 +37,8 @@ class LessonModel extends LessonEntity {
       title: entity.title,
       description: entity.description,
       theory: entity.theory,
-      level: entity.level
+      level: entity.level,
+        completed: entity.completed
     );
   }
 
@@ -44,6 +47,7 @@ class LessonModel extends LessonEntity {
     title: title,
     description: description,
     theory: theory,
-    level: level
+    level: level,
+    completed: completed
   );
 }

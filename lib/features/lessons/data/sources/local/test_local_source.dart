@@ -2,49 +2,61 @@
 import 'package:test_practic/features/lessons/domain/entities/test_entity.dart';
 
 class TestsLocalDataSource {
-  static final Map<int, List<Map<String, dynamic>>> _repeatQueue = {};
+  static final Map<int, List<TestEntity>> _cachedReviewQuestions = {};
+  static final Map<int, Map<int, Map<String, int>>> _stats = {};
 
-  static final Map<int, Map<String, int>> _stats = {};
-
-  List<TestEntity> getRepeatQueue(int lessonId) {
-    final list = _repeatQueue[lessonId] ?? [];
-    return list.map((m) => _mapToEntity(m)).toList();
+  List<TestEntity> getDueQuestionsForUser(int userId) {
+    return _cachedReviewQuestions[userId] ?? [];
   }
 
-  void addToRepeat(int lessonId, TestEntity q) {
-    final list = _repeatQueue.putIfAbsent(lessonId, () => []);
-    list.add({
-      'id': q.id.toString(),
-      'question': q.question,
-      'options': q.options,
-      'correct': q.correctOptionIndex,
-      'short_theory': (q as dynamic).shortTheory ?? '',
-      'translation': (q as dynamic).translation ?? '',
+  void cacheReviewQuestions(int userId, List<TestEntity> questions) {
+    _cachedReviewQuestions[userId] = questions;
+  }
+
+  void clearUserProgress(int userId) {
+    _cachedReviewQuestions.remove(userId);
+  }
+
+  void addStat(int userId, int lessonId, {required bool correct}) {
+    _stats.putIfAbsent(userId, () => <int, Map<String, int>>{});
+    final userStats = _stats[userId]!;
+
+    if (!userStats.containsKey(lessonId)) {
+      userStats[lessonId] = <String, int>{'total': 0, 'correct': 0};
+    }
+
+    final lessonStats = userStats[lessonId]!;
+    lessonStats['total'] = (lessonStats['total'] ?? 0) + 1;
+    if (correct) {
+      lessonStats['correct'] = (lessonStats['correct'] ?? 0) + 1;
+    }
+  }
+
+  Map<String, dynamic> getUserStats(int userId) {
+    if (!_stats.containsKey(userId)) {
+      return {
+        'byLesson': <int, Map<String, int>>{},
+        'total': {'total': 0, 'correct': 0},
+        'accuracy': 0
+      };
+    }
+
+    final userStats = _stats[userId]!;
+    final totalStats = {'total': 0, 'correct': 0};
+
+    userStats.forEach((lessonId, lessonStats) {
+      totalStats['total'] = (totalStats['total'] as int) + (lessonStats['total'] as int);
+      totalStats['correct'] = (totalStats['correct'] as int) + (lessonStats['correct'] as int);
     });
-  }
 
-  void clearRepeatQueue(int lessonId) {
-    _repeatQueue.remove(lessonId);
-  }
+    final accuracy = totalStats['total'] != 0
+        ? ((totalStats['correct'] as int) / (totalStats['total'] as int) * 100).round()
+        : 0;
 
-  void addStat(int lessonId, {required bool correct}) {
-    final map = _stats.putIfAbsent(lessonId, () => {'total': 0, 'correct': 0});
-    map['total'] = (map['total'] ?? 0) + 1;
-    if (correct) map['correct'] = (map['correct'] ?? 0) + 1;
-  }
-
-  Map<String, int> getStats(int lessonId) {
-    return _stats[lessonId] ?? {'total': 0, 'correct': 0};
-  }
-
-  TestEntity _mapToEntity(Map<String, dynamic> m) {
-    return TestEntity(
-      id: int.parse(m['id'] as String),
-      question: m['question'] as String,
-      options: List<String>.from(m['options'] as List<dynamic>),
-      correctOptionIndex: m['correct'] as int,
-      shortTheory: m['short_theory'] as String,
-      translation: m['translation'] as String,
-    );
+    return {
+      'byLesson': Map<int, Map<String, int>>.from(userStats),
+      'total': Map<String, int>.from(totalStats),
+      'accuracy': accuracy,
+    };
   }
 }

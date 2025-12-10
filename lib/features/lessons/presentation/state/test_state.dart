@@ -4,16 +4,15 @@ class LessonTestState {
   final int lessonId;
   final List<TestModel> questions;
   final int index;
-
   final int? selectedOption;
   final bool showCorrect;
-
   final bool correct;
   final String? theory;
   final String? translation;
-
   final List<int> mistakes;
   final bool finished;
+  final int userId;
+  final bool successful;
 
   LessonTestState({
     required this.lessonId,
@@ -26,6 +25,8 @@ class LessonTestState {
     required this.translation,
     required this.mistakes,
     required this.finished,
+    required this.userId,
+    this.successful = false,
   });
 
   LessonTestState copyWith({
@@ -39,6 +40,8 @@ class LessonTestState {
     String? translation,
     List<int>? mistakes,
     bool? finished,
+    int? userId,
+    bool? successful,
   }) {
     return LessonTestState(
       lessonId: lessonId ?? this.lessonId,
@@ -51,6 +54,8 @@ class LessonTestState {
       translation: translation ?? this.translation,
       mistakes: mistakes ?? this.mistakes,
       finished: finished ?? this.finished,
+      userId: userId ?? this.userId,
+      successful: successful ?? this.successful,
     );
   }
 }

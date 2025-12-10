@@ -9,6 +9,8 @@ class TestModel extends TestEntity {
     required super.correctOptionIndex,
     required super.shortTheory,
     required super.translation,
+    required super.lessonId,
+    required super.nextReviewDate
   });
 
   factory TestModel.fromJson(Map<String, dynamic> json) {
@@ -19,15 +21,10 @@ class TestModel extends TestEntity {
       correctOptionIndex: json['correct'],
       shortTheory:  json['short_theory'],
       translation: json['translation'],
+      lessonId: json['lessonId'],
+      nextReviewDate: json['nextReviewDate']
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'question': question,
-    'options': options,
-    'correct': correctOptionIndex,
-  };
 
   factory TestModel.fromEntity(TestEntity entity) {
     return TestModel(
@@ -37,6 +34,8 @@ class TestModel extends TestEntity {
       correctOptionIndex: entity.correctOptionIndex,
       shortTheory: entity.shortTheory,
       translation: entity.translation,
+      lessonId: entity.lessonId,
+      nextReviewDate: entity.nextReviewDate
     );
   }
 
@@ -47,5 +46,7 @@ class TestModel extends TestEntity {
     correctOptionIndex: correctOptionIndex,
     shortTheory: shortTheory,
     translation: translation,
+    lessonId: lessonId,
+    nextReviewDate: nextReviewDate
   );
 }

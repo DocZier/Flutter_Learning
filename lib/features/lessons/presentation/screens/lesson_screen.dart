@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import '../provider/lesson_theory_provider.dart';
-import '../state/lesson_theory_state.dart';
+
 class LessonScreen extends ConsumerWidget {
   final int lessonId;
 
@@ -38,7 +37,6 @@ class LessonScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Назад
                     SizedBox(
                       height: 48,
                       child: ElevatedButton(

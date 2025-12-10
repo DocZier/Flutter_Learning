@@ -1,7 +1,3 @@
-import 'package:test_practic/features/lessons/data/model/lesson_model.dart';
-
-import '../../domain/entities/lesson_entity.dart';
-
 class LessonTheoryState {
   final List<String> parts;
   final int index;
