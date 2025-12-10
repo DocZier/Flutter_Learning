@@ -8,16 +8,17 @@ import 'package:test_practic/features/flashcards/presentation/screens/flashcard/
 import 'package:test_practic/features/flashcards/presentation/screens/flashcard/study_screen.dart';
 import 'package:test_practic/features/profile/presentation/screens/profile_screen.dart';
 import 'package:test_practic/features/settings/presentation/screens/settings_screen.dart';
-
+import 'package:test_practic/features/stats/presentation/screen/stats_screen.dart';
 import '../../features/dictionary/presentation/screens/search_screen.dart';
 import '../../features/flashcards/presentation/screens/statistic/statistic_screen.dart';
 import '../../features/lessons/presentation/screens/lesson_screen.dart';
 import '../../features/lessons/presentation/screens/lessons_list_screen.dart';
 import '../../features/lessons/presentation/screens/test_screen.dart';
+import '../../menu/menu_screen.dart';
 
 class AppRouter {
   late final GoRouter _router = GoRouter(
-    initialLocation: '/lessons',
+    initialLocation: '/login',
     routes: <RouteBase>[
       GoRoute(
         path: '/profile',
@@ -89,6 +90,20 @@ class AppRouter {
         name: 'settings',
         builder: (context, state) {
           return SettingsScreen();
+        },
+      ),
+      GoRoute(
+        path: '/menu',
+        name: 'menu',
+        builder: (context, state) {
+          return MenuScreen();
+        },
+      ),
+      GoRoute(
+        path: '/stats',
+        name: 'stats',
+        builder: (context, state) {
+          return StatisticsScreen();
         },
       ),
       GoRoute(

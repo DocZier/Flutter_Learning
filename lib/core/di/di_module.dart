@@ -4,6 +4,7 @@ import '../../features/flashcards/di/flashcards_di.dart';
 import '../../features/lessons/di/lessons_di.dart';
 import '../../features/profile/di/profile_di.dart';
 import '../../features/settings/di/settings_di.dart';
+import '../../features/stats/di/stats_di.dart';
 
 void registerModule() {
   registerSettingsDependencies();
@@ -12,4 +13,5 @@ void registerModule() {
   registerProfileDependencies();
   registerDictionaryDependencies();
   registerLessonsDependencies();
+  registerStatsDependencies();
 }
