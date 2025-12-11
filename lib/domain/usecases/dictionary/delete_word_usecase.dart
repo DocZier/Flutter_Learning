@@ -1,0 +1,11 @@
+import 'package:test_practic/data/repositories/dictionary/dictionary_repository.dart';
+
+class DeleteWordUseCase {
+  final DictionaryRepository repository;
+
+  DeleteWordUseCase(this.repository);
+
+  void execute(int id) {
+    repository.deleteWord(id);
+  }
+}

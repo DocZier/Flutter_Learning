@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_practic/core/navigation/app_router.dart';
-import 'package:test_practic/shared/providers/auth_provider.dart';
-import 'package:test_practic/shared/providers/theme_provider.dart';
-
+import 'package:test_practic/presentation/shared/providers/theme_provider.dart';
 import 'core/di/di_module.dart';
-import 'features/settings/presentation/provider/settings_provider.dart';
 
 void main() {
   registerModule();
