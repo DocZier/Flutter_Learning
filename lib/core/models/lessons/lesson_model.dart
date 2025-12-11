@@ -1,53 +1,39 @@
-import 'lesson_entity.dart';
-
-class LessonModel extends LessonEntity {
+class LessonModel {
+  final int id;
+  final String title;
+  final String description;
+  final String theory;
+  final String level;
+  final bool completed;
+  final DateTime? nextReviewDate;
 
   const LessonModel({
-    required super.id,
-    required super.title,
-    required super.description,
-    required super.theory,
-    required super.level,
-    required super.completed
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.theory,
+    required this.level,
+    required this.completed,
+    this.nextReviewDate,
   });
 
-  factory LessonModel.fromJson(Map<String, dynamic> json) {
+  LessonModel copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? theory,
+    String? level,
+    bool? completed,
+    DateTime? nextReviewDate,
+  }) {
     return LessonModel(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      theory: json['theory'],
-        level: json['level'],
-        completed: json['completed']
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      theory: theory ?? this.theory,
+      level: level ?? this.level,
+      completed: completed ?? this.completed,
+      nextReviewDate: nextReviewDate ?? this.nextReviewDate,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'title': title,
-    'description': description,
-    'theory': theory,
-    'level': level,
-    'completed': completed
-  };
-
-  factory LessonModel.fromEntity(LessonEntity entity) {
-    return LessonModel(
-      id: entity.id,
-      title: entity.title,
-      description: entity.description,
-      theory: entity.theory,
-      level: entity.level,
-        completed: entity.completed
-    );
-  }
-
-  LessonEntity toEntity() => LessonEntity(
-    id: id,
-    title: title,
-    description: description,
-    theory: theory,
-    level: level,
-    completed: completed
-  );
 }

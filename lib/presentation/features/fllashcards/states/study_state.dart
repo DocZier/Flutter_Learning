@@ -3,8 +3,8 @@ import '../../../../core/models/fllashcards/flashcards_model.dart';
 class StudyState {
   final String deckTitle;
   final bool isFlipped;
-  final List<Flashcard> dueCards;
-  final Flashcard? currentCard;
+  final List<FlashcardModel> dueCards;
+  final FlashcardModel? currentCard;
   final int remainingCards;
   final int totalCards;
   final bool isComplete;
@@ -22,8 +22,8 @@ class StudyState {
   StudyState copyWith({
     String? deckTitle,
     bool? isFlipped,
-    List<Flashcard>? dueCards,
-    Flashcard? currentCard,
+    List<FlashcardModel>? dueCards,
+    FlashcardModel? currentCard,
     int? remainingCards,
     int? totalCards,
     bool? isComplete,

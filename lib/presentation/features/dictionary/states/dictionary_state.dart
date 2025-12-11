@@ -1,7 +1,7 @@
 import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
 
 class DictionaryState {
-  final List<DictionaryWord> words;
+  final List<DictionaryWordModel> words;
   final List<String> history;
 
   DictionaryState({
@@ -10,7 +10,7 @@ class DictionaryState {
   });
 
   DictionaryState copyWith({
-    List<DictionaryWord>? words,
+    List<DictionaryWordModel>? words,
     List<String>? history,
   }) {
     return DictionaryState(

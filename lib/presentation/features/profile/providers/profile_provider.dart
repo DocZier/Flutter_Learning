@@ -6,7 +6,6 @@ import 'package:test_practic/domain/usecases/profile/delete_profile_usecase.dart
 import 'package:test_practic/domain/usecases/profile/get_profile_usecase.dart';
 import 'package:test_practic/domain/usecases/profile/save_profile_usecase.dart';
 import 'package:test_practic/presentation/shared/providers/auth_provider.dart';
-import '../../../../core/models/shared/user_model.dart';
 import '../../../shared/states/auth_state.dart';
 import '../states/profile_state.dart';
 
@@ -42,7 +41,7 @@ class Profile extends _$Profile {
       final authState = ref.read(authProvider);
       final userId = (authState as Authenticated).user.id;
       final entity = await _getProfileUseCase.execute(userId);
-      return ProfileState(user: User.fromEntity(entity));
+      return ProfileState(user: entity);
     } catch (e) {
       rethrow;
     }
@@ -56,9 +55,9 @@ class Profile extends _$Profile {
   Future<void> updateProfile() async {
     try {
       final user = (ref.read(authProvider) as Authenticated).user;
-      await _saveProfileUseCase.execute(user.copyWith(login: username.text).toEntity(), user.id);
+      await _saveProfileUseCase.execute(user.copyWith(login: username.text), user.id);
       final entity = await _getProfileUseCase.execute(user.id);
-      state = AsyncValue.data(ProfileState(user: User.fromEntity(entity)));
+      state = AsyncValue.data(ProfileState(user: entity));
     } catch (e) {
       rethrow;
     }

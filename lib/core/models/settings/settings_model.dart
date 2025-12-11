@@ -1,48 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/settings_constants.dart';
-import 'settings_entity.dart';
+class AppSettingsModel {
+  final ThemeMode themeMode;
+  final int startOfTheDay;
 
-class AppSettings extends AppSettingsEntity {
-  const AppSettings({
-    required super.themeMode,
-    required super.startOfTheDay,
+  const AppSettingsModel({
+    this.themeMode = ThemeMode.system,
+    required this.startOfTheDay,
   });
 
-  @override
-  AppSettings copyWith({
-    ThemeMode? themeMode,
+  AppSettingsModel copyWith({
     int? startOfTheDay,
+    ThemeMode? themeMode,
   }) {
-    return AppSettings(
+    return AppSettingsModel(
       themeMode: themeMode ?? this.themeMode,
       startOfTheDay: startOfTheDay ?? this.startOfTheDay,
     );
   }
-
-  AppSettings copyFromModel(AppSettings settings) {
-    return AppSettings(
-        themeMode: settings.themeMode,
-        startOfTheDay: settings.startOfTheDay,
-    );
-  }
-
-  factory AppSettings.fromEntity(AppSettingsEntity entity) {
-    return AppSettings(
-        themeMode: entity.themeMode,
-        startOfTheDay: entity.startOfTheDay,
-    );
-  }
-
-  AppSettingsEntity toEntity() {
-    return AppSettingsEntity(
-        themeMode: themeMode,
-        startOfTheDay: startOfTheDay,
-    );
-  }
-
-  factory AppSettings.defaultSettings() {
-    return AppSettings.fromEntity(SettingsConstants.defaultSettings);
-  }
-
 }

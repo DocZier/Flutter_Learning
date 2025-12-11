@@ -1,7 +1,7 @@
 import '../../../../core/models/fllashcards/deck_model.dart';
 
 class DeckState {
-  final List<Deck> decks;
+  final List<DeckModel> decks;
   final bool isLoading;
 
   DeckState({
@@ -10,7 +10,7 @@ class DeckState {
   });
 
   DeckState copyWith({
-    List<Deck>? decks,
+    List<DeckModel>? decks,
     bool? isLoading,
   }) {
     return DeckState(

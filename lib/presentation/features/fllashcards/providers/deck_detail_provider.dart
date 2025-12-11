@@ -43,13 +43,13 @@ class DeckDetailNotifier extends _$DeckDetailNotifier {
     );
   }
 
-  Deck _loadDeck(int userId, String deckId) {
+  DeckModel _loadDeck(int userId, String deckId) {
     final deck = _getDeckByIdUseCase.execute(userId, deckId);
-    return Deck.fromEntity(deck);
+    return deck;
   }
 
-  List<Flashcard> _loadFlashcards(String deckId) {
-    return _getFlashcardsByDeckIdUseCase.execute(deckId).map(Flashcard.fromEntity).toList();
+  List<FlashcardModel> _loadFlashcards(String deckId) {
+    return _getFlashcardsByDeckIdUseCase.execute(deckId).toList();
   }
 
   Future<void> deleteDeck(String deckId) async {

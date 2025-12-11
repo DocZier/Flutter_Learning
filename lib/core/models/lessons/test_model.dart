@@ -1,52 +1,43 @@
+class TestModel {
+  final int id;
+  final int lessonId;
+  final String question;
+  final List<String> options;
+  final int correctOptionIndex;
+  final String shortTheory;
+  final String translation;
+  final DateTime? nextReviewDate;
 
-import 'test_entity.dart';
-
-class TestModel extends TestEntity {
   const TestModel({
-    required super.id,
-    required super.question,
-    required super.options,
-    required super.correctOptionIndex,
-    required super.shortTheory,
-    required super.translation,
-    required super.lessonId,
-    required super.nextReviewDate
+    required this.id,
+    required this.lessonId,
+    required this.question,
+    required this.options,
+    required this.correctOptionIndex,
+    required this.shortTheory,
+    required this.translation,
+    this.nextReviewDate,
   });
 
-  factory TestModel.fromJson(Map<String, dynamic> json) {
+  TestModel copyWith({
+    int? id,
+    int? lessonId,
+    String? question,
+    List<String>? options,
+    int? correctOptionIndex,
+    String? shortTheory,
+    String? translation,
+    DateTime? nextReviewDate,
+  }) {
     return TestModel(
-      id: json['id'],
-      question: json['question'],
-      options: List<String>.from(json['options']),
-      correctOptionIndex: json['correct'],
-      shortTheory:  json['short_theory'],
-      translation: json['translation'],
-      lessonId: json['lessonId'],
-      nextReviewDate: json['nextReviewDate']
+      id: id ?? this.id,
+      lessonId: lessonId ?? this.lessonId,
+      question: question ?? this.question,
+      options: options ?? this.options,
+      correctOptionIndex: correctOptionIndex ?? this.correctOptionIndex,
+      shortTheory: shortTheory ?? this.shortTheory,
+      translation: translation ?? this.translation,
+      nextReviewDate: nextReviewDate ?? this.nextReviewDate,
     );
   }
-
-  factory TestModel.fromEntity(TestEntity entity) {
-    return TestModel(
-      id: entity.id,
-      question: entity.question,
-      options: entity.options,
-      correctOptionIndex: entity.correctOptionIndex,
-      shortTheory: entity.shortTheory,
-      translation: entity.translation,
-      lessonId: entity.lessonId,
-      nextReviewDate: entity.nextReviewDate
-    );
-  }
-
-  TestEntity toEntity() => TestEntity(
-    id: id,
-    question: question,
-    options: options,
-    correctOptionIndex: correctOptionIndex,
-    shortTheory: shortTheory,
-    translation: translation,
-    lessonId: lessonId,
-    nextReviewDate: nextReviewDate
-  );
 }

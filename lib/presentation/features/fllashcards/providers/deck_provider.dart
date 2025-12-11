@@ -37,14 +37,14 @@ class DeckNotifier extends _$DeckNotifier {
     );
   }
 
-  List<Deck> _loadDecks(int userId) {
+  List<DeckModel> _loadDecks(int userId) {
     final list = _getUsersDecksUseCase.execute(userId);
-    return list.map(Deck.fromEntity).toList();
+    return list;
   }
 
-  Future<void> addDeck(Deck deck) async {
+  Future<void> addDeck(DeckModel deck) async {
     try {
-      await _saveDeckUseCase.execute(deck.toEntity());
+      await _saveDeckUseCase.execute(deck);
     } catch (e) {
       throw Exception("Не удалось создать колоду: $e");
     } finally {
@@ -74,8 +74,8 @@ class DeckNotifier extends _$DeckNotifier {
     return state.decks.isEmpty;
   }
 
-  List<Flashcard> getFlashcardsByDeckId(String deckId) {
+  List<FlashcardModel> getFlashcardsByDeckId(String deckId) {
     final flashcards = _getFlashcardsByDeckIdUseCase.execute(deckId);
-    return flashcards.map(Flashcard.fromEntity).toList();
+    return flashcards;
   }
 }

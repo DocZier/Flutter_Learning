@@ -3,7 +3,7 @@ import 'package:test_practic/core/models/fllashcards/flashcards_model.dart';
 
 class CardListItem extends StatelessWidget {
   final String deckId;
-  final Flashcard card;
+  final FlashcardModel card;
   final void Function(String deckd, String cardID) deleteCard;
 
   const CardListItem({

@@ -1,10 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_practic/core/models/progress/stats_model.dart';
 import 'package:test_practic/presentation/shared/providers/auth_provider.dart';
 import 'package:test_practic/presentation/shared/states/auth_state.dart';
-
-import '../../../../core/models/progress/stats_entity.dart';
 import '../providers/progress_provider.dart';
 import '../../../shared/widgets/progress/progress_ring_widget.dart';
 class ProgressScreen extends ConsumerWidget {
@@ -103,7 +101,7 @@ class ProgressScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildActivityRow(StatisticsEntity stats) {
+  Widget _buildActivityRow(StatisticsModel stats) {
     return Card(
       elevation: 2,
       child: Padding(
@@ -163,7 +161,7 @@ class ProgressScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProgressRingSection(StatisticsEntity stats) {
+  Widget _buildProgressRingSection(StatisticsModel stats) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -202,7 +200,7 @@ class ProgressScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDetailedStatsSection(StatisticsEntity stats, WidgetRef ref) {
+  Widget _buildDetailedStatsSection(StatisticsModel stats, WidgetRef ref) {
     final retentionColor = stats.retentionRate >= 90
         ? Colors.green
         : stats.retentionRate >= 75

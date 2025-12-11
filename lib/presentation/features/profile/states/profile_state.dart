@@ -1,15 +1,14 @@
-
 import '../../../../core/models/shared/user_model.dart';
 
 class ProfileState {
-  final User user;
+  final UserModel user;
 
   ProfileState({
     required this.user,
   });
 
   ProfileState copyWith({
-    User? user,
+    UserModel? user,
   }) {
     return ProfileState(
       user: user ?? this.user,

@@ -39,7 +39,7 @@ class Dictionary extends _$Dictionary {
     });
 
     final remoteWords = await _getWordsUseCase.execute();
-    final words = remoteWords.map(DictionaryWord.fromEntity).toList();
+    final words = remoteWords.toList();
     final history = _getHistoryUseCase.execute();
 
     return DictionaryState(
@@ -51,7 +51,7 @@ class Dictionary extends _$Dictionary {
   Future<void> search(String query) async {
     if (query.isEmpty) return;
     final resultEntities = await _searchWordsUseCase.execute(query);
-    final resultModels = resultEntities.map(DictionaryWord.fromEntity).toList();
+    final resultModels = resultEntities.toList();
     state = AsyncData(
       state.value!.copyWith(words: resultModels),
     );
@@ -72,8 +72,8 @@ class Dictionary extends _$Dictionary {
     );
   }
 
-  Future<DictionaryWord> getWordById(int id) async {
-    final entity = await _getWordByIdUseCase.execute(id);
-    return DictionaryWord.fromEntity(entity);
+  Future<DictionaryWordModel> getWordById(int id) async {
+    final model = await _getWordByIdUseCase.execute(id);
+    return model;
   }
 }

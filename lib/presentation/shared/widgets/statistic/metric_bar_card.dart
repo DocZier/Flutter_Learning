@@ -5,7 +5,7 @@ import 'metric_bar_view.dart';
 
 class MetricBarCard extends StatelessWidget {
   final String title;
-  final List<Metric> metrics;
+  final List<MetricModel> metrics;
 
   const MetricBarCard({
     super.key,

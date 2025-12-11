@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/lessons/test_entity.dart';
+import 'package:test_practic/core/models/lessons/test_model.dart';
 import 'package:test_practic/data/repositories/lessons/test_repository.dart';
 
 class GetQuestionsForLessonUseCase {
@@ -6,7 +6,7 @@ class GetQuestionsForLessonUseCase {
 
   GetQuestionsForLessonUseCase(this.repository);
 
-  Future<List<TestEntity>> execute(int lessonId, {required int userId}) async {
+  Future<List<TestModel>> execute(int lessonId, {required int userId}) async {
     return await repository.getQuestionsForLesson(lessonId, userId: userId);
   }
 }

@@ -5,8 +5,8 @@ import 'package:test_practic/domain/usecases/settings/reset_user_settings_usecas
 import 'package:test_practic/domain/usecases/settings/save_settings_usecase.dart';
 
 import '../../../data/repositories/settings/settings_repository.dart';
-import '../../../data/datasources/local/settings/settings_local_source.dart';
-import '../../../data/datasources/remote/settings/settings_remote_source.dart';
+import '../../../data/datasources/local/settings_local_source.dart';
+import '../../../data/datasources/remote/settings_remote_source.dart';
 
 void registerSettingsDependencies() {
   GetIt.I.registerLazySingleton<SettingsLocalDataSource>(

@@ -1,51 +1,31 @@
+class FlashcardModel {
+  final String deckId;
+  final String id;
+  final String question;
+  final String answer;
+  final int interval;
+  final DateTime nextReview;
+  final double easeFactor;
+  final int reviewCount;
+  final DateTime lastReviewedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-import 'flashcard_entity.dart';
-
-class Flashcard extends FlashcardEntity {
-  const Flashcard({
-    required super.deckId,
-    required super.id,
-    required super.question,
-    required super.answer,
-    required super.interval,
-    required super.nextReview,
-    required super.easeFactor,
-    required super.reviewCount,
-    required super.lastReviewedAt,
-    required super.createdAt,
-    required super.updatedAt,
+  const FlashcardModel({
+    required this.deckId,
+    required this.id,
+    required this.question,
+    required this.answer,
+    required this.interval,
+    required this.easeFactor,
+    required this.nextReview,
+    required this.reviewCount,
+    required this.lastReviewedAt,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  FlashcardEntity toEntity() => FlashcardEntity(
-    deckId: deckId,
-    id: id,
-    question: question,
-    answer: answer,
-    interval: interval,
-    nextReview: nextReview,
-    easeFactor: easeFactor,
-    reviewCount: reviewCount,
-    lastReviewedAt: lastReviewedAt,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-  );
-
-  factory Flashcard.fromEntity(FlashcardEntity entity) => Flashcard(
-    deckId: entity.deckId,
-    id: entity.id,
-    question: entity.question,
-    answer: entity.answer,
-    interval: entity.interval,
-    nextReview: entity.nextReview,
-    easeFactor: entity.easeFactor,
-    reviewCount: entity.reviewCount,
-    lastReviewedAt: entity.lastReviewedAt,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
-  );
-
-  @override
-  Flashcard copyWith({
+  FlashcardModel copyWith({
     String? question,
     String? answer,
     int? interval,
@@ -56,7 +36,7 @@ class Flashcard extends FlashcardEntity {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return Flashcard(
+    return FlashcardModel(
       deckId: deckId,
       id: id,
       question: question ?? this.question,

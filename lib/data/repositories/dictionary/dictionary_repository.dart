@@ -1,12 +1,13 @@
-import '../../../core/models/dictionary/dictionary_entity.dart';
-import '../../datasources/local/dictionary/dictionary_local_source.dart';
-import '../../datasources/remote/dictionary/dictionary_remote_source.dart';
+import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
+
+import '../../datasources/local/dictionary_local_source.dart';
+import '../../datasources/remote/dictionary_remote_source.dart';
 
 abstract class DictionaryRepository {
-  Future<List<DictionaryWordEntity>> getWords();
-  Future<DictionaryWordEntity> getWordById(int id);
-  List<DictionaryWordEntity> getSavedWords();
-  Future<List<DictionaryWordEntity>> search(String query);
+  Future<List<DictionaryWordModel>> getWords();
+  Future<DictionaryWordModel> getWordById(int id);
+  List<DictionaryWordModel> getSavedWords();
+  Future<List<DictionaryWordModel>> search(String query);
   void saveWord(int id);
   void deleteWord(int id);
   void clear();
@@ -26,17 +27,17 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
         _remoteDataSource = remoteDataSource;
 
   @override
-  Future<List<DictionaryWordEntity>> getWords() async {
+  Future<List<DictionaryWordModel>> getWords() async {
     return _remoteDataSource.getWords();
   }
 
   @override
-  Future<DictionaryWordEntity> getWordById(int id) async {
+  Future<DictionaryWordModel> getWordById(int id) async {
     return _remoteDataSource.getWordById(id);
   }
 
   @override
-  List<DictionaryWordEntity> getSavedWords() {
+  List<DictionaryWordModel> getSavedWords() {
     return _localDataSource.getWords();
   }
 
@@ -47,7 +48,7 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<List<DictionaryWordEntity>> search(String query) async {
+  Future<List<DictionaryWordModel>> search(String query) async {
     return _remoteDataSource.search(query);
   }
 

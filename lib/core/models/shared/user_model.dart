@@ -1,35 +1,24 @@
-import 'user_entity.dart';
+class UserModel {
+  final int id;
+  final String login;
+  final String email;
+  final DateTime createdAt;
 
-class User extends UserEntity {
-  const User({
-    required super.id,
-    required super.login,
-    required super.email,
-    required super.createdAt,
+  const UserModel({
+    required this.id,
+    required this.login,
+    required this.email,
+    required this.createdAt,
   });
 
-  static User fromEntity(UserEntity entity) {
-    return User(
-      id: entity.id,
-      login: entity.login,
-      email: entity.email,
-      createdAt: entity.createdAt,
-    );
-  }
-
-  UserEntity toEntity() =>
-      UserEntity(id: id, login: login, email: email, createdAt: createdAt);
-
-  @override
-  String toString() {
-    return 'User(id: $id, login: $login, email: $email, createdAt: $createdAt)';
-  }
-
-  User copyWith({String? login}) {
-    return User(
+  UserModel copyWith({
+    String? login,
+    String? email,
+  }) {
+    return UserModel(
       id: id,
       login: login ?? this.login,
-      email: email,
+      email: email ?? this.email,
       createdAt: createdAt,
     );
   }

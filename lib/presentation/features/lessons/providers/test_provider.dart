@@ -48,11 +48,10 @@ class LessonTest extends _$LessonTest {
   }
 
   Future<List<TestModel>> _loadQuestions(int lessonId) async {
-    final entities = await _getQuestionsForLessonUseCase.execute(
+    final models = await _getQuestionsForLessonUseCase.execute(
         lessonId,
         userId: _userId
     );
-    final models = entities.map((entity) => TestModel.fromEntity(entity)).toList();
     if (models.isNotEmpty) {
       models.shuffle();
     }
@@ -72,7 +71,7 @@ class LessonTest extends _$LessonTest {
       _addToReviewQueueUseCase.execute(
           s.userId,
           lessonId,
-          q.toEntity(),
+          q,
           interval: 1
       );
     } else {

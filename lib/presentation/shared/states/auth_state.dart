@@ -9,7 +9,7 @@ final class Unauthenticated extends AuthState {
 
 }
 final class Authenticated extends AuthState {
-  final User user;
+  final UserModel user;
 
   const Authenticated({required this.user});
 }

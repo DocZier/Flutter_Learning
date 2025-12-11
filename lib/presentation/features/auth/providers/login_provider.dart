@@ -47,7 +47,7 @@ class Login extends _$Login {
       if (user != null) {
         ref
             .read(authProvider.notifier)
-            .updateState(Authenticated(user: User.fromEntity(user)));
+            .updateState(Authenticated(user: user));
         onSuccess();
       } else {
         onError('Login failed');

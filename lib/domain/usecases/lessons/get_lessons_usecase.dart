@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/lessons/lesson_entity.dart';
+import 'package:test_practic/core/models/lessons/lesson_model.dart';
 import 'package:test_practic/data/repositories/lessons/lessons_repository.dart';
 
 class GetLessonsUseCase {
@@ -6,7 +6,7 @@ class GetLessonsUseCase {
 
   GetLessonsUseCase(this.repository);
 
-  Future<List<LessonEntity>> execute({String? level, int? userId}) async {
+  Future<List<LessonModel>> execute({String? level, int? userId}) async {
     return await repository.getLessons(level: level, userId: userId);
   }
 }

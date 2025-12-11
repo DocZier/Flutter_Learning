@@ -4,8 +4,8 @@ import 'package:test_practic/core/models/fllashcards/flashcards_model.dart';
 
 
 class DeckListItem extends StatelessWidget {
-  final Deck deck;
-  final List<Flashcard> flashcards;
+  final DeckModel deck;
+  final List<FlashcardModel> flashcards;
   final void Function(String deckId) onTapEmpty;
   final void Function(String deckId) onTapFull;
   final void Function(String deckId) onLongPress;

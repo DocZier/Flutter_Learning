@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:test_practic/core/models/fllashcards/deck_model.dart';
 import 'package:test_practic/presentation/shared/widgets/deck/deck_view.dart';
 
 import '../../../shared/providers/auth_provider.dart';
 import '../../../shared/states/auth_state.dart';
-import '../../../../core/models/fllashcards/deck_model.dart';
 import '../providers/deck_provider.dart';
 
 const deckIcon = 'https://cdn-icons-png.flaticon.com/512/17554/17554945.png';
@@ -64,7 +64,7 @@ class HomeScreen extends ConsumerWidget {
                 final userId = authState.user.id;
                 print('Before add');
                 await ref.read(deckProvider.notifier).addDeck(
-                  Deck(
+                  DeckModel(
                     userId: userId,
                     id: DateTime.now().millisecondsSinceEpoch.toString(),
                     title: deckName,

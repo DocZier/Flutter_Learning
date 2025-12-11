@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/fllashcards/flashcard_entity.dart';
+import 'package:test_practic/core/models/fllashcards/flashcards_model.dart';
 import 'package:test_practic/data/repositories/fllashcards/flashcard_repository.dart';
 
 class GetFlashcardsByDeckIdUseCase {
@@ -6,7 +6,7 @@ class GetFlashcardsByDeckIdUseCase {
 
   GetFlashcardsByDeckIdUseCase(this.repository);
 
-  List<FlashcardEntity> execute(String deckId) {
+  List<FlashcardModel> execute(String deckId) {
     return repository.getFlashcardsByDeckId(deckId);
   }
 }

@@ -1,9 +1,9 @@
-class Metric {
+class MetricModel {
   String title;
   int value;
   int max;
 
-  Metric({
+  MetricModel({
     required this.title,
     required this.value,
     required this.max

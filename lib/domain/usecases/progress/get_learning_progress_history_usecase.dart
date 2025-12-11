@@ -6,7 +6,7 @@ class GetLearningProgressHistoryUseCase {
 
   GetLearningProgressHistoryUseCase(this.repository);
 
-  Future<List<LearningProgressEntity>> execute(int userId, {int days = 30}) async {
+  Future<List<LearningProgressModel>> execute(int userId, {int days = 30}) async {
     return await repository.getLearningProgressHistory(userId, days: days);
   }
 }

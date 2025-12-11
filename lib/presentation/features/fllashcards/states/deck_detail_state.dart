@@ -3,8 +3,8 @@ import 'package:test_practic/core/models/fllashcards/flashcards_model.dart';
 import '../../../../core/models/fllashcards/deck_model.dart';
 
 class DeckDetailState {
-  final Deck deck;
-  final List<Flashcard> flashcards;
+  final DeckModel deck;
+  final List<FlashcardModel> flashcards;
   final bool isLoading;
 
   DeckDetailState({
@@ -14,9 +14,9 @@ class DeckDetailState {
   });
 
   DeckDetailState copyWith({
-   Deck? deck,
+   DeckModel? deck,
     bool? isLoading,
-    List<Flashcard>? flashcards
+    List<FlashcardModel>? flashcards
   }) {
     return DeckDetailState(
       deck: deck ?? this.deck,

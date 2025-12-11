@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/lessons/test_entity.dart';
+import 'package:test_practic/core/models/lessons/test_model.dart';
 import 'package:test_practic/data/repositories/lessons/test_repository.dart';
 
 class GetDueQuestionsForReviewUseCase {
@@ -6,7 +6,7 @@ class GetDueQuestionsForReviewUseCase {
 
   GetDueQuestionsForReviewUseCase(this.repository);
 
-  List<TestEntity> execute(int userId) {
+  List<TestModel> execute(int userId) {
     return repository.getDueQuestionsForReview(userId);
   }
 }

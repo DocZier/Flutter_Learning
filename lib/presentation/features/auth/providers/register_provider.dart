@@ -49,7 +49,7 @@ class Registration extends _$Registration {
       if (user != null) {
         ref
             .read(authProvider.notifier)
-            .updateState(Authenticated(user: User.fromEntity(user)));
+            .updateState(Authenticated(user: user));
         onSuccess();
       } else {
         onError('Ошибка регистрации');

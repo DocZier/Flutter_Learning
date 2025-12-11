@@ -3,7 +3,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:test_practic/domain/usecases/auth/check_auth_status_usecase.dart';
 import 'package:test_practic/domain/usecases/auth/logout_usecase.dart';
 import 'package:test_practic/domain/usecases/profile/delete_account_usecase.dart';
-import '../../../core/models/shared/user_model.dart';
 import '../states/auth_state.dart';
 
 part 'auth_provider.g.dart';
@@ -21,7 +20,7 @@ class Auth extends _$Auth {
 
     final user = _checkAuthStatusUseCase.execute();
     if (user != null) {
-      return Authenticated(user: User.fromEntity(user));
+      return Authenticated(user: user);
     }
     return Unauthenticated();
   }

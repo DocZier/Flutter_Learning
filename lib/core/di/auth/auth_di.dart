@@ -6,8 +6,8 @@ import 'package:test_practic/domain/usecases/auth/register_usecase.dart';
 import 'package:test_practic/domain/usecases/profile/delete_account_usecase.dart';
 
 import '../../../data/repositories/auth/auth_repository.dart';
-import '../../../data/datasources/local/auth/auth_local_source.dart';
-import '../../../data/datasources/remote/auth/auth_remote_source.dart';
+import '../../../data/datasources/local/auth_local_source.dart';
+import '../../../data/datasources/remote/auth_remote_source.dart';
 
 void registerAuthDependencies() {
   GetIt.I.registerLazySingleton<AuthRemoteDataSource>(

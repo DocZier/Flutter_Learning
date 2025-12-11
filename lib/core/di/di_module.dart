@@ -7,7 +7,7 @@ import 'lessons/lessons_di.dart';
 import 'profile/profile_di.dart';
 import 'settings/settings_di.dart';
 import 'progress/progress_di.dart';
-import '../../data/datasources/remote/shared/remote_user_source.dart';
+import '../../data/datasources/remote/user_remote_source.dart';
 
 void registerModule() {
   GetIt.I.registerLazySingleton<RemoteUserSource>(() => RemoteUserSource());

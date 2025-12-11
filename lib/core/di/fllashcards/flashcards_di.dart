@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:test_practic/data/repositories/fllashcards/flashcard_repository.dart';
-import 'package:test_practic/data/datasources/local/fllashcards/deck_local_source.dart';
-import 'package:test_practic/data/datasources/local/fllashcards/flashcards_local_source.dart';
+import 'package:test_practic/data/datasources/local/deck_local_source.dart';
+import 'package:test_practic/data/datasources/local/flashcards_local_source.dart';
 import 'package:test_practic/domain/usecases/fllashcards/delete_deck_usecase.dart';
 import 'package:test_practic/domain/usecases/fllashcards/delete_flashcard_usecase.dart';
 import 'package:test_practic/domain/usecases/fllashcards/delete_flashcards_by_deckid_usecase.dart';
@@ -12,8 +12,8 @@ import 'package:test_practic/domain/usecases/fllashcards/save_deck_usecase.dart'
 import 'package:test_practic/domain/usecases/fllashcards/save_flashcard_usecase.dart';
 import 'package:test_practic/domain/usecases/fllashcards/update_flashcard_usecase.dart';
 
-import '../../../data/datasources/remote/fllashcards/deck_remote_source.dart';
-import '../../../data/datasources/remote/fllashcards/flashcards_remote_source.dart';
+import '../../../data/datasources/remote/deck_remote_source.dart';
+import '../../../data/datasources/remote/flashcards_remote_source.dart';
 
 void registerFlashcardsDependencies() {
   GetIt.I.registerLazySingleton<FlashcardsLocalSource>(

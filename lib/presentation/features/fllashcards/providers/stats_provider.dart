@@ -17,11 +17,11 @@ class Statistic extends _$Statistic {
     return _calculateStatistics(cards);
   }
 
-  List<Flashcard> _loadCards(String deckId) {
-    return _getFlashcardsByDeckIdUseCase.execute(deckId).map(Flashcard.fromEntity).toList();
+  List<FlashcardModel> _loadCards(String deckId) {
+    return _getFlashcardsByDeckIdUseCase.execute(deckId);
   }
 
-  StatisticsState _calculateStatistics(List<Flashcard> cards) {
+  StatisticsState _calculateStatistics(List<FlashcardModel> cards) {
     final totalCards = cards.length;
     if (totalCards == 0) {
       return StatisticsState(
@@ -59,7 +59,7 @@ class Statistic extends _$Statistic {
     );
   }
 
-  Map<String, int> _buildIntervalBuckets(List<Flashcard> cards) {
+  Map<String, int> _buildIntervalBuckets(List<FlashcardModel> cards) {
     final buckets = <String, int>{
       "1 день": 0,
       "2–3 дня": 0,

@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/fllashcards/deck_entity.dart';
+import 'package:test_practic/core/models/fllashcards/deck_model.dart';
 import 'package:test_practic/data/repositories/fllashcards/flashcard_repository.dart';
 
 class GetUsersDecksUseCase {
@@ -6,7 +6,7 @@ class GetUsersDecksUseCase {
 
   GetUsersDecksUseCase(this.repository);
 
-  List<DeckEntity> execute(int userId) {
+  List<DeckModel> execute(int userId) {
     return repository.getUsersDecks(userId);
   }
 }

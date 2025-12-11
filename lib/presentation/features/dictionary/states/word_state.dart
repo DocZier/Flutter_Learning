@@ -1,11 +1,11 @@
 import '../../../../core/models/dictionary/dictionary_model.dart';
 
 class WordState {
-  final DictionaryWord word;
+  final DictionaryWordModel word;
 
   WordState({required this.word});
 
-  WordState copyWith({DictionaryWord? word}) {
+  WordState copyWith({DictionaryWordModel? word}) {
     return WordState(word: word ?? this.word);
   }
 }

@@ -43,15 +43,15 @@ class StudyNotifier extends _$StudyNotifier {
     );
   }
 
-  List<Flashcard> _loadFlashcards(String deckId) {
-    return _getFlashcardsByDeckIdUseCase.execute(deckId).map(Flashcard.fromEntity).toList();
+  List<FlashcardModel> _loadFlashcards(String deckId) {
+    return _getFlashcardsByDeckIdUseCase.execute(deckId);
   }
 
   void flip() {
     state = state.copyWith(isFlipped: !state.isFlipped);
   }
 
-  void setCurrentCard(Flashcard? card) {
+  void setCurrentCard(FlashcardModel? card) {
     state = state.copyWith(currentCard: card);
   }
 
@@ -71,10 +71,10 @@ class StudyNotifier extends _$StudyNotifier {
     if (card == null) return;
 
     flip();
-    final updated = _applyQualityUseCase.execute(card.toEntity(), quality);
+    final updated = _applyQualityUseCase.execute(card, quality);
     await GetIt.I<SaveFlashcardUseCase>().execute(updated);
 
-    final newDue = List<Flashcard>.from(state.dueCards);
+    final newDue = List<FlashcardModel>.from(state.dueCards);
     newDue.removeWhere((c) => c.id == card.id);
 
     if (newDue.isNotEmpty) {

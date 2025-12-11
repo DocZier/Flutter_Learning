@@ -3,7 +3,7 @@ import '../../../../core/models/settings/settings_model.dart';
 class SettingsState {
   final bool isLoading;
   final bool isError;
-  final AppSettings? settings;
+  final AppSettingsModel? settings;
 
   const SettingsState({
     this.isLoading = false,
@@ -14,7 +14,7 @@ class SettingsState {
   SettingsState copyWith({
     bool? isLoading,
     bool? isError,
-    AppSettings? settings,
+    AppSettingsModel? settings,
   }) {
     return SettingsState(
       isLoading: isLoading ?? this.isLoading,

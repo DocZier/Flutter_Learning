@@ -18,10 +18,10 @@ import 'package:test_practic/domain/usecases/lessons/update_review_interval_usec
 
 import '../../../data/repositories/lessons/lessons_repository.dart';
 import '../../../data/repositories/lessons/test_repository.dart';
-import '../../../data/datasources/local/lessons/lessons_local_source.dart';
-import '../../../data/datasources/local/lessons/test_local_source.dart';
-import '../../../data/datasources/remote/lessons/lessons_remote_source.dart';
-import '../../../data/datasources/remote/lessons/test_remote_source.dart';
+import '../../../data/datasources/local/lessons_local_source.dart';
+import '../../../data/datasources/local/test_local_source.dart';
+import '../../../data/datasources/remote/lessons_remote_source.dart';
+import '../../../data/datasources/remote/test_remote_source.dart';
 
 void registerLessonsDependencies() {
   GetIt.I.registerLazySingleton<LessonsLocalDataSource>(

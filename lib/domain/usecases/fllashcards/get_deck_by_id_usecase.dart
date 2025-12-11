@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/fllashcards/deck_entity.dart';
+import 'package:test_practic/core/models/fllashcards/deck_model.dart';
 import 'package:test_practic/data/repositories/fllashcards/flashcard_repository.dart';
 
 class GetDeckByIdUseCase {
@@ -6,7 +6,7 @@ class GetDeckByIdUseCase {
 
   GetDeckByIdUseCase(this.repository);
 
-  DeckEntity execute(int userId, String id) {
+  DeckModel execute(int userId, String id) {
     return repository.getDeckById(userId, id);
   }
 }

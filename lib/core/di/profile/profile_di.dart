@@ -5,8 +5,8 @@ import 'package:test_practic/domain/usecases/profile/get_profile_usecase.dart';
 import 'package:test_practic/domain/usecases/profile/save_profile_usecase.dart';
 
 import '../../../data/repositories/profile/profile_repository.dart';
-import '../../../data/datasources/local/profile/profile_local_source.dart';
-import '../../../data/datasources/remote/profile/profile_remote_source.dart';
+import '../../../data/datasources/local/profile_local_source.dart';
+import '../../../data/datasources/remote/profile_remote_source.dart';
 
 void registerProfileDependencies() {
   GetIt.I.registerLazySingleton<ProfileLocalDataSource>(

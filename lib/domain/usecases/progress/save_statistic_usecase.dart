@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/progress/stats_entity.dart';
+import 'package:test_practic/core/models/progress/stats_model.dart';
 import 'package:test_practic/data/repositories/progress/progress_repository.dart';
 
 class SaveStatisticsUseCase {
@@ -6,7 +6,7 @@ class SaveStatisticsUseCase {
 
   SaveStatisticsUseCase(this.repository);
 
-  Future<void> execute(StatisticsEntity stats) async {
+  Future<void> execute(StatisticsModel stats) async {
     await repository.saveStatistics(stats);
   }
 }

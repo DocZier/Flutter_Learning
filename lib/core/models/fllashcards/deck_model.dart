@@ -1,33 +1,21 @@
-import 'deck_entity.dart';
+class DeckModel {
+  final int userId;
+  final String id;
+  final String title;
+  final String description;
 
-class Deck extends DeckEntity {
-  const Deck({
-    required super.userId,
-    required super.id,
-    required super.title,
-    required super.description,
+  const DeckModel({
+    required this.userId,
+    required this.id,
+    required this.title,
+    required this.description,
   });
 
-  DeckEntity toEntity() => DeckEntity(
-    userId: userId,
-    id: id,
-    title: title,
-    description: description,
-  );
-
-  factory Deck.fromEntity(DeckEntity entity) => Deck(
-    userId: entity.userId,
-    id: entity.id,
-    title: entity.title,
-    description: entity.description,
-  );
-
-  @override
-  Deck copyWith({
+  DeckModel copyWith({
     String? title,
-    String? description
+    String? description,
   }) {
-    return Deck(
+    return DeckModel(
       userId: userId,
       id: id,
       title: title ?? this.title,

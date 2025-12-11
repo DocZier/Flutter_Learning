@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:test_practic/core/models/fllashcards/flashcard_entity.dart';
 import 'package:get_it/get_it.dart';
+import 'package:test_practic/core/models/fllashcards/flashcards_model.dart';
 import 'package:test_practic/domain/usecases/fllashcards/save_flashcard_usecase.dart';
 
 part 'add_card_provider.g.dart';
@@ -26,7 +26,7 @@ class AddCardNotifier extends _$AddCardNotifier {
   }
 
   Future<void> addCard(String deckId, String questionText, String answerText) async {
-    final flashcard = FlashcardEntity(
+    final flashcard = FlashcardModel(
       deckId: deckId,
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       question: questionText,

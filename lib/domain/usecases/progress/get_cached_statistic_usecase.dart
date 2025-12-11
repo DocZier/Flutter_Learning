@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/progress/stats_entity.dart';
+import 'package:test_practic/core/models/progress/stats_model.dart';
 import 'package:test_practic/data/repositories/progress/progress_repository.dart';
 
 class GetCachedStatisticsUseCase {
@@ -6,7 +6,7 @@ class GetCachedStatisticsUseCase {
 
   GetCachedStatisticsUseCase(this.repository);
 
-  StatisticsEntity? execute(int userId) {
+  StatisticsModel? execute(int userId) {
     return repository.getCachedStatistics(userId);
   }
 }

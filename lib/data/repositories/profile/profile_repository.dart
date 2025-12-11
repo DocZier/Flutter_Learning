@@ -1,12 +1,11 @@
+import 'package:test_practic/core/models/shared/user_model.dart';
 
-import 'package:test_practic/core/models/shared/user_entity.dart';
-
-import '../../datasources/local/profile/profile_local_source.dart';
-import '../../datasources/remote/profile/profile_remote_source.dart';
+import '../../datasources/local/profile_local_source.dart';
+import '../../datasources/remote/profile_remote_source.dart';
 
 abstract class ProfileRepository {
-  Future<UserEntity> getProfile(int userId);
-  Future<void> saveProfile(UserEntity profile, int userId);
+  Future<UserModel> getProfile(int userId);
+  Future<void> saveProfile(UserModel profile, int userId);
   Future<void> deleteProfile(int userId);
   void logout();
 }
@@ -22,24 +21,20 @@ class ProfileRepositoryImpl implements ProfileRepository {
         _localDataSource = localDataSource;
 
   @override
-  Future<UserEntity> getProfile(int userId) async {
+  Future<UserModel> getProfile(int userId) async {
     try {
-      print("Trying to get profile^ ${userId}");
       final remoteProfile = await _remoteDataSource.getProfileById(userId);
-      print("Remote answer: ${remoteProfile.toString()}");
       if (remoteProfile != null) {
         _localDataSource.saveProfile(remoteProfile);
-        print("Local answer: ${_localDataSource.getProfile().toString()}");
       }
-
       return _localDataSource.getProfile();
     } catch (e) {
-     rethrow;
+      rethrow;
     }
   }
 
   @override
-  Future<void> saveProfile(UserEntity profile, int userId) async {
+  Future<void> saveProfile(UserModel profile, int userId) async {
     _localDataSource.saveProfile(profile);
     await _remoteDataSource.saveProfile(profile, userId);
   }

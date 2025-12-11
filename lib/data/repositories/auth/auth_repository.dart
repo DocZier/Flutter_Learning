@@ -1,12 +1,12 @@
-import '../../../core/models/shared/user_entity.dart';
-import '../../datasources/local/auth/auth_local_source.dart';
-import '../../datasources/remote/auth/auth_remote_source.dart';
+import 'package:test_practic/core/models/shared/user_model.dart';
+import '../../datasources/local/auth_local_source.dart';
+import '../../datasources/remote/auth_remote_source.dart';
 
 abstract class AuthRepository {
-  Future<UserEntity?> login(String login, String password);
-  Future<UserEntity?> register(String login, String email, String password);
+  Future<UserModel?> login(String login, String password);
+  Future<UserModel?> register(String login, String email, String password);
   void logout();
-  UserEntity? checkAuthStatus();
+  UserModel? checkAuthStatus();
   void deleteAccount(int userId);
 }
 
@@ -21,11 +21,9 @@ class AuthRepositoryImpl implements AuthRepository {
         _localDataSource = localDataSource;
 
   @override
-  Future<UserEntity?> login(String login, String password) async {
+  Future<UserModel?> login(String login, String password) async {
     try {
-      print('login repository start');
       final user = await _remoteDataSource.login(login, password);
-      print('login user: ${user.toString()}');
       if (user != null) {
         _localDataSource.saveCurrentUser(user);
       }
@@ -36,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserEntity?> register(
+  Future<UserModel?> register(
       String login,
       String email,
       String password,
@@ -60,7 +58,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  UserEntity? checkAuthStatus() {
+  UserModel? checkAuthStatus() {
     return _localDataSource.getCurrentUser();
   }
 

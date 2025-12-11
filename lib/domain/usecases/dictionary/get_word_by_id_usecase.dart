@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/dictionary/dictionary_entity.dart';
+import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
 import 'package:test_practic/data/repositories/dictionary/dictionary_repository.dart';
 
 class GetWordByIdUseCase {
@@ -6,7 +6,7 @@ class GetWordByIdUseCase {
 
   GetWordByIdUseCase(this.repository);
 
-  Future<DictionaryWordEntity> execute(int id) async {
+  Future<DictionaryWordModel> execute(int id) async {
     return await repository.getWordById(id);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/settings/settings_entity.dart';
+import 'package:test_practic/core/models/settings/settings_model.dart';
 import 'package:test_practic/data/repositories/settings/settings_repository.dart';
 
 class GetLocalSettingsUseCase {
@@ -6,7 +6,7 @@ class GetLocalSettingsUseCase {
 
   GetLocalSettingsUseCase(this.repository);
 
-  AppSettingsEntity? execute() {
+  AppSettingsModel? execute() {
     return repository.getLocalSettings();
   }
 }

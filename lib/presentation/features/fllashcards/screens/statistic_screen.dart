@@ -134,12 +134,12 @@ class DeckStatisticsScreen extends ConsumerWidget {
                   MetricBarCard(
                     title: 'Активность просмотра',
                     metrics: [
-                      Metric(
+                      MetricModel(
                         title: 'Сегодня',
                         value: stats.todayReviews,
                         max: stats.totalCards,
                       ),
-                      Metric(
+                      MetricModel(
                         title: 'Всего',
                         value: stats.totalReviews,
                         max: stats.totalCards,
@@ -151,7 +151,7 @@ class DeckStatisticsScreen extends ConsumerWidget {
                     title: 'Интервалы',
                     metrics: [
                       ...stats.intervalBuckets.entries.map((interval) {
-                        return Metric(
+                        return MetricModel(
                           title: interval.key,
                           value: interval.value,
                           max: stats.totalCards,

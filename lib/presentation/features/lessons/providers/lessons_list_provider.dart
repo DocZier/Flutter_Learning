@@ -20,11 +20,10 @@ class LessonsList extends _$LessonsList {
     final userId = authState is Authenticated ? authState.user.id : null;
 
     final lessons = await _getLessonsUseCase.execute(userId: userId);
-    final lessonModels = lessons.map(LessonModel.fromEntity).toList();
 
     return LessonsListState(
-      lessons: lessonModels,
-      filtered: lessonModels.where((l) => l.level.toUpperCase() == "N5").toList(),
+      lessons: lessons,
+      filtered: lessons.where((l) => l.level.toUpperCase() == "N5").toList(),
       selectedLevel: "N5",
       isLoading: false,
     );

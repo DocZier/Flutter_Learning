@@ -58,7 +58,7 @@ final class StatisticProvider
   }
 }
 
-String _$statisticHash() => r'53e5a6c174cb843c82e9a6ed5d2481c034dd096a';
+String _$statisticHash() => r'c4aba6e1fbb5098577ca31ccc6514b7314cdb578';
 
 final class StatisticFamily extends $Family
     with

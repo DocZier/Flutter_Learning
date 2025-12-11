@@ -1,12 +1,12 @@
+import 'package:test_practic/core/models/progress/stats_model.dart';
 import '../../../../core/models/shared/learining_progress_enity.dart';
-import '../../../../core/models/progress/stats_entity.dart';
 
 class ProgressState {
   final bool isLoading;
   final bool isError;
   final String? errorMessage;
-  final StatisticsEntity? statistics;
-  final List<LearningProgressEntity>? progressHistory;
+  final StatisticsModel? statistics;
+  final List<LearningProgressModel>? progressHistory;
 
   const ProgressState({
     this.isLoading = false,
@@ -20,8 +20,8 @@ class ProgressState {
     bool? isLoading,
     bool? isError,
     String? errorMessage,
-    StatisticsEntity? statistics,
-    List<LearningProgressEntity>? progressHistory,
+    StatisticsModel? statistics,
+    List<LearningProgressModel>? progressHistory,
   }) {
     return ProgressState(
       isLoading: isLoading ?? this.isLoading,

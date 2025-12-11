@@ -1,88 +1,67 @@
-import 'stats_entity.dart';
+class StatisticsModel {
+  final int userId;
+  final int totalDecks;
+  final int totalFlashcards;
+  final int cardsDueToday;
+  final int cardsReviewedToday;
+  final double averageEaseFactor;
+  final int totalLessonsAvailable;
+  final int completedLessons;
+  final int testsTotalAttempts;
+  final int testsCorrectAnswers;
+  final int retentionRate;
+  final int daysSinceFirstActivity;
+  final int daysSinceLastActivity;
+  final int learningStreak;
 
-class StatisticsModel extends StatisticsEntity {
   const StatisticsModel({
-    required super.userId,
-    required super.totalDecks,
-    required super.totalFlashcards,
-    required super.cardsDueToday,
-    required super.cardsReviewedToday,
-    required super.averageEaseFactor,
-    required super.totalLessonsAvailable,
-    required super.completedLessons,
-    required super.testsTotalAttempts,
-    required super.testsCorrectAnswers,
-    required super.retentionRate,
-    required super.daysSinceFirstActivity,
-    required super.daysSinceLastActivity,
-    required super.learningStreak,
+    required this.userId,
+    required this.totalDecks,
+    required this.totalFlashcards,
+    required this.cardsDueToday,
+    required this.cardsReviewedToday,
+    required this.averageEaseFactor,
+    required this.totalLessonsAvailable,
+    required this.completedLessons,
+    required this.testsTotalAttempts,
+    required this.testsCorrectAnswers,
+    required this.retentionRate,
+    required this.daysSinceFirstActivity,
+    required this.daysSinceLastActivity,
+    required this.learningStreak,
   });
 
-  factory StatisticsModel.fromEntity(StatisticsEntity e) => StatisticsModel(
-    userId: e.userId,
-    totalDecks: e.totalDecks,
-    totalFlashcards: e.totalFlashcards,
-    cardsDueToday: e.cardsDueToday,
-    cardsReviewedToday: e.cardsReviewedToday,
-    averageEaseFactor: e.averageEaseFactor,
-    totalLessonsAvailable: e.totalLessonsAvailable,
-    completedLessons: e.completedLessons,
-    testsTotalAttempts: e.testsTotalAttempts,
-    testsCorrectAnswers: e.testsCorrectAnswers,
-    retentionRate: e.retentionRate,
-    daysSinceFirstActivity: e.daysSinceFirstActivity,
-    daysSinceLastActivity: e.daysSinceLastActivity,
-    learningStreak: e.learningStreak,
-  );
-
-  StatisticsEntity toEntity() => StatisticsEntity(
-    userId: userId,
-    totalDecks: totalDecks,
-    totalFlashcards: totalFlashcards,
-    cardsDueToday: cardsDueToday,
-    cardsReviewedToday: cardsReviewedToday,
-    averageEaseFactor: averageEaseFactor,
-    totalLessonsAvailable: totalLessonsAvailable,
-    completedLessons: completedLessons,
-    testsTotalAttempts: testsTotalAttempts,
-    testsCorrectAnswers: testsCorrectAnswers,
-    retentionRate: retentionRate,
-    daysSinceFirstActivity: daysSinceFirstActivity,
-    daysSinceLastActivity: daysSinceLastActivity,
-    learningStreak: learningStreak,
-  );
-
-  Map<String, dynamic> toJson() => {
-    'userId': userId,
-    'totalDecks': totalDecks,
-    'totalFlashcards': totalFlashcards,
-    'cardsDueToday': cardsDueToday,
-    'cardsReviewedToday': cardsReviewedToday,
-    'averageEaseFactor': averageEaseFactor,
-    'totalLessonsAvailable': totalLessonsAvailable,
-    'completedLessons': completedLessons,
-    'testsTotalAttempts': testsTotalAttempts,
-    'testsCorrectAnswers': testsCorrectAnswers,
-    'retentionRate': retentionRate,
-    'daysSinceFirstActivity': daysSinceFirstActivity,
-    'daysSinceLastActivity': daysSinceLastActivity,
-    'learningStreak': learningStreak,
-  };
-
-  factory StatisticsModel.fromJson(Map<String, dynamic> json) => StatisticsModel(
-    userId: json['userId'] as int,
-    totalDecks: json['totalDecks'] as int,
-    totalFlashcards: json['totalFlashcards'] as int,
-    cardsDueToday: json['cardsDueToday'] as int,
-    cardsReviewedToday: json['cardsReviewedToday'] as int,
-    averageEaseFactor: (json['averageEaseFactor'] as num).toDouble(),
-    totalLessonsAvailable: json['totalLessonsAvailable'] as int,
-    completedLessons: json['completedLessons'] as int,
-    testsTotalAttempts: json['testsTotalAttempts'] as int,
-    testsCorrectAnswers: json['testsCorrectAnswers'] as int,
-    retentionRate: json['retentionRate'] as int,
-    daysSinceFirstActivity: json['daysSinceFirstActivity'] as int,
-    daysSinceLastActivity: json['daysSinceLastActivity'] as int,
-    learningStreak: json['learningStreak'] as int,
-  );
+  StatisticsModel copyWith({
+    int? userId,
+    int? totalDecks,
+    int? totalFlashcards,
+    int? cardsDueToday,
+    int? cardsReviewedToday,
+    double? averageEaseFactor,
+    int? totalLessonsAvailable,
+    int? completedLessons,
+    int? testsTotalAttempts,
+    int? testsCorrectAnswers,
+    int? retentionRate,
+    int? daysSinceFirstActivity,
+    int? daysSinceLastActivity,
+    int? learningStreak,
+  }) {
+    return StatisticsModel(
+      userId: userId ?? this.userId,
+      totalDecks: totalDecks ?? this.totalDecks,
+      totalFlashcards: totalFlashcards ?? this.totalFlashcards,
+      cardsDueToday: cardsDueToday ?? this.cardsDueToday,
+      cardsReviewedToday: cardsReviewedToday ?? this.cardsReviewedToday,
+      averageEaseFactor: averageEaseFactor ?? this.averageEaseFactor,
+      totalLessonsAvailable: totalLessonsAvailable ?? this.totalLessonsAvailable,
+      completedLessons: completedLessons ?? this.completedLessons,
+      testsTotalAttempts: testsTotalAttempts ?? this.testsTotalAttempts,
+      testsCorrectAnswers: testsCorrectAnswers ?? this.testsCorrectAnswers,
+      retentionRate: retentionRate ?? this.retentionRate,
+      daysSinceFirstActivity: daysSinceFirstActivity ?? this.daysSinceFirstActivity,
+      daysSinceLastActivity: daysSinceLastActivity ?? this.daysSinceLastActivity,
+      learningStreak: learningStreak ?? this.learningStreak,
+    );
+  }
 }

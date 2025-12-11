@@ -1,4 +1,4 @@
-class DeckStatistics {
+class DeckStatisticsModel {
   final int totalCards;
   final int dueCards;
   final int learnedCards;
@@ -8,7 +8,7 @@ class DeckStatistics {
   final int totalReviews;
   final Map<String, int> intervalBuckets;
 
-  DeckStatistics({
+  DeckStatisticsModel({
     required this.totalCards,
     required this.dueCards,
     required this.learnedCards,

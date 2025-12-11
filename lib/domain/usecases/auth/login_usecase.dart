@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/shared/user_entity.dart';
+import 'package:test_practic/core/models/shared/user_model.dart';
 import 'package:test_practic/data/repositories/auth/auth_repository.dart';
 
 class LoginUseCase {
@@ -6,7 +6,7 @@ class LoginUseCase {
 
   LoginUseCase(this.repository);
 
-  Future<UserEntity?> execute(String login, String password) async {
+  Future<UserModel?> execute(String login, String password) async {
     print('start usecase');
     return await repository.login(login, password);
   }

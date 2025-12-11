@@ -1,4 +1,4 @@
-import 'package:test_practic/core/models/shared/user_entity.dart';
+import 'package:test_practic/core/models/shared/user_model.dart';
 import 'package:test_practic/data/repositories/auth/auth_repository.dart';
 
 class RegisterUseCase {
@@ -6,7 +6,7 @@ class RegisterUseCase {
 
   RegisterUseCase(this.repository);
 
-  Future<UserEntity?> execute(String login, String email, String password) async {
+  Future<UserModel?> execute(String login, String email, String password) async {
     return await repository.register(login, email, password);
   }
 }

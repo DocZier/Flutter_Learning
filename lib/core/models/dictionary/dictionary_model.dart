@@ -1,52 +1,35 @@
-import 'dictionary_entity.dart';
+class DictionaryWordModel {
+  final int id;
+  final String word;
+  final String furigana;
+  final String romanji;
+  final String meaning;
+  final List<String> examples;
 
-class DictionaryWord extends DictionaryWordEntity {
-  const DictionaryWord({
-    required super.id,
-    required super.word,
-    required super.furigana,
-    required super.romanji,
-    required super.meaning,
-    required super.examples,
+  const DictionaryWordModel({
+    required this.id,
+    required this.word,
+    required this.furigana,
+    required this.romanji,
+    required this.meaning,
+    required this.examples,
   });
 
-  factory DictionaryWord.fromEntity(DictionaryWordEntity entity) {
-    return DictionaryWord(
-      id: entity.id,
-      word: entity.word,
-      furigana: entity.furigana,
-      romanji: entity.romanji,
-      meaning: entity.meaning,
-      examples: entity.examples,
+  DictionaryWordModel copyWith({
+    int? id,
+    String? word,
+    String? furigana,
+    String? romanji,
+    String? meaning,
+    List<String>? examples,
+  }) {
+    return DictionaryWordModel(
+      id: id ?? this.id,
+      word: word ?? this.word,
+      furigana: furigana ?? this.furigana,
+      romanji: romanji ?? this.romanji,
+      meaning: meaning ?? this.meaning,
+      examples: examples ?? this.examples,
     );
   }
-
-  DictionaryWordEntity toEntity() => DictionaryWordEntity(
-    id: id,
-    word: word,
-    furigana: furigana,
-    romanji: romanji,
-    meaning: meaning,
-    examples: examples,
-  );
-
-  factory DictionaryWord.fromJson(Map<String, dynamic> json) {
-    return DictionaryWord(
-      id: json['id'],
-      word: json['word'],
-      furigana: json['furigana'],
-      romanji: json['romanji'],
-      meaning: json['meaning'],
-      examples: List<String>.from(json['examples']),
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'word': word,
-    'furigana': furigana,
-    'romanji': romanji,
-    'meaning': meaning,
-    'examples': examples,
-  };
 }
