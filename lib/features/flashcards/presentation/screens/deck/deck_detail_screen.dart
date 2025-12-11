@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_practic/features/flashcards/presentation/provider/deck/deck_detail_provider.dart';
 import 'package:test_practic/features/flashcards/presentation/widgets/flashcard/flashcard_view.dart';
-import '../../../../../shared/providers/auth_provider.dart';
-import '../../../../../shared/state/auth_state.dart';
 import '../../provider/deck/deck_provider.dart';
 
 class DeckDetailsScreen extends ConsumerWidget {
@@ -48,7 +46,7 @@ class DeckDetailsScreen extends ConsumerWidget {
             icon: Icon(Icons.delete),
             onPressed: () {
               Router.neglect(context, () {
-                context.go('/home');
+                context.pop();
                 ref.read(deckProvider.notifier).removeDeck(currentDeck);
               });
             },

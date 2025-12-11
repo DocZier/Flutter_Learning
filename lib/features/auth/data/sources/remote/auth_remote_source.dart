@@ -1,23 +1,18 @@
 
+import '../../../../../shared/data/remote_user_source.dart';
 import '../../../domain/entities/user_entity.dart';
 
 class AuthRemoteDataSource {
 
-  static final List<Map<String, dynamic>> _users = [
-    {
-      'id': '1',
-      'login': 'test',
-      'email': 'test@test.com',
-      'password': 'test',
-      'created_at': DateTime.now().toIso8601String(),
-    },
-  ];
+  final RemoteUserSource remote;
+
+  AuthRemoteDataSource(this.remote);
 
   Future<UserEntity?> login(String login, String password) async {
 
     await Future.delayed(const Duration(milliseconds: 500));
 
-    final user = _users.firstWhere(
+    final user = remote.users.firstWhere(
           (u) => u['email'] == login && u['password'] == password,
       orElse: () => throw Exception('Данные неверны'),
     );
@@ -37,23 +32,23 @@ class AuthRemoteDataSource {
   }) async {
     await Future.delayed(const Duration(milliseconds: 500));
 
-    if (_users.any((u) => u['email'] == email)) {
+    if (remote.users.any((u) => u['email'] == email)) {
       throw Exception('Пользователь уже существует');
     }
 
-    if (_users.any((u) => u['login'] == login)) {
+    if (remote.users.any((u) => u['login'] == login)) {
       throw Exception('Имя уже используется');
     }
 
     final Map<String, String> newUser = {
-      'id': '${_users.length + 1}',
+      'id': '${remote.users.length + 1}',
       'login': login,
       'email': email.toString(),
       'password': password,
       'created_at': DateTime.now().toIso8601String(),
     };
 
-    _users.add(newUser);
+    remote.users.add(newUser);
 
     return UserEntity(
       id: int.parse(newUser['id']!),
@@ -64,6 +59,6 @@ class AuthRemoteDataSource {
   }
 
   Future<void> deleteAccount(int userId) async {
-    _users.removeWhere((u) => u['id'] == userId.toString());
+    remote.users.removeWhere((u) => u['id'] == userId.toString());
   }
 }

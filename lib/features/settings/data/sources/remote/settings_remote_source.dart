@@ -5,21 +5,16 @@ import '../../../domain/entities/settings_entity.dart';
 
 class SettingsRemoteDataSource {
   static final List<Map<String, dynamic>> _settings = [
-    {
-      'id': '1',
-      'userId': '1',
-      'theme': 'system',
-      'start_of_the_day': 0,
-    },
+    {'id': '1', 'userId': '1', 'theme': 'system', 'start_of_the_day': 0},
   ];
 
   Future<AppSettingsEntity?> getSettingsById(int userId) async {
     final settings = _settings.firstWhere(
-          (s) => int.parse(s['userId']) == userId,
+      (s) => int.parse(s['userId']) == userId,
     );
     return AppSettingsEntity(
-        themeMode: _getThemeMode(settings['theme']),
-        startOfTheDay: settings['start_of_the_day'],
+      themeMode: _getThemeMode(settings['theme']),
+      startOfTheDay: settings['start_of_the_day'],
     );
   }
 
@@ -39,20 +34,16 @@ class SettingsRemoteDataSource {
   }
 
   Future<void> saveSettings(AppSettingsEntity settings, int? userId) async {
-    if (userId == null) {
+    final index = _settings.indexWhere((s) => int.parse(s['userId']) == userId);
+    if (index == -1) {
       _settings.add({
-        'id': _settings.length.toString(),
-        'userId': userId,
+        'id': '${(_settings.length + 1)}',
+        'userId': '$userId',
         'theme': settings.themeMode,
         'start_of_the_day': settings.startOfTheDay,
       });
-    } else {
-      final index = _settings.indexWhere(
-            (s) => int.parse(s['userId']) == userId,
-      );
-      if (index == -1) {
-        throw Exception('User not found');
-      }
+    }
+    else {
       _settings[index] = {
         'userId': userId.toString(),
         'theme': settings.themeMode,

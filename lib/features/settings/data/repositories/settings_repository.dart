@@ -47,6 +47,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
     try {
       _localDataSource.saveSettings(settings);
       if (userId != null) {
+        print("Setting repository: ${userId}");
         await _remoteDataSource.saveSettings(settings, userId);
       }
     } catch (e) {

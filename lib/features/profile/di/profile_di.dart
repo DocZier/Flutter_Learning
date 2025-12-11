@@ -10,7 +10,7 @@ void registerProfileDependencies() {
         () => ProfileLocalDataSource(),
   );
   GetIt.I.registerLazySingleton<ProfileRemoteDataSource>(
-        () => ProfileRemoteDataSource(),
+        () => ProfileRemoteDataSource(GetIt.I()),
   );
 
   GetIt.I.registerLazySingleton<ProfileRepository>(

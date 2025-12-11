@@ -7,9 +7,9 @@ class FeaturesConstants {
     {
       'title': 'Карточки',
       'icon': Icons.my_library_books_outlined,
-      'route': '/home',
+      'route': '/decks',
     },
-    {'title': 'Статистика', 'icon': Icons.bar_chart, 'route': '/stats'},
+    {'title': 'Статистика', 'icon': Icons.bar_chart, 'route': '/progress'},
     {'title': 'Профиль', 'icon': Icons.person, 'route': '/profile'},
     {'title': 'Настройки', 'icon': Icons.settings, 'route': '/settings'},
   ];

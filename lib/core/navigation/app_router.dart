@@ -79,8 +79,8 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '/home',
-        name: 'home',
+        path: '/decks',
+        name: 'decks',
         builder: (context, state) {
           return HomeScreen();
         },
@@ -100,8 +100,8 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '/stats',
-        name: 'stats',
+        path: '/progress',
+        name: 'progress',
         builder: (context, state) {
           return StatisticsScreen();
         },

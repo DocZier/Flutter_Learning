@@ -6,7 +6,7 @@ import '../data/sources/remote/auth_remote_source.dart';
 
 void registerAuthDependencies() {
   GetIt.I.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSource(),
+    () => AuthRemoteDataSource(GetIt.I()),
   );
   GetIt.I.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSource(),

@@ -46,9 +46,9 @@ class Registration extends _$Registration {
 
     try {
       final user = await _repository.register(
+        username.text.trim(),
         email.text.trim(),
         password.text.trim(),
-        username.text.trim(),
       );
       if (user != null) {
         ref

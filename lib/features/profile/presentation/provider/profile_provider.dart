@@ -38,7 +38,7 @@ class Profile extends _$Profile {
       final userId = (ref.read(authProvider) as Authenticated).user.id;
       print((ref.read(authProvider) as Authenticated).user.toString());
       print(userId);
-      final entity = await _profileRepository.getProfile((ref.read(authProvider) as Authenticated).user.id);
+      final entity = await _profileRepository.getProfile(userId);
 
       return ProfileState(user: User.fromEntity(entity));
     } catch (e) {

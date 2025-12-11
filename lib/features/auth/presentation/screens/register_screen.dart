@@ -132,7 +132,7 @@ class RegistrationScreen extends ConsumerWidget {
                         context,
                       ).showSnackBar(SnackBar(content: Text(error))),
                       onSuccess: () {
-                        context.go('/home');
+                        context.go('/menu');
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Аккаунт создан!")),

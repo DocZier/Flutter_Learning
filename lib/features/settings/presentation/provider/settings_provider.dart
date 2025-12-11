@@ -41,6 +41,8 @@ class Settings extends _$Settings {
       print(ref.read(authProvider));
       final user = (ref.read(authProvider) as Authenticated).user.id;
 
+      print("User id settings: ${user}");
+
       await _settingsRepository.saveSettings(settings.toEntity(), user);
       state = AsyncValue.data(
           state.value!.copyWith(settings: settings)

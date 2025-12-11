@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:test_practic/features/flashcards/data/model/flashcards_model.dart';
-import 'package:test_practic/models/decks.dart';
 
 import '../../../data/model/deck_model.dart';
 

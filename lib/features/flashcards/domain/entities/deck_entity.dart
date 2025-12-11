@@ -1,5 +1,3 @@
-import '../../../../models/flashcards.dart';
-
 class DeckEntity {
   final int userId;
   final String id;

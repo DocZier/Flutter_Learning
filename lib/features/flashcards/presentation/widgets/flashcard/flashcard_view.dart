@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_practic/models/flashcards.dart';
-
 import '../../../data/model/flashcards_model.dart';
 
 class CardListItem extends StatelessWidget {

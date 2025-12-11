@@ -1,23 +1,20 @@
 
 import 'package:test_practic/features/auth/domain/entities/user_entity.dart';
 
+import '../../../../../shared/data/remote_user_source.dart';
+
 class ProfileRemoteDataSource {
-  static final List<Map<String, dynamic>> _profiles = [
-    {
-      'id': 1,
-      'login': 'test',
-      'email': 'test@test.com',
-      'created_at': DateTime.now().toIso8601String(),
-    },
-  ];
+  final RemoteUserSource remote;
+
+  ProfileRemoteDataSource(this.remote);
 
   Future<UserEntity?> getProfileById(int userId) async {
     try {
-      print("Remote storage: ${_profiles.toString()}");
-      final profile = _profiles.firstWhere((p) => p['id'] == userId);
+      print("Remote storage: ${remote.users.toString()}");
+      final profile = remote.users.firstWhere((p) => p['id'] == '$userId');
       print("Remote profile: ${profile.toString()} to ${userId.toString()}");
       return UserEntity(
-       id: profile['id'],
+       id: int.parse(profile['id']),
        login: profile['login'],
        email: profile['email'],
        createdAt: DateTime.parse(profile['created_at']),
@@ -30,8 +27,8 @@ class ProfileRemoteDataSource {
 
   Future<bool> addProfile(String login, int userId, String email) async {
     try {
-      _profiles.add({
-        'id': (_profiles.length + 1),
+      remote.users.add({
+        'id': '${remote.users.length + 1}',
         'login': login,
         'email': email,
         'created_at': DateTime.now().toIso8601String(),
@@ -43,26 +40,26 @@ class ProfileRemoteDataSource {
   }
 
   Future<void> deleteProfile(int userId) async {
-    _profiles.removeWhere((p) => p['id'] == userId);
+    remote.users.removeWhere((p) => p['id'] == '$userId');
   }
 
   Future<void> saveProfile(UserEntity user, int userId) async {
-    final index = _profiles.indexWhere((p) => p['id'] == userId);
+    final index = remote.users.indexWhere((p) => p['id'] == '$userId');
     print("Remote index: $index");
 
     if (index == -1) {
-      _profiles.add({
-        'id': (_profiles.length + 1),
+      remote.users.add({
+        'id': '${remote.users.length + 1}',
         'login': user.login,
         'email': user.email,
         'created_at': DateTime.now().toIso8601String(),
       });
     } else {
-      _profiles[index] = {
-        'id': _profiles[index]['id'],
+      remote.users[index] = {
+        'id': '${remote.users[index]['id']}',
         'login': user.login,
         'email': user.email,
-        'created_at': _profiles[index]['created_at'],
+        'created_at': remote.users[index]['created_at'],
       };
     }
   }

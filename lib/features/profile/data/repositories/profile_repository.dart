@@ -24,6 +24,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<UserEntity> getProfile(int userId) async {
     try {
+      print("Trying to get profile^ ${userId}");
       final remoteProfile = await _remoteDataSource.getProfileById(userId);
       print("Remote answer: ${remoteProfile.toString()}");
       if (remoteProfile != null) {

@@ -5,7 +5,6 @@ import 'package:test_practic/features/lessons/presentation/state/test_state.dart
 
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/state/auth_state.dart';
-import '../../data/repositories/lessons_repository.dart';
 import '../../data/repositories/test_repository.dart';
 
 part 'test_provider.g.dart';

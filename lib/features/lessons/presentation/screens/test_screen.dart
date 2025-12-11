@@ -54,7 +54,7 @@ class TestScreen extends ConsumerWidget {
                   Text(
                     state.successful
                         ? "Урок успешно пройден!"
-                        : "Все неправильные ответы добавлены в очередь на повторение",
+                        : "",
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 30),
