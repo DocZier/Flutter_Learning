@@ -32,7 +32,7 @@ class ProgressRepositoryImpl implements ProgressRepository {
 
   @override
   Future<StatisticsModel> computeStatisticsForUser(int userId) async {
-    final decks = _flashcardRepository.getUsersDecks(userId);
+    final decks = await _flashcardRepository.getUsersDecks(userId);
     final totalDecks = decks.length;
     int totalFlashcards = 0;
     int cardsDueToday = 0;
@@ -44,7 +44,7 @@ class ProgressRepositoryImpl implements ProgressRepository {
     final endOfToday = startOfToday.add(const Duration(days: 1));
 
     for (final deck in decks) {
-      final cards = _flashcardRepository.getFlashcardsByDeckId(deck.id);
+      final cards = await _flashcardRepository.getFlashcardsByDeckId(deck.id);
       totalFlashcards += cards.length;
       for (final c in cards) {
         if (c.nextReview.isBefore(now) || c.nextReview.isAtSameMomentAs(now)) {

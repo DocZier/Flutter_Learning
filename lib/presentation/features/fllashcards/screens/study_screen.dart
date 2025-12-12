@@ -15,87 +15,104 @@ class StudyScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyProvider(currentDeck));
+    final studyState = ref.watch(studyProvider(currentDeck));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(state.deckTitle)
+    return studyState.when(
+      loading: () => Scaffold(
+        appBar: AppBar(title: Text('Изучение')),
+        body: const Center(child: CircularProgressIndicator()),
       ),
-      body: ref.watch(studyProvider(currentDeck)).remainingCards == 0
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: finaleIcon,
-                    height: 160,
-                    width: 160,
-                    placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        Center(child: Icon(Icons.error)),
-                    fit: BoxFit.contain,
-                  ),
-                  Text(
-                    'Все карточки изучены.\nПриходите завтра.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => {
-                      Router.neglect(context, () {
-                        context.pushReplacement(
-                          '/deck_stats',
-                          extra: {'deckId': currentDeck},
-                        );
-                      }),
-                    },
-                    child: Text('Статистика'),
-                  ),
-                ],
+      error: (error, stack) => Scaffold(
+        appBar: AppBar(title: Text('Изучение')),
+        body: Center(child: Text('Ошибка: $error')),
+      ),
+      data: (state) => Scaffold(
+        appBar: AppBar(
+          title: Text(state.deckTitle),
+        ),
+        body: state.remainingCards == 0
+            ? Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CachedNetworkImage(
+                imageUrl: finaleIcon,
+                height: 160,
+                width: 160,
+                placeholder: (context, url) =>
+                const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) =>
+                const Center(child: Icon(Icons.error)),
+                fit: BoxFit.contain,
               ),
-            )
-          : InkWell(
-              onTap: () {ref.read(studyProvider(currentDeck).notifier).flip();},
-              child: Card(
-                margin: EdgeInsets.all(24),
-                child: Padding(
-                  padding: EdgeInsets.all(32),
-                  child: Center(
-                    child: Text(
-                      state.isFlipped ? ref.watch(studyProvider(currentDeck)).currentCard!.answer : ref.watch(studyProvider(currentDeck)).currentCard!.question,
-                      style: TextStyle(fontSize: 28),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+              const Text(
+                'Все карточки изучены.\nПриходите завтра.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Router.neglect(context, () {
+                    context.pushReplacement(
+                      '/deck_stats',
+                      extra: {'deckId': currentDeck},
+                    );
+                  });
+                },
+                child: const Text('Статистика'),
+              ),
+            ],
+          ),
+        )
+            : InkWell(
+          onTap: () {
+            ref.read(studyProvider(currentDeck).notifier).flip();
+          },
+          child: Card(
+            margin: const EdgeInsets.all(24),
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Center(
+                child: Text(
+                  state.isFlipped && state.currentCard != null
+                      ? state.currentCard!.answer
+                      : state.currentCard?.question ?? 'Нет карточек для изучения',
+                  style: const TextStyle(fontSize: 28),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
-      bottomNavigationBar: state.isFlipped
-          ? Container(
-              padding: EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () =>
-                        ref.read(studyProvider(currentDeck).notifier).updateCard(2, currentDeck),
-                    child: Text('Сложно'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () =>
-                        ref.read(studyProvider(currentDeck).notifier).updateCard(4, currentDeck),
-                    child: Text('Хорошо'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () =>
-                        ref.read(studyProvider(currentDeck).notifier).updateCard(5, currentDeck),
-                    child: Text('Легко'),
-                  ),
-                ],
+          ),
+        ),
+        bottomNavigationBar: state.isFlipped && state.currentCard != null
+            ? Container(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () => ref
+                    .read(studyProvider(currentDeck).notifier)
+                    .updateCard(2, currentDeck),
+                child: const Text('Сложно'),
               ),
-            )
-          : null,
+              ElevatedButton(
+                onPressed: () => ref
+                    .read(studyProvider(currentDeck).notifier)
+                    .updateCard(4, currentDeck),
+                child: const Text('Хорошо'),
+              ),
+              ElevatedButton(
+                onPressed: () => ref
+                    .read(studyProvider(currentDeck).notifier)
+                    .updateCard(5, currentDeck),
+                child: const Text('Легко'),
+              ),
+            ],
+          ),
+        )
+            : null,
+      ),
     );
   }
 }

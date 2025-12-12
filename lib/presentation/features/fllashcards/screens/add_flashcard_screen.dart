@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:test_practic/presentation/features/fllashcards/providers/deck_flashcards_provider.dart';
 import '../providers/add_card_provider.dart';
 
 const flashcardIcon = 'https://cdn-icons-png.flaticon.com/512/6726/6726775.png';

@@ -23,58 +23,58 @@ class FlashcardRepositoryImpl implements FlashcardRepository {
        _localDeckSource = localDeckSource;
 
   @override
-  List<FlashcardModel> getFlashcardsByDeckId(String deckId) {
-    return _localFlashcardSource.getFlashcardsByDeckId(deckId);
+  Future<List<FlashcardModel>> getFlashcardsByDeckId(String deckId) async {
+    return await _localFlashcardSource.getFlashcardsByDeckId(deckId);
   }
 
   @override
   Future<void> saveFlashcard(FlashcardModel flashcard) async {
-    _localFlashcardSource.saveFlashcard(flashcard);
+    await _localFlashcardSource.saveFlashcard(flashcard);
     return await _remoteFlashcardSource.saveFlashcard(flashcard);
   }
 
   @override
   Future<void> removeFlashcard(String deckId, String id) async {
-    _localFlashcardSource.removeFlashcard(id);
+    await _localFlashcardSource.removeFlashcard(id);
     return await _remoteFlashcardSource.removeFlashcard(deckId, id);
   }
 
   @override
   Future<void> removeFlashcardsByDeckId(String deckId) async {
-    _localFlashcardSource.removeFlashcardsByDeckId(deckId);
+    await _localFlashcardSource.removeFlashcardsByDeckId(deckId);
     return await _remoteFlashcardSource.removeFlashcardsByDeckId(deckId);
   }
 
   @override
-  List<DeckModel> getUsersDecks(int userId) {
-    return _localDeckSource.getUsersDecks(userId);
+  Future<List<DeckModel>> getUsersDecks(int userId) async {
+    return await _localDeckSource.getUsersDecks(userId);
   }
 
   @override
-  DeckModel getDeckById(int userId, String id) {
-    return _localDeckSource.getDeck(userId, id);
+  Future<DeckModel> getDeckById(int userId, String id) async {
+    return await _localDeckSource.getDeck(userId, id);
   }
 
   @override
   Future<void> saveDeck(DeckModel deck) async {
-    _localDeckSource.saveDeck(deck);
+    await _localDeckSource.saveDeck(deck);
     return await _remoteDeckSource.saveDeck(deck);
   }
 
   @override
   Future<void> removeDeck(int userId, String id) async {
-    _localDeckSource.removeDeck(id);
+    await _localDeckSource.removeDeck(userId, id);
     return await _remoteDeckSource.removeDeck(userId, id);
   }
 
   @override
   Future<void> removeDecksByUserId(int userId) async {
-    _localDeckSource.removeDecksByUserId(userId);
+    await _localDeckSource.removeDecksByUserId(userId);
     return await _remoteDeckSource.removeDecksByUserId(userId);
   }
 
   @override
-  FlashcardModel applyQuality(FlashcardModel entity, int quality) {
+  FlashcardModel applyQuality(FlashcardModel entity, int quality)  {
     int newInterval = entity.interval;
     double newEF = entity.easeFactor;
 

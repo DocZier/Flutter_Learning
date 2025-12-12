@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:test_practic/data/datasources/local/database/database.dart';
 
 import 'auth/auth_di.dart';
 import 'dictionary/dictionary_di.dart';
@@ -11,6 +12,7 @@ import '../../data/datasources/remote/user_remote_source.dart';
 
 void registerModule() {
   GetIt.I.registerLazySingleton<RemoteUserSource>(() => RemoteUserSource());
+  GetIt.I.registerLazySingleton<AppDatabase>(() => AppDatabase());
 
   registerSettingsDependencies();
   registerAuthDependencies();

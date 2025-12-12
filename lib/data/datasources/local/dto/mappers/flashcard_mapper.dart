@@ -1,7 +1,7 @@
 import 'package:test_practic/core/models/fllashcards/flashcards_model.dart';
-import 'package:test_practic/data/datasources/local/dto/flashcard_dto.dart';
+import 'package:test_practic/data/datasources/local/database/database.dart';
 
-extension FlashcardLocalMapper on FlashcardLocalDto {
+extension FlashcardLocalMapper on Flashcard {
   FlashcardModel toModel() {
     return FlashcardModel(
       deckId: deckId,
@@ -20,8 +20,8 @@ extension FlashcardLocalMapper on FlashcardLocalDto {
 }
 
 extension FlashcardModelLocalMapper on FlashcardModel {
-  FlashcardLocalDto toLocalDto() {
-    return FlashcardLocalDto(
+  Flashcard toLocalDto() {
+    return Flashcard(
       deckId: deckId,
       id: id,
       question: question,

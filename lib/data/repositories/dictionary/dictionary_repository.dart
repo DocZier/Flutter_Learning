@@ -16,23 +16,23 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
 
   @override
   Future<List<DictionaryWordModel>> getWords() async {
-    return _remoteDataSource.getWords();
+    return await _remoteDataSource.getWords();
   }
 
   @override
   Future<DictionaryWordModel> getWordById(int id) async {
-    return _remoteDataSource.getWordById(id);
+    return await _remoteDataSource.getWordById(id);
   }
 
   @override
-  List<DictionaryWordModel> getSavedWords() {
-    return _localDataSource.getWords();
+  Future<List<DictionaryWordModel>> getSavedWords() async {
+    return await _localDataSource.getWords();
   }
 
   @override
-  void saveWord(int id) async {
+  Future<void> saveWord(int id) async {
     final word = await _remoteDataSource.getWordById(id);
-    _localDataSource.saveWord(word);
+    await _localDataSource.saveWord(word);
   }
 
   @override
@@ -41,13 +41,13 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  void deleteWord(int id) {
-    _localDataSource.deleteWord(id);
+  Future<void> deleteWord(int id) async {
+    await _localDataSource.deleteWord(id);
   }
 
   @override
-  void clear() {
-    _localDataSource.clear();
+  Future<void> clear() async {
+    await _localDataSource.clear();
   }
 
   @override

@@ -39,8 +39,8 @@ class DeckDetailNotifier extends _$DeckDetailNotifier {
     final authState = authStateAsync.value as Authenticated;
     _userId = authState.user.id;
 
-    final deck = _loadDeck(_userId, deckId);
-    final flashcards = _loadFlashcards(deckId);
+    final deck = await _loadDeck(_userId, deckId);
+    final flashcards = await _loadFlashcards(deckId);
 
     return DeckDetailState(
       deck: deck,
@@ -49,13 +49,13 @@ class DeckDetailNotifier extends _$DeckDetailNotifier {
     );
   }
 
-  DeckModel _loadDeck(int userId, String deckId) {
-    final deck = _getDeckByIdUseCase.execute(userId, deckId);
+  Future<DeckModel> _loadDeck(int userId, String deckId) async {
+    final deck = await _getDeckByIdUseCase.execute(userId, deckId);
     return deck;
   }
 
-  List<FlashcardModel> _loadFlashcards(String deckId) {
-    return _getFlashcardsByDeckIdUseCase.execute(deckId).toList();
+  Future<List<FlashcardModel>> _loadFlashcards(String deckId) async {
+    return (await _getFlashcardsByDeckIdUseCase.execute(deckId)).toList();
   }
 
   Future<void> deleteDeck(String deckId) async {
@@ -82,8 +82,8 @@ class DeckDetailNotifier extends _$DeckDetailNotifier {
   }
 
   Future<void> _reload(String deckId) async {
-    final updatedDeck = _loadDeck(_userId, deckId);
-    final updatedFlashcards = _loadFlashcards(deckId);
+    final updatedDeck = await _loadDeck(_userId, deckId);
+    final updatedFlashcards = await _loadFlashcards(deckId);
     state = AsyncValue.data(
       state.value!.copyWith(
         deck: updatedDeck,

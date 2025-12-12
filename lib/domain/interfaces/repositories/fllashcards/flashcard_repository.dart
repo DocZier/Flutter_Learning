@@ -6,14 +6,14 @@ import 'package:test_practic/data/datasources/remote/deck_remote_source.dart';
 import 'package:test_practic/data/datasources/remote/flashcards_remote_source.dart';
 
 abstract class FlashcardRepository {
-  List<FlashcardModel> getFlashcardsByDeckId(String deckId);
+  Future<List<FlashcardModel>> getFlashcardsByDeckId(String deckId);
   Future<void> saveFlashcard(FlashcardModel flashcard);
   Future<void> removeFlashcard(String deckId, String id);
   Future<void> removeFlashcardsByDeckId(String deckId);
-  List<DeckModel> getUsersDecks(int userId);
+  Future<List<DeckModel>> getUsersDecks(int userId);
   Future<void> saveDeck(DeckModel deck);
   Future<void> removeDeck(int userId, String id);
   Future<void> removeDecksByUserId(int userId);
-  DeckModel getDeckById(int userId, String id);
+  Future<DeckModel> getDeckById(int userId, String id);
   FlashcardModel applyQuality(FlashcardModel entity, int quality);
 }

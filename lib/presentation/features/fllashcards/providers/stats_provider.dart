@@ -11,14 +11,14 @@ class Statistic extends _$Statistic {
   late final GetFlashcardsByDeckIdUseCase _getFlashcardsByDeckIdUseCase;
 
   @override
-  StatisticsState build({required String deckId}) {
+  Future<StatisticsState> build({required String deckId}) async {
     _getFlashcardsByDeckIdUseCase = GetIt.I<GetFlashcardsByDeckIdUseCase>();
-    final cards = _loadCards(deckId);
+    final cards = await _loadCards(deckId);
     return _calculateStatistics(cards);
   }
 
-  List<FlashcardModel> _loadCards(String deckId) {
-    return _getFlashcardsByDeckIdUseCase.execute(deckId);
+  Future<List<FlashcardModel>> _loadCards(String deckId) async {
+    return await _getFlashcardsByDeckIdUseCase.execute(deckId);
   }
 
   StatisticsState _calculateStatistics(List<FlashcardModel> cards) {

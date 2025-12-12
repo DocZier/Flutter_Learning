@@ -13,7 +13,7 @@ part of 'stats_provider.dart';
 const statisticProvider = StatisticFamily._();
 
 final class StatisticProvider
-    extends $NotifierProvider<Statistic, StatisticsState> {
+    extends $AsyncNotifierProvider<Statistic, StatisticsState> {
   const StatisticProvider._({
     required StatisticFamily super.from,
     required String super.argument,
@@ -39,14 +39,6 @@ final class StatisticProvider
   @override
   Statistic create() => Statistic();
 
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(StatisticsState value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<StatisticsState>(value),
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     return other is StatisticProvider && other.argument == argument;
@@ -58,15 +50,15 @@ final class StatisticProvider
   }
 }
 
-String _$statisticHash() => r'c4aba6e1fbb5098577ca31ccc6514b7314cdb578';
+String _$statisticHash() => r'0998ac3bae9432c16edbe040b9ade495cc1d93ed';
 
 final class StatisticFamily extends $Family
     with
         $ClassFamilyOverride<
           Statistic,
+          AsyncValue<StatisticsState>,
           StatisticsState,
-          StatisticsState,
-          StatisticsState,
+          FutureOr<StatisticsState>,
           String
         > {
   const StatisticFamily._()
@@ -85,21 +77,21 @@ final class StatisticFamily extends $Family
   String toString() => r'statisticProvider';
 }
 
-abstract class _$Statistic extends $Notifier<StatisticsState> {
+abstract class _$Statistic extends $AsyncNotifier<StatisticsState> {
   late final _$args = ref.$arg as String;
   String get deckId => _$args;
 
-  StatisticsState build({required String deckId});
+  FutureOr<StatisticsState> build({required String deckId});
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build(deckId: _$args);
-    final ref = this.ref as $Ref<StatisticsState, StatisticsState>;
+    final ref = this.ref as $Ref<AsyncValue<StatisticsState>, StatisticsState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<StatisticsState, StatisticsState>,
-              StatisticsState,
+              AnyNotifier<AsyncValue<StatisticsState>, StatisticsState>,
+              AsyncValue<StatisticsState>,
               Object?,
               Object?
             >;

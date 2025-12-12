@@ -7,7 +7,7 @@ class GetFlashcardsByDeckIdUseCase {
 
   GetFlashcardsByDeckIdUseCase(this.repository);
 
-  List<FlashcardModel> execute(String deckId) {
-    return repository.getFlashcardsByDeckId(deckId);
+  Future<List<FlashcardModel>> execute(String deckId) async {
+    return await repository.getFlashcardsByDeckId(deckId);
   }
 }

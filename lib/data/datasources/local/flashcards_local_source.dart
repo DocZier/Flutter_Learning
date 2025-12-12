@@ -1,36 +1,50 @@
 import 'package:test_practic/core/models/fllashcards/flashcards_model.dart';
-import 'package:test_practic/data/datasources/local/dto/flashcard_dto.dart';
+import 'package:test_practic/data/datasources/local/database/dao/flashcard_dao.dart';
+import 'package:test_practic/data/datasources/local/database/database.dart';
 import 'package:test_practic/data/datasources/local/dto/mappers/flashcard_mapper.dart';
 
 class FlashcardsLocalSource {
-  static final List<FlashcardLocalDto> _localFlashcards = [];
+  final AppDatabase _database;
+  final FlashcardDao _flashcardDao;
 
-  void saveFlashcard(FlashcardModel flashcard) {
-    final index = _localFlashcards.indexWhere((item) => item.id == flashcard.id);
-    if (index != -1) {
-      _localFlashcards[index] = flashcard.toLocalDto();
-    } else {
-      _localFlashcards.add(flashcard.toLocalDto());
-    }
+  FlashcardsLocalSource() :
+        _database = AppDatabase(),
+        _flashcardDao = FlashcardDao(AppDatabase());
+
+  Future<void> saveFlashcard(FlashcardModel flashcard) async {
+    await _flashcardDao.saveFlashcard(flashcard.toLocalDto());
   }
 
-  void removeFlashcard(String id) {
-    _localFlashcards.removeWhere((item) => item.id == id);
+  Future<void> removeFlashcard(String id) async {
+    await _flashcardDao.removeFlashcard(id);
   }
 
-  FlashcardModel getFlashcard(String id) {
-    final flashcardDto = _localFlashcards.firstWhere((item) => item.id == id);
+  Future<FlashcardModel> getFlashcard(String id) async {
+    final flashcardDto = await _flashcardDao.getFlashcard(id);
+    if (flashcardDto == null) throw Exception('Flashcard not found');
     return flashcardDto.toModel();
   }
 
-  List<FlashcardModel> getFlashcardsByDeckId(String deckId) {
-    return _localFlashcards
-        .where((item) => item.deckId == deckId)
-        .map((dto) => dto.toModel())
-        .toList();
+  Future<List<FlashcardModel>> getFlashcardsByDeckId(String deckId) async {
+    final flashcardDtos = await _flashcardDao.getFlashcardsByDeckId(deckId);
+    return flashcardDtos.map((dto) => dto.toModel()).toList();
   }
 
-  void removeFlashcardsByDeckId(String deckId) {
-    _localFlashcards.removeWhere((item) => item.deckId == deckId);
+  Future<void> removeFlashcardsByDeckId(String deckId) async {
+    await _flashcardDao.removeFlashcardsByDeckId(deckId);
+  }
+
+  Stream<List<FlashcardModel>> watchFlashcardsByDeckId(String deckId) {
+    return _flashcardDao.watchFlashcardsByDeckId(deckId).map((flashcards) => flashcards.map((dto) => dto.toModel()).toList());
+  }
+
+  Future<List<FlashcardModel>> getDueFlashcards() async {
+    final now = DateTime.now();
+    final flashcardsDto = await _flashcardDao.getDueFlashcards(now);
+    return flashcardsDto.map((dto) => dto.toModel()).toList();
+  }
+
+  void close() async {
+    await _database.close();
   }
 }

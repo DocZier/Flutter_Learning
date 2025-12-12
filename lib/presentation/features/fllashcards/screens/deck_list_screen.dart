@@ -131,7 +131,6 @@ class HomeScreen extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => Center(child: Text('Error: $error')),
             data: (deckState) {
-              print('Current state: ${deckState.decks.length}');
 
               return deckState.decks.isEmpty
                   ? Center(
@@ -155,24 +154,22 @@ class HomeScreen extends ConsumerWidget {
               )
                   : ListView.builder(
                 itemCount: deckState.decks.length,
-                itemBuilder: (_, index) {
-                  final deck = deckState.decks[index];
-                  final flashcards = ref.read(deckProvider.notifier).getFlashcardsByDeckId(deck.id);
-                  return DeckListItem(
-                    deck: deck,
-                    flashcards: flashcards,
-                    onTapEmpty: (test) {
-                      Router.neglect(context, () {
-                        context.push('/add_flashcard', extra: {'deckId': deck.id});
-                      });
-                    },
-                    onTapFull: (test) {
-                      context.push('/study', extra: {'deckId': deck.id});
-                    },
-                    onLongPress: (test) {
-                      context.push('/deck_detail', extra: {'deckId': deck.id});
-                    },
-                  );
+                  itemBuilder: (_, index) {
+                    final deck = deckState.decks[index];
+                    return DeckListItem(
+                      deck: deck,
+                      onTapEmpty: (deckId) {
+                        Router.neglect(context, () {
+                          context.push('/add_flashcard', extra: {'deckId': deckId});
+                        });
+                      },
+                      onTapFull: (deckId) {
+                        context.push('/study', extra: {'deckId': deckId});
+                      },
+                      onLongPress: (deckId) {
+                        context.push('/deck_detail', extra: {'deckId': deckId});
+                      },
+                    );
                 },
               );
             },

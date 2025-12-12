@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:test_practic/core/models/fllashcards/flashcards_model.dart';
 import 'package:test_practic/domain/usecases/fllashcards/save_flashcard_usecase.dart';
+import 'package:test_practic/presentation/features/fllashcards/providers/deck_flashcards_provider.dart';
 
 part 'add_card_provider.g.dart';
 
@@ -40,6 +41,8 @@ class AddCardNotifier extends _$AddCardNotifier {
       updatedAt: DateTime.now(),
     );
 
-    return await _saveFlashcardUseCase.execute(flashcard);
+    await _saveFlashcardUseCase.execute(flashcard);
+
+    ref.read(deckFlashcardsProvider(deckId).notifier).refresh();
   }
 }

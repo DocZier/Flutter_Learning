@@ -7,7 +7,7 @@ class GetDeckByIdUseCase {
 
   GetDeckByIdUseCase(this.repository);
 
-  DeckModel execute(int userId, String id) {
-    return repository.getDeckById(userId, id);
+  Future<DeckModel> execute(int userId, String id) async {
+    return await repository.getDeckById(userId, id);
   }
 }

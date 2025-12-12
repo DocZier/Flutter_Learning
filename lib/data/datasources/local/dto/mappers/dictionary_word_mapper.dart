@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
-import 'package:test_practic/data/datasources/local/dto/dictionary_word_dto.dart';
+import 'package:test_practic/data/datasources/local/database/database.dart';
 
-extension SavedWordMapper on DictionarySavedWordDto {
+extension SavedWordMapper on DictionarySavedWord {
   DictionaryWordModel toModel() {
     return DictionaryWordModel(
       id: int.tryParse(id) ?? 0,
@@ -9,20 +10,20 @@ extension SavedWordMapper on DictionarySavedWordDto {
       furigana: furigana,
       romanji: romanji,
       meaning: meaning,
-      examples: examples,
+      examples: List<String>.from(jsonDecode(examples)),
     );
   }
 }
 
 extension DictionaryWordModelToSavedDto on DictionaryWordModel {
-  DictionarySavedWordDto toSavedWordDto() {
-    return DictionarySavedWordDto(
+  DictionarySavedWord toSavedWordDto() {
+    return DictionarySavedWord(
       id: id.toString(),
       word: word,
       furigana: furigana,
       romanji: romanji,
       meaning: meaning,
-      examples: examples,
+      examples: jsonEncode(examples),
       savedAt: DateTime.now(),
     );
   }

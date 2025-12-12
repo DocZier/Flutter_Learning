@@ -82,8 +82,8 @@ class DeckNotifier extends _$DeckNotifier {
     return state.value?.decks.isEmpty ?? true;
   }
 
-  List<FlashcardModel> getFlashcardsByDeckId(String deckId) {
-    final flashcards = _getFlashcardsByDeckIdUseCase.execute(deckId);
+  Future<List<FlashcardModel>> getFlashcardsByDeckId(String deckId) async {
+    final flashcards = await _getFlashcardsByDeckIdUseCase.execute(deckId);
     return flashcards;
   }
 }

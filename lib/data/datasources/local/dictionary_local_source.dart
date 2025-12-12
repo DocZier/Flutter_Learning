@@ -1,13 +1,18 @@
 import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
+import 'package:test_practic/data/datasources/local/database/dao/dictionary_dao.dart';
+import 'package:test_practic/data/datasources/local/database/database.dart';
 import 'package:test_practic/data/datasources/local/dto/dictionary_history_dto.dart';
-import 'package:test_practic/data/datasources/local/dto/dictionary_word_dto.dart';
 import 'package:test_practic/data/datasources/local/dto/mappers/dictionary_history_mapper.dart';
 import 'package:test_practic/data/datasources/local/dto/mappers/dictionary_word_mapper.dart';
 
-
 class DictionaryLocalDataSource {
   static final List<DictionaryHistoryItemDto> _history = [];
-  static final List<DictionarySavedWordDto> _savedWords = [];
+  final AppDatabase _database;
+  final DictionaryDao _dictionaryDao;
+
+  DictionaryLocalDataSource() :
+        _database = AppDatabase(),
+        _dictionaryDao = DictionaryDao(AppDatabase());
 
   List<String> getHistory() {
     return _history.map((item) => item.toQuery()).toList();
@@ -24,29 +29,37 @@ class DictionaryLocalDataSource {
     _history.clear();
   }
 
-  List<DictionaryWordModel> getWords() {
-    return _savedWords.map((dto) => dto.toModel()).toList();
+  Stream<List<DictionaryWordModel>> watchSavedWords() {
+    return _dictionaryDao.watchSavedWords().map((words) => words.map((dto) => dto.toModel()).toList());
   }
 
-  DictionaryWordModel getWordById(int id) {
-    final dto = _savedWords.firstWhere((word) => word.id == id.toString());
-    return dto.toModel();
+  Future<List<DictionaryWordModel>> getWords() async {
+    final wordDtos = await _dictionaryDao.getSavedWords();
+    return wordDtos.map((dto) => dto.toModel()).toList();
   }
 
-  void saveWord(DictionaryWordModel word) {
-    final existingIndex = _savedWords.indexWhere((saved) => saved.id == word.id.toString());
-    if (existingIndex != -1) {
-      _savedWords[existingIndex] = word.toSavedWordDto();
-    } else {
-      _savedWords.add(word.toSavedWordDto());
+  Future<DictionaryWordModel> getWordById(int id) async {
+    final wordDto = await _dictionaryDao.getSavedWordById(id.toString());
+    if (wordDto == null) throw Exception('Word not found');
+    return wordDto.toModel();
+  }
+
+  Future<void> saveWord(DictionaryWordModel word) async {
+    await _dictionaryDao.saveSavedWord(word.toSavedWordDto());
+  }
+
+  Future<void> deleteWord(int id) async {
+    await _dictionaryDao.deleteSavedWord(id.toString());
+  }
+
+  Future<void> clear() async {
+    final words = await getWords();
+    for (var word in words) {
+      await deleteWord(word.id);
     }
   }
 
-  void deleteWord(int id) {
-    _savedWords.removeWhere((word) => word.id == id.toString());
-  }
-
-  void clear() {
-    _savedWords.clear();
+  void close() async {
+    await _database.close();
   }
 }

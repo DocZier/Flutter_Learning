@@ -1,38 +1,45 @@
 import 'package:test_practic/core/models/fllashcards/deck_model.dart';
+import 'package:test_practic/data/datasources/local/database/dao/deck_dao.dart';
+import 'package:test_practic/data/datasources/local/database/database.dart';
 import 'package:test_practic/data/datasources/local/dto/deck_dto.dart';
 import 'package:test_practic/data/datasources/local/dto/mappers/deck_mapper.dart';
 
 class DeckLocalSource {
-  static final List<DeckLocalDto> _localDecks = [];
+  final AppDatabase _database;
+  final DeckDao _deckDao;
 
-  void saveDeck(DeckModel deck) {
-    final index = _localDecks.indexWhere((item) => item.id == deck.id);
-    if (index != -1) {
-      _localDecks[index] = deck.toLocalDto();
-    } else {
-      _localDecks.add(deck.toLocalDto());
-    }
+  DeckLocalSource() :
+        _database = AppDatabase(),
+        _deckDao = DeckDao(AppDatabase());
+
+  Future<void> saveDeck(DeckModel deck) async {
+    await _deckDao.saveDeck(deck.toLocalDto());
   }
 
-  void removeDeck(String id) {
-    _localDecks.removeWhere((item) => item.id == id);
+  Future<void> removeDeck(int userId, String id) async {
+    await _deckDao.removeDeck(userId, id);
   }
 
-  void removeDecksByUserId(int userId) {
-    _localDecks.removeWhere((item) => item.userId == userId);
+  Future<void> removeDecksByUserId(int userId) async {
+    await _deckDao.removeDecksByUserId(userId);
   }
 
-  DeckModel getDeck(int userId, String id) {
-    final deckDto = _localDecks.firstWhere(
-          (item) => item.id == id && item.userId == userId,
-    );
+  Future<DeckModel> getDeck(int userId, String id) async {
+    final deckDto = await _deckDao.getDeckById(userId, id);
+    if (deckDto == null) throw Exception('Deck not found');
     return deckDto.toModel();
   }
 
-  List<DeckModel> getUsersDecks(int userId) {
-    return _localDecks
-        .where((item) => item.userId == userId)
-        .map((dto) => dto.toModel())
-        .toList();
+  Future<List<DeckModel>> getUsersDecks(int userId) async {
+    final deckDtos = await _deckDao.getUsersDecks(userId);
+    return deckDtos.map((dto) => dto.toModel()).toList();
+  }
+
+  Stream<List<DeckModel>> watchUsersDecks(int userId) {
+    return _deckDao.watchUsersDecks(userId).map((decks) => decks.map((dto) => dto.toModel()).toList());
+  }
+
+  void close() {
+    _database.close();
   }
 }

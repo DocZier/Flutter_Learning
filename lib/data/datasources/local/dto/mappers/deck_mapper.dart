@@ -1,7 +1,8 @@
 import 'package:test_practic/core/models/fllashcards/deck_model.dart';
-import 'package:test_practic/data/datasources/local/dto/deck_dto.dart';
+import 'package:test_practic/data/datasources/local/database/database.dart';
+import 'package:test_practic/data/datasources/local/database/tables/deck_table.dart';
 
-extension DeckLocalMapper on DeckLocalDto {
+extension DeckLocalMapper on Deck {
   DeckModel toModel() {
     return DeckModel(
       userId: userId,
@@ -13,8 +14,8 @@ extension DeckLocalMapper on DeckLocalDto {
 }
 
 extension DeckModelLocalMapper on DeckModel {
-  DeckLocalDto toLocalDto() {
-    return DeckLocalDto(
+  Deck toLocalDto() {
+    return Deck(
       userId: userId,
       id: id,
       title: title,
