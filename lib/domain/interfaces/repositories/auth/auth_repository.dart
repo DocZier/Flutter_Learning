@@ -4,6 +4,6 @@ abstract class AuthRepository {
   Future<UserModel?> login(String login, String password);
   Future<UserModel?> register(String login, String email, String password);
   void logout();
-  UserModel? checkAuthStatus();
+  Future<UserModel?> checkAuthStatus();
   void deleteAccount(int userId);
 }

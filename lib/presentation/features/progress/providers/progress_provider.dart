@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:test_practic/domain/usecases/auth/check_auth_status_usecase.dart';
 import 'package:test_practic/domain/usecases/progress/compute_statistic_usecase.dart';
 import 'package:test_practic/domain/usecases/progress/get_cached_statistic_usecase.dart';
 import 'package:test_practic/domain/usecases/progress/refresh_statistic_usecase.dart';
@@ -15,7 +16,6 @@ class Progress extends _$Progress {
   late final ComputeStatisticsUseCase _computeStatsUseCase;
   late final GetCachedStatisticsUseCase _getCachedStatsUseCase;
   late final RefreshStatisticsUseCase _refreshStatsUseCase;
-  late final int _userId;
 
   @override
   Future<ProgressState> build() async {
@@ -23,18 +23,17 @@ class Progress extends _$Progress {
     _getCachedStatsUseCase = GetIt.I<GetCachedStatisticsUseCase>();
     _refreshStatsUseCase = GetIt.I<RefreshStatisticsUseCase>();
 
-    final authState = ref.watch(authProvider);
-    if (authState is! Authenticated) {
-      return ProgressState(
-        isError: true,
-        errorMessage: 'Пользователь не авторизован',
-      );
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
     }
 
-    _userId = authState.user.id;
+    final authState = authStateAsync.value as Authenticated;
+    final userId = authState.user.id;
 
     try {
-      final cached = _getCachedStatsUseCase.execute(_userId);
+      final cached = _getCachedStatsUseCase.execute(userId);
       if (cached != null) {
         return ProgressState(
           statistics: cached,
@@ -43,7 +42,7 @@ class Progress extends _$Progress {
         );
       }
 
-      final computed = await _computeStatsUseCase.execute(_userId);
+      final computed = await _computeStatsUseCase.execute(userId);
       return ProgressState(
         statistics: computed,
         isLoading: false,
@@ -60,8 +59,17 @@ class Progress extends _$Progress {
 
   Future<void> refresh() async {
     state = AsyncValue.data(state.value!.copyWith(isLoading: true));
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
+    }
+
+    final authState = authStateAsync.value as Authenticated;
+    final userId = authState.user.id;
+
     try {
-      final newStats = await _refreshStatsUseCase.execute(_userId);
+      final newStats = await _refreshStatsUseCase.execute(userId);
       state = AsyncValue.data(
         state.value!.copyWith(
           statistics: newStats,

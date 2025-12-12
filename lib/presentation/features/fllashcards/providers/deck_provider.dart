@@ -21,57 +21,65 @@ class DeckNotifier extends _$DeckNotifier {
   late final int _userId;
 
   @override
-  DeckState build() {
+  Future<DeckState> build() async {
     _getUsersDecksUseCase = GetIt.I<GetUsersDecksUseCase>();
     _saveDeckUseCase = GetIt.I<SaveDeckUseCase>();
     _removeDeckUseCase = GetIt.I<RemoveDeckUseCase>();
     _getFlashcardsByDeckIdUseCase = GetIt.I<GetFlashcardsByDeckIdUseCase>();
 
-    final authState = ref.watch(authProvider);
-    _userId = (authState as Authenticated).user.id;
-    final decks = _loadDecks(_userId);
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
+    }
 
+    final authState = authStateAsync.value as Authenticated;
+    _userId = authState.user.id;
+
+    final decks = await _loadDecks(_userId);
     return DeckState(
       decks: decks,
       isLoading: false,
     );
   }
 
-  List<DeckModel> _loadDecks(int userId) {
+  Future<List<DeckModel>> _loadDecks(int userId) async {
     final list = _getUsersDecksUseCase.execute(userId);
     return list;
   }
 
   Future<void> addDeck(DeckModel deck) async {
+    state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
       await _saveDeckUseCase.execute(deck);
+      await _reload();
     } catch (e) {
       throw Exception("Не удалось создать колоду: $e");
-    } finally {
-      _reload();
     }
   }
 
   Future<void> removeDeck(String deckId) async {
+    state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
       await _removeDeckUseCase.execute(_userId, deckId);
+      await _reload();
     } catch (e) {
       throw Exception("Ошибка удаления: $e");
-    } finally {
-      _reload();
     }
   }
 
-  void _reload() {
-    final decks = _loadDecks(_userId);
-    state = state.copyWith(
-      decks: decks,
-      isLoading: false,
+  Future<void> _reload() async {
+    final decks = await _loadDecks(_userId);
+    state = AsyncValue.data(
+      state.value!.copyWith(
+        decks: decks,
+        isLoading: false,
+      ),
     );
   }
 
   bool isEmpty() {
-    return state.decks.isEmpty;
+    return state.value?.decks.isEmpty ?? true;
   }
 
   List<FlashcardModel> getFlashcardsByDeckId(String deckId) {

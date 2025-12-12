@@ -24,8 +24,14 @@ class StudyNotifier extends _$StudyNotifier {
     _getFlashcardsByDeckIdUseCase = GetIt.I<GetFlashcardsByDeckIdUseCase>();
     _applyQualityUseCase = GetIt.I<UpdateFlashcardUseCase>();
 
-    final authState = ref.watch(authProvider);
-    _userId = (authState as Authenticated).user.id;
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
+    }
+
+    final authState = authStateAsync.value as Authenticated;
+    _userId = authState.user.id;
 
     final deck = _getDeckByIdUseCase.execute(_userId, deckId);
     final flashcards = _loadFlashcards(deckId);

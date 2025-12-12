@@ -24,7 +24,7 @@ class ProfileRemoteDataSource {
         'id': '${remote.users.length + 1}',
         'login': login,
         'email': email,
-        'password': '', // Пустой пароль для профиля
+        'password': '',
         'created_at': DateTime.now().toIso8601String(),
       });
       return true;
@@ -44,7 +44,7 @@ class ProfileRemoteDataSource {
         'id': '${remote.users.length + 1}',
         'login': user.login,
         'email': user.email,
-        'password': '', // Пустой пароль для профиля
+        'password': '',
         'created_at': DateTime.now().toIso8601String(),
       });
     } else {

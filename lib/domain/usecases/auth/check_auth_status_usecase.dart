@@ -7,7 +7,7 @@ class CheckAuthStatusUseCase {
 
   CheckAuthStatusUseCase(this.repository);
 
-  UserModel? execute() {
-    return repository.checkAuthStatus();
+  Future<UserModel?> execute() async {
+    return await repository.checkAuthStatus();
   }
 }

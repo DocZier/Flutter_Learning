@@ -10,8 +10,9 @@ class ProgressScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
-    if (authState is! Authenticated) {
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
       return Scaffold(
         body: Center(child: Text('Пожалуйста, авторизуйтесь для просмотра статистики')),
       );

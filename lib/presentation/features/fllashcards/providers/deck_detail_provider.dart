@@ -30,8 +30,14 @@ class DeckDetailNotifier extends _$DeckDetailNotifier {
     _removeFlashcardUseCase = GetIt.I<RemoveFlashcardUseCase>();
     _removeFlashcardsByDeckIdUseCase = GetIt.I<RemoveFlashcardsByDeckIdUseCase>();
 
-    final authState = ref.read(authProvider);
-    _userId = (authState as Authenticated).user.id;
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
+    }
+
+    final authState = authStateAsync.value as Authenticated;
+    _userId = authState.user.id;
 
     final deck = _loadDeck(_userId, deckId);
     final flashcards = _loadFlashcards(deckId);

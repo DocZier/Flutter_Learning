@@ -6,8 +6,8 @@ import 'package:test_practic/domain/usecases/lessons/add_to_review_usecase.dart'
 import 'package:test_practic/domain/usecases/lessons/get_questions_for_lesson_usecase.dart';
 import 'package:test_practic/domain/usecases/lessons/update_review_interval_usecase.dart';
 import 'package:test_practic/presentation/features/lessons/states/test_state.dart';
-import '../../../shared/providers/auth_provider.dart';
-import '../../../shared/states/auth_state.dart';
+import 'package:test_practic/presentation/shared/providers/auth_provider.dart';
+import 'package:test_practic/presentation/shared/states/auth_state.dart';
 
 part 'test_provider.g.dart';
 
@@ -17,7 +17,6 @@ class LessonTest extends _$LessonTest {
   late final AddTestStatUseCase _addTestStatUseCase;
   late final AddToReviewUseCase _addToReviewQueueUseCase;
   late final UpdateReviewIntervalUseCase _updateReviewIntervalUseCase;
-  late final int _userId;
 
   @override
   Future<LessonTestState> build(int lessonId) async {
@@ -26,10 +25,16 @@ class LessonTest extends _$LessonTest {
     _addToReviewQueueUseCase = GetIt.I<AddToReviewUseCase>();
     _updateReviewIntervalUseCase = GetIt.I<UpdateReviewIntervalUseCase>();
 
-    final authState = ref.watch(authProvider);
-    _userId = authState is Authenticated ? authState.user.id : -1;
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
+    }
 
-    final questions = await _loadQuestions(lessonId);
+    final authState = authStateAsync.value as Authenticated;
+    final userId = authState.user.id;
+
+    final questions = await _loadQuestions(lessonId, userId);
 
     return LessonTestState(
       lessonId: lessonId,
@@ -42,15 +47,15 @@ class LessonTest extends _$LessonTest {
       correct: false,
       mistakes: [],
       finished: questions.isEmpty,
-      userId: _userId,
+      userId: userId,
       successful: questions.isEmpty,
     );
   }
 
-  Future<List<TestModel>> _loadQuestions(int lessonId) async {
+  Future<List<TestModel>> _loadQuestions(int lessonId, int userId) async {
     final models = await _getQuestionsForLessonUseCase.execute(
         lessonId,
-        userId: _userId
+        userId: userId
     );
     if (models.isNotEmpty) {
       models.shuffle();

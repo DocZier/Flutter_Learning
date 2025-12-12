@@ -7,26 +7,31 @@ import '../states/auth_state.dart';
 
 part 'auth_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class Auth extends _$Auth {
   late final CheckAuthStatusUseCase _checkAuthStatusUseCase;
   late final LogoutUseCase _logoutUseCase;
   late final DeleteAccountUseCase _deleteAccountUseCase;
 
   @override
-  AuthState build() {
+  Future<AuthState> build() async {
     _checkAuthStatusUseCase = GetIt.I<CheckAuthStatusUseCase>();
     _logoutUseCase = GetIt.I<LogoutUseCase>();
+    _deleteAccountUseCase = GetIt.I<DeleteAccountUseCase>();
 
-    final user = _checkAuthStatusUseCase.execute();
-    if (user != null) {
-      return Authenticated(user: user);
+    try {
+      final user = await _checkAuthStatusUseCase.execute();
+      if (user != null) {
+        return Authenticated(user: user);
+      }
+      return Unauthenticated();
+    } catch (e) {
+      return Unauthenticated();
     }
-    return Unauthenticated();
   }
 
   void updateState(AuthState state) {
-    this.state = state;
+    this.state = AsyncValue.data(state);
   }
 
   void logout() {
@@ -35,8 +40,8 @@ class Auth extends _$Auth {
   }
 
   void deleteAccount() {
-    if (state is Authenticated) {
-      final userId = (state as Authenticated).user.id;
+    if (state.value is Authenticated) {
+      final userId = (state.value as Authenticated).user.id;
       _deleteAccountUseCase.execute(userId);
       updateState(Unauthenticated());
     }

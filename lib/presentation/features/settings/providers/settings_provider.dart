@@ -25,7 +25,15 @@ class Settings extends _$Settings {
   Future<AppSettingsModel> _loadSettings() async {
     try {
         final getSettingsForUserUseCase = GetIt.I<GetSettingsForUserUseCase>();
-        final model = await getSettingsForUserUseCase.execute((ref.read(authProvider) as Authenticated ).user.id);
+        final authStateAsync = ref.watch(authProvider);
+        if (authStateAsync is! AsyncData<AuthState> ||
+            authStateAsync.value is! Authenticated) {
+          throw Exception('Пользователь не авторизован');
+        }
+
+        final authState = authStateAsync.value as Authenticated;
+        final userId = authState.user.id;
+        final model = await getSettingsForUserUseCase.execute(userId);
         return model ?? SettingsConstants.defaultSettings;
 
     } catch (e) {
@@ -37,7 +45,14 @@ class Settings extends _$Settings {
     state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
       final saveSettingsUseCase = GetIt.I<SaveSettingsUseCase>();
-      await saveSettingsUseCase.execute(settings, (ref.read(authProvider) as Authenticated ).user.id);
+      final authStateAsync = ref.watch(authProvider);
+      if (authStateAsync is! AsyncData<AuthState> ||
+          authStateAsync.value is! Authenticated) {
+        throw Exception('Пользователь не авторизован');
+      }
+      final authState = authStateAsync.value as Authenticated;
+      final userId = authState.user.id;
+      await saveSettingsUseCase.execute(settings, userId);
       state = AsyncValue.data(state.value!.copyWith(settings: settings));
     } catch (e) {
       throw Exception(e);
@@ -49,7 +64,14 @@ class Settings extends _$Settings {
     state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
       final resetSettingsUseCase = GetIt.I<ResetSettingsUseCase>();
-      await resetSettingsUseCase.execute((ref.read(authProvider) as Authenticated ).user.id);
+      final authStateAsync = ref.watch(authProvider);
+      if (authStateAsync is! AsyncData<AuthState> ||
+          authStateAsync.value is! Authenticated) {
+        throw Exception('Пользователь не авторизован');
+      }
+      final authState = authStateAsync.value as Authenticated;
+      final userId = authState.user.id;
+      await resetSettingsUseCase.execute(userId);
       state = AsyncValue.data(state.value!.copyWith(
           settings: SettingsConstants.defaultSettings
       ));

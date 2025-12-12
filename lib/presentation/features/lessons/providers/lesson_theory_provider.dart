@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:test_practic/domain/usecases/auth/check_auth_status_usecase.dart';
 import 'package:test_practic/domain/usecases/lessons/get_lesson_by_id_usecase.dart';
 import 'package:test_practic/domain/usecases/lessons/get_lesson_page_index_usecase.dart';
 import 'package:test_practic/domain/usecases/lessons/is_lesson_complete_usecase.dart';
@@ -18,7 +19,6 @@ class LessonTheory extends _$LessonTheory {
   late final SaveLessonPageIndexUseCase _saveLessonPageIndexUseCase;
   late final IsLessonCompletedUseCase _isLessonCompletedUseCase;
   late final MarkLessonCompletedUseCase _markLessonCompletedUseCase;
-  late final int _userId;
 
   @override
   Future<LessonTheoryState> build(int lessonId) async {
@@ -28,13 +28,19 @@ class LessonTheory extends _$LessonTheory {
     _isLessonCompletedUseCase = GetIt.I<IsLessonCompletedUseCase>();
     _markLessonCompletedUseCase = GetIt.I<MarkLessonCompletedUseCase>();
 
-    final authState = ref.watch(authProvider);
-    _userId = authState is Authenticated ? authState.user.id : -1;
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
+    }
+
+    final authState = authStateAsync.value as Authenticated;
+    final userId = authState.user.id;
 
     final lesson = await _getLessonByIdUseCase.execute(lessonId);
     final parts = lesson.theory.split('---');
-    final savedIndex = _getLessonPageIndexUseCase.execute(_userId, lessonId);
-    final isFinished = _isLessonCompletedUseCase.execute(_userId, lessonId) || parts.length == 1;
+    final savedIndex = _getLessonPageIndexUseCase.execute(userId, lessonId);
+    final isFinished = _isLessonCompletedUseCase.execute(userId, lessonId) || parts.length == 1;
 
     return LessonTheoryState(
       parts: parts,
@@ -43,14 +49,23 @@ class LessonTheory extends _$LessonTheory {
     );
   }
 
-  void next() {
+  Future<void> next() async {
     final s = state.value!;
     final newIndex = s.index + 1;
     final finished = newIndex == s.parts.length - 1;
 
-    _saveLessonPageIndexUseCase.execute(_userId, lessonId, newIndex);
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
+    }
+
+    final authState = authStateAsync.value as Authenticated;
+    final userId = authState.user.id;
+
+    _saveLessonPageIndexUseCase.execute(userId, lessonId, newIndex);
     if (finished) {
-      _markLessonCompletedUseCase.execute(_userId, lessonId);
+      _markLessonCompletedUseCase.execute(userId, lessonId);
     }
 
     state = AsyncValue.data(s.copyWith(
@@ -59,11 +74,21 @@ class LessonTheory extends _$LessonTheory {
     ));
   }
 
-  void previous() {
+  Future<void> previous() async {
     final s = state.value!;
     if (s.index == 0) return;
     final newIndex = s.index - 1;
-    _saveLessonPageIndexUseCase.execute(_userId, lessonId, newIndex);
+
+    final authStateAsync = ref.watch(authProvider);
+    if (authStateAsync is! AsyncData<AuthState> ||
+        authStateAsync.value is! Authenticated) {
+      throw Exception('Пользователь не авторизован');
+    }
+
+    final authState = authStateAsync.value as Authenticated;
+    final userId = authState.user.id;
+
+    _saveLessonPageIndexUseCase.execute(userId, lessonId, newIndex);
     state = AsyncValue.data(s.copyWith(index: newIndex));
   }
 }

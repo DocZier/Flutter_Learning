@@ -20,7 +20,6 @@ class HomeScreen extends ConsumerWidget {
   void _createNewDeck(BuildContext context, WidgetRef ref) {
     String deckName = '';
     String deckDescription = '';
-
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -53,15 +52,18 @@ class HomeScreen extends ConsumerWidget {
           ElevatedButton(
             onPressed: () async {
               if (deckName.isNotEmpty) {
-                final authState = ref.read(authProvider);
-                if (authState is! Authenticated) {
+                final authStateAsync = ref.watch(authProvider);
+                if (authStateAsync is! AsyncData<AuthState> ||
+                    authStateAsync.value is! Authenticated) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Пользователь не авторизован")),
                   );
                   return;
                 }
 
+                final authState = authStateAsync.value as Authenticated;
                 final userId = authState.user.id;
+
                 print('Before add');
                 await ref.read(deckProvider.notifier).addDeck(
                   DeckModel(
@@ -72,9 +74,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 );
                 print('After add');
-
                 Navigator.of(context).pop();
-
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Колода создана успешно")),
                 );
@@ -89,8 +89,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final deckState = ref.watch(deckProvider);
-    print('Current state: ${deckState.decks.length}');
+    final deckStateAsync = ref.watch(deckProvider);
+    final authStateAsync = ref.watch(authProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -100,57 +100,81 @@ class HomeScreen extends ConsumerWidget {
               imageUrl: deckIcon,
               height: 24,
               width: 24,
-              placeholder: (context, url) =>
-                  Center(child: CircularProgressIndicator()),
-              errorWidget: (context, url, error) =>
-                  Center(child: Icon(Icons.error)),
+              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
               fit: BoxFit.contain,
             ),
             Text('Колоды'),
           ],
         ),
       ),
-      body: deckState.decks.isEmpty ?
-      Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CachedNetworkImage(
-              imageUrl: emptyListIcon,
-              height: 160,
-              width: 160,
-              placeholder: (context, url) =>
-                  Center(child: CircularProgressIndicator()),
-              errorWidget: (context, url, error) =>
-                  Center(child: Icon(Icons.error)),
-              fit: BoxFit.contain,
-            ),
-            Text(
-              'Отсутствуют колоды',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-          ],
-        ),
-      )
-          :
-      ListView.builder(
-        itemCount: deckState.decks.length,
-        itemBuilder: (_, index) {
-          final deck = deckState.decks[index];
-          final flashcards = ref.read(deckProvider.notifier).getFlashcardsByDeckId(deck.id);
-          return DeckListItem(
-            deck: deck,
-            flashcards: flashcards,
-            onTapEmpty: (test) {
-              Router.neglect(context, () {
-                context.push('/add_flashcard', extra: {'deckId': deck.id});
-              });
-            },
-            onTapFull: (test) {
-              context.push('/study', extra: {'deckId': deck.id});
-            },
-            onLongPress: (test) {
-              context.push('/deck_detail', extra: {'deckId': deck.id});
+      body: authStateAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('Error: $error')),
+        data: (authState) {
+          if (authState is Unauthenticated) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Пожалуйста, войдите в систему'),
+                  ElevatedButton(
+                    onPressed: () => context.go('/login'),
+                    child: Text('Войти'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return deckStateAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(child: Text('Error: $error')),
+            data: (deckState) {
+              print('Current state: ${deckState.decks.length}');
+
+              return deckState.decks.isEmpty
+                  ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: emptyListIcon,
+                      height: 160,
+                      width: 160,
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
+                      fit: BoxFit.contain,
+                    ),
+                    Text(
+                      'Отсутствуют колоды',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              )
+                  : ListView.builder(
+                itemCount: deckState.decks.length,
+                itemBuilder: (_, index) {
+                  final deck = deckState.decks[index];
+                  final flashcards = ref.read(deckProvider.notifier).getFlashcardsByDeckId(deck.id);
+                  return DeckListItem(
+                    deck: deck,
+                    flashcards: flashcards,
+                    onTapEmpty: (test) {
+                      Router.neglect(context, () {
+                        context.push('/add_flashcard', extra: {'deckId': deck.id});
+                      });
+                    },
+                    onTapFull: (test) {
+                      context.push('/study', extra: {'deckId': deck.id});
+                    },
+                    onLongPress: (test) {
+                      context.push('/deck_detail', extra: {'deckId': deck.id});
+                    },
+                  );
+                },
+              );
             },
           );
         },
@@ -163,10 +187,8 @@ class HomeScreen extends ConsumerWidget {
           imageUrl: addDeckIcon,
           height: 40,
           width: 40,
-          placeholder: (context, url) =>
-              Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) =>
-              Center(child: Icon(Icons.error)),
+          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
           fit: BoxFit.contain,
         ),
       ),

@@ -1,32 +1,38 @@
+import 'dart:convert';
+
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:test_practic/core/models/shared/user_model.dart';
 
 class AuthLocalDataSource {
   static const _currentUserKey = 'current_user';
-  static final Map<String, dynamic> _storage = <String, dynamic>{};
+  final _storage = const FlutterSecureStorage();
 
-  void saveCurrentUser(UserModel user) {
-    _storage[_currentUserKey] = {
-      'id': user.id,
-      'email': user.email,
-      'name': user.login,
-      'created_at': user.createdAt.toIso8601String(),
-    };
+  Future<void> saveCurrentUser(UserModel user) async {
+    await _storage.write(
+      key: _currentUserKey,
+      value: json.encode({
+        'id': user.id,
+        'email': user.email,
+        'login': user.login,
+        'created_at': user.createdAt.toIso8601String(),
+      }),
+    );
   }
 
-  UserModel? getCurrentUser() {
-    final userData = _storage[_currentUserKey];
-    if (userData != null) {
-      return UserModel(
-        id: userData['id'],
-        email: userData['email'],
-        login: userData['name'],
-        createdAt: DateTime.parse(userData['created_at']),
-      );
-    }
-    return null;
+  Future<UserModel?> getCurrentUser() async {
+    final userDataString = await _storage.read(key: _currentUserKey);
+    if (userDataString == null) return null;
+
+    final userData = json.decode(userDataString);
+    return UserModel(
+      id: userData['id'],
+      email: userData['email'],
+      login: userData['login'],
+      createdAt: DateTime.parse(userData['created_at']),
+    );
   }
 
-  void clearAuthData() {
-    _storage.remove(_currentUserKey);
+  Future<void> clearAuthData() async {
+    await _storage.delete(key: _currentUserKey);
   }
 }

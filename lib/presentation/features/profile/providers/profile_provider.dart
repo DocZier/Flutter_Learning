@@ -38,8 +38,14 @@ class Profile extends _$Profile {
 
   Future<ProfileState> _loadProfile() async {
     try {
-      final authState = ref.read(authProvider);
-      final userId = (authState as Authenticated).user.id;
+      final authStateAsync = ref.watch(authProvider);
+      if (authStateAsync is! AsyncData<AuthState> ||
+          authStateAsync.value is! Authenticated) {
+        throw Exception('Пользователь не авторизован');
+      }
+
+      final authState = authStateAsync.value as Authenticated;
+      final userId = authState.user.id;
       final entity = await _getProfileUseCase.execute(userId);
       return ProfileState(user: entity);
     } catch (e) {
@@ -54,7 +60,14 @@ class Profile extends _$Profile {
 
   Future<void> updateProfile() async {
     try {
-      final user = (ref.read(authProvider) as Authenticated).user;
+      final authStateAsync = ref.watch(authProvider);
+      if (authStateAsync is! AsyncData<AuthState> ||
+          authStateAsync.value is! Authenticated) {
+        throw Exception('Пользователь не авторизован');
+      }
+
+      final authState = authStateAsync.value as Authenticated;
+      final user = authState.user;
       await _saveProfileUseCase.execute(user.copyWith(login: username.text), user.id);
       final entity = await _getProfileUseCase.execute(user.id);
       state = AsyncValue.data(ProfileState(user: entity));
@@ -65,7 +78,14 @@ class Profile extends _$Profile {
 
   Future<void> deleteProfile() async {
     try {
-      final user = (ref.read(authProvider) as Authenticated).user;
+      final authStateAsync = ref.watch(authProvider);
+      if (authStateAsync is! AsyncData<AuthState> ||
+          authStateAsync.value is! Authenticated) {
+        throw Exception('Пользователь не авторизован');
+      }
+
+      final authState = authStateAsync.value as Authenticated;
+      final user = authState.user;
       ref.read(authProvider.notifier).deleteAccount();
       await _deleteProfileUseCase.execute(user.id);
       _logoutUseCase.execute();

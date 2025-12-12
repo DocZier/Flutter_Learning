@@ -51,8 +51,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  UserModel? checkAuthStatus() {
-    return _localDataSource.getCurrentUser();
+  Future<UserModel?> checkAuthStatus() async {
+    return await _localDataSource.getCurrentUser();
   }
 
   @override
