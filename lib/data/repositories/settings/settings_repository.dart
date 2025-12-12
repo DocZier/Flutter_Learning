@@ -14,9 +14,9 @@ class SettingsRepositoryImpl implements SettingsRepository {
       );
 
   @override
-  AppSettingsModel getLocalSettings() {
+  Future<AppSettingsModel> getLocalSettings() async{
     try {
-      return _localDataSource.getSettings();
+      return await _localDataSource.getSettings();
     } catch (e) {
       return SettingsConstants.defaultSettings;
     }
