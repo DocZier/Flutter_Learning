@@ -1,10 +1,10 @@
 import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
 import 'package:test_practic/core/models/dictionary/kanji_model.dart';
-import 'package:test_practic/data/datasources/remote/api/kanji_remote_source.dart';
+import 'package:test_practic/data/datasources/remote/kanji_remote_source.dart';
 import 'package:test_practic/domain/interfaces/repositories/dictionary/dictionary_repository.dart';
 
 import '../../datasources/local/dictionary_local_source.dart';
-import '../../datasources/remote/api/dictionary_remote_source.dart';
+import '../../datasources/remote/dictionary_remote_source.dart';
 
 class DictionaryRepositoryImpl implements DictionaryRepository {
   final DictionaryLocalDataSource _localDataSource;

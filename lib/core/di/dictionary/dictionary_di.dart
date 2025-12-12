@@ -1,8 +1,9 @@
 
 import 'package:get_it/get_it.dart';
 import 'package:test_practic/data/datasources/remote/api/configuration/dio_client.dart';
-import 'package:test_practic/data/datasources/remote/api/dictionary_remote_source.dart';
-import 'package:test_practic/data/datasources/remote/api/kanji_remote_source.dart';
+import 'package:test_practic/data/datasources/remote/api/dictionary_api.dart';
+import 'package:test_practic/data/datasources/remote/dictionary_remote_source.dart';
+import 'package:test_practic/data/datasources/remote/kanji_remote_source.dart';
 import 'package:test_practic/domain/interfaces/repositories/dictionary/dictionary_repository.dart';
 import 'package:test_practic/domain/usecases/dictionary/clear_history_usecase.dart';
 import 'package:test_practic/domain/usecases/dictionary/delete_word_usecase.dart';
@@ -18,19 +19,31 @@ import 'package:test_practic/domain/usecases/dictionary/search_kanji_by_characte
 import 'package:test_practic/domain/usecases/dictionary/search_kanji_usecase.dart';
 import 'package:test_practic/domain/usecases/dictionary/search_words_usecase.dart';
 
+import '../../../data/datasources/remote/api/kanji_api.dart' show KanjiApi;
 import '../../../data/repositories/dictionary/dictionary_repository.dart';
 import '../../../data/datasources/local/dictionary_local_source.dart';
 
 void registerDictionaryDependencies() {
   GetIt.I.registerLazySingleton<DioClient>(() => DioClient());
+
+  GetIt.I.registerLazySingleton<DictionaryApi>(
+        () => DictionaryApi(GetIt.I<DioClient>().dio, baseUrl: DioClient.baseUrl),
+  );
+
+  GetIt.I.registerLazySingleton<KanjiApi>(
+        () => KanjiApi(GetIt.I<DioClient>().kanjiDio, baseUrl: DioClient.kanjiBaseUrl),
+  );
+
   GetIt.I.registerLazySingleton<DictionaryLocalDataSource>(
         () => DictionaryLocalDataSource(),
   );
+
   GetIt.I.registerLazySingleton<DictionaryRemoteDataSource>(
-        () => DictionaryRemoteDataSource(GetIt.I()),
+        () => DictionaryRemoteDataSource(GetIt.I<DictionaryApi>()),
   );
+
   GetIt.I.registerLazySingleton<KanjiRemoteDataSource>(
-        () => KanjiRemoteDataSource(GetIt.I()),
+        () => KanjiRemoteDataSource(GetIt.I<KanjiApi>()),
   );
 
   GetIt.I.registerLazySingleton<DictionaryRepository>(
@@ -40,6 +53,7 @@ void registerDictionaryDependencies() {
       kanjiRemoteDataSource: GetIt.I(),
     ),
   );
+
 
   GetIt.I.registerFactory<GetWordsUseCase>(() => GetWordsUseCase(GetIt.I<DictionaryRepository>()));
   GetIt.I.registerFactory<GetWordByIdUseCase>(() => GetWordByIdUseCase(GetIt.I<DictionaryRepository>()));

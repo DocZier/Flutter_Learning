@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'dictionary_word_dto.g.dart';
+
+@JsonSerializable()
 class DictionaryWordDto {
   final String id;
   final String word;
@@ -5,6 +10,7 @@ class DictionaryWordDto {
   final String romaji;
   final String meaning;
   final List<String> examples;
+  final int? level;
 
   DictionaryWordDto({
     required this.id,
@@ -13,27 +19,9 @@ class DictionaryWordDto {
     required this.romaji,
     required this.meaning,
     this.examples = const [],
+    this.level,
   });
 
-  factory DictionaryWordDto.fromJson(Map<String, dynamic> json) {
-    return DictionaryWordDto(
-      id: json['id']?.toString() ?? '0',
-      word: json['word'] ?? '',
-      furigana: json['furigana'] ?? '',
-      romaji: json['romaji'] ?? '',
-      meaning: json['meaning'] ?? '',
-      examples: List<String>.from(json['examples'] ?? []),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'word': word,
-      'furigana': furigana,
-      'romaji': romaji,
-      'meaning': meaning,
-      'examples': examples,
-    };
-  }
+  factory DictionaryWordDto.fromJson(Map<String, dynamic> json) => _$DictionaryWordDtoFromJson(json);
+  Map<String, dynamic> toJson() => _$DictionaryWordDtoToJson(this);
 }
