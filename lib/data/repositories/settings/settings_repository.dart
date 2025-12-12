@@ -1,14 +1,8 @@
 import 'package:test_practic/core/models/settings/settings_model.dart';
+import 'package:test_practic/domain/interfaces/repositories/settings/settings_repository.dart' show SettingsRepository;
 import '../../../core/constants/settings_constants.dart';
 import '../../datasources/local/settings_local_source.dart';
 import '../../datasources/remote/settings_remote_source.dart';
-
-abstract class SettingsRepository {
-  AppSettingsModel? getLocalSettings();
-  Future<AppSettingsModel?> getSettingsForUser(int userId);
-  Future<void> saveSettings(AppSettingsModel settings, int? userId);
-  Future<void> resetSettings(int? userId);
-}
 
 class SettingsRepositoryImpl implements SettingsRepository {
   final SettingsLocalDataSource _localDataSource;

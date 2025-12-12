@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+import 'package:test_practic/domain/interfaces/repositories/lessons/lessons_repository.dart';
+import 'package:test_practic/domain/interfaces/repositories/lessons/test_repository.dart';
 import 'package:test_practic/domain/usecases/lessons/add_test_stats_usecase.dart';
 import 'package:test_practic/domain/usecases/lessons/add_to_review_usecase.dart';
 import 'package:test_practic/domain/usecases/lessons/clear_user_progress_usecase.dart';

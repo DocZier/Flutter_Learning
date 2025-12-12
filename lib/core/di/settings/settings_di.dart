@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:test_practic/domain/interfaces/repositories/settings/settings_repository.dart';
 import 'package:test_practic/domain/usecases/settings/get_local_settings_usecase.dart';
 import 'package:test_practic/domain/usecases/settings/get_settings_for_user_usecase.dart';
 import 'package:test_practic/domain/usecases/settings/reset_user_settings_usecase.dart';

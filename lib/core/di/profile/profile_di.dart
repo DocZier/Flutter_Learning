@@ -1,5 +1,6 @@
 
 import 'package:get_it/get_it.dart';
+import 'package:test_practic/domain/interfaces/repositories/profile/profile_repository.dart';
 import 'package:test_practic/domain/usecases/profile/delete_profile_usecase.dart';
 import 'package:test_practic/domain/usecases/profile/get_profile_usecase.dart';
 import 'package:test_practic/domain/usecases/profile/save_profile_usecase.dart';

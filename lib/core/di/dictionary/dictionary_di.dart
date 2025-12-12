@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:test_practic/data/datasources/remote/dictionary_remote_source.dart';
+import 'package:test_practic/domain/interfaces/repositories/dictionary/dictionary_repository.dart';
 import 'package:test_practic/domain/usecases/dictionary/clear_history_usecase.dart';
 import 'package:test_practic/domain/usecases/dictionary/delete_word_usecase.dart';
 import 'package:test_practic/domain/usecases/dictionary/get_history_usecase.dart';

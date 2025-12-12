@@ -1,20 +1,8 @@
 import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
+import 'package:test_practic/domain/interfaces/repositories/dictionary/dictionary_repository.dart';
 
 import '../../datasources/local/dictionary_local_source.dart';
 import '../../datasources/remote/dictionary_remote_source.dart';
-
-abstract class DictionaryRepository {
-  Future<List<DictionaryWordModel>> getWords();
-  Future<DictionaryWordModel> getWordById(int id);
-  List<DictionaryWordModel> getSavedWords();
-  Future<List<DictionaryWordModel>> search(String query);
-  void saveWord(int id);
-  void deleteWord(int id);
-  void clear();
-  List<String> getHistory();
-  void saveHistory(String query);
-  void clearHistory();
-}
 
 class DictionaryRepositoryImpl implements DictionaryRepository {
   final DictionaryLocalDataSource _localDataSource;

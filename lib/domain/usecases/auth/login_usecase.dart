@@ -1,5 +1,6 @@
 import 'package:test_practic/core/models/shared/user_model.dart';
 import 'package:test_practic/data/repositories/auth/auth_repository.dart';
+import 'package:test_practic/domain/interfaces/repositories/auth/auth_repository.dart';
 
 class LoginUseCase {
   final AuthRepository repository;

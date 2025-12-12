@@ -22,7 +22,7 @@ extension SettingsRemoteMapper on SettingsRemoteDto {
 extension SettingsModelRemoteMapper on AppSettingsModel {
   SettingsRemoteDto toRemoteDto({int? userId}) {
     return SettingsRemoteDto(
-      id: '1', // Default ID
+      id: '1',
       userId: userId?.toString() ?? '1',
       themeMode: _getThemeModeString(themeMode),
       startOfTheDay: startOfTheDay,

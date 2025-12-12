@@ -1,4 +1,5 @@
 import 'package:test_practic/data/repositories/lessons/test_repository.dart';
+import 'package:test_practic/domain/interfaces/repositories/lessons/test_repository.dart';
 
 class UpdateReviewIntervalUseCase {
   final TestsRepository repository;

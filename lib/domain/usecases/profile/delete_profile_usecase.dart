@@ -1,4 +1,5 @@
 import 'package:test_practic/data/repositories/profile/profile_repository.dart';
+import 'package:test_practic/domain/interfaces/repositories/profile/profile_repository.dart';
 
 class DeleteProfileUseCase {
   final ProfileRepository repository;

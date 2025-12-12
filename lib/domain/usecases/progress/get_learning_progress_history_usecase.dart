@@ -1,5 +1,6 @@
 import 'package:test_practic/core/models/shared/learining_progress_enity.dart';
 import 'package:test_practic/data/repositories/progress/progress_repository.dart';
+import 'package:test_practic/domain/interfaces/repositories/progress/progress_repository.dart';
 
 class GetLearningProgressHistoryUseCase {
   final ProgressRepository repository;

@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:test_practic/data/repositories/fllashcards/flashcard_repository.dart';
 import 'package:test_practic/data/datasources/local/deck_local_source.dart';
 import 'package:test_practic/data/datasources/local/flashcards_local_source.dart';
+import 'package:test_practic/domain/interfaces/repositories/fllashcards/flashcard_repository.dart';
 import 'package:test_practic/domain/usecases/fllashcards/delete_deck_usecase.dart';
 import 'package:test_practic/domain/usecases/fllashcards/delete_flashcard_usecase.dart';
 import 'package:test_practic/domain/usecases/fllashcards/delete_flashcards_by_deckid_usecase.dart';

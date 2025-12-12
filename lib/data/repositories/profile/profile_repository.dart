@@ -1,14 +1,8 @@
 import 'package:test_practic/core/models/shared/user_model.dart';
+import 'package:test_practic/domain/interfaces/repositories/profile/profile_repository.dart';
 
 import '../../datasources/local/profile_local_source.dart';
 import '../../datasources/remote/profile_remote_source.dart';
-
-abstract class ProfileRepository {
-  Future<UserModel> getProfile(int userId);
-  Future<void> saveProfile(UserModel profile, int userId);
-  Future<void> deleteProfile(int userId);
-  void logout();
-}
 
 class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileLocalDataSource _localDataSource;

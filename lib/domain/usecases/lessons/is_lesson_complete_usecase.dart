@@ -1,4 +1,5 @@
 import 'package:test_practic/data/repositories/lessons/lessons_repository.dart';
+import 'package:test_practic/domain/interfaces/repositories/lessons/lessons_repository.dart';
 
 class IsLessonCompletedUseCase {
   final LessonsRepository repository;

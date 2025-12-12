@@ -1,14 +1,7 @@
 import 'package:test_practic/core/models/shared/user_model.dart';
+import 'package:test_practic/domain/interfaces/repositories/auth/auth_repository.dart';
 import '../../datasources/local/auth_local_source.dart';
 import '../../datasources/remote/auth_remote_source.dart';
-
-abstract class AuthRepository {
-  Future<UserModel?> login(String login, String password);
-  Future<UserModel?> register(String login, String email, String password);
-  void logout();
-  UserModel? checkAuthStatus();
-  void deleteAccount(int userId);
-}
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;

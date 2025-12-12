@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:test_practic/domain/interfaces/repositories/auth/auth_repository.dart';
 import 'package:test_practic/domain/usecases/auth/check_auth_status_usecase.dart';
 import 'package:test_practic/domain/usecases/auth/login_usecase.dart';
 import 'package:test_practic/domain/usecases/auth/logout_usecase.dart';
