@@ -3,15 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/word_provider.dart';
 
-
 class WordDetailScreen extends ConsumerWidget {
-  final int wordId;
+  final String word;
 
-  const WordDetailScreen({super.key, required this.wordId});
+  const WordDetailScreen({super.key, required this.word});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final wordAsync = ref.watch(wordProvider(wordId));
+    final wordAsync = ref.watch(wordProvider(word));
 
     return Scaffold(
       appBar: AppBar(
@@ -25,6 +24,7 @@ class WordDetailScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(e.toString())),
         data: (word) {
+          print('${word.word}, ${word.word.word}, ${word.word.romanji}');
           return Padding(
             padding: const EdgeInsets.all(16),
             child: ListView(
@@ -41,7 +41,6 @@ class WordDetailScreen extends ConsumerWidget {
                   word.word.furigana,
                   style: const TextStyle(
                     fontSize: 24,
-                    color: Colors.grey,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -50,13 +49,6 @@ class WordDetailScreen extends ConsumerWidget {
                   style: const TextStyle(fontSize: 22),
                 ),
                 const SizedBox(height: 24),
-
-                Text(
-                  'Примеры:',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-
                 ...word.word.examples.map(
                       (example) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),

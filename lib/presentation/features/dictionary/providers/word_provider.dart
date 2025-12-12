@@ -8,12 +8,11 @@ part 'word_provider.g.dart';
 
 @riverpod
 class Word extends _$Word {
-  late final GetWordByIdUseCase _getWordByIdUseCase;
 
   @override
-  Future<WordState> build(int wordId) async {
-    _getWordByIdUseCase = GetIt.I<GetWordByIdUseCase>();
-    final model = await _getWordByIdUseCase.execute(wordId);
+  Future<WordState> build(String word) async {
+    final model = await GetIt.I<GetWordByIdUseCase>().execute(word);
+    print('${word}: ${model}');
     return WordState(word: model);
   }
 }

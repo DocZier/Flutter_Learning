@@ -10,8 +10,8 @@ class DictionaryLocalDataSource {
   final AppDatabase _database;
   final DictionaryDao _dictionaryDao;
 
-  DictionaryLocalDataSource() :
-        _database = AppDatabase(),
+  DictionaryLocalDataSource()
+      : _database = AppDatabase(),
         _dictionaryDao = DictionaryDao(AppDatabase());
 
   List<String> getHistory() {
@@ -30,7 +30,9 @@ class DictionaryLocalDataSource {
   }
 
   Stream<List<DictionaryWordModel>> watchSavedWords() {
-    return _dictionaryDao.watchSavedWords().map((words) => words.map((dto) => dto.toModel()).toList());
+    return _dictionaryDao.watchSavedWords().map(
+          (words) => words.map((dto) => dto.toModel()).toList(),
+    );
   }
 
   Future<List<DictionaryWordModel>> getWords() async {
@@ -40,7 +42,9 @@ class DictionaryLocalDataSource {
 
   Future<DictionaryWordModel> getWordById(int id) async {
     final wordDto = await _dictionaryDao.getSavedWordById(id.toString());
-    if (wordDto == null) throw Exception('Word not found');
+    if (wordDto == null) {
+      throw Exception('Word not found with ID: $id');
+    }
     return wordDto.toModel();
   }
 
@@ -48,15 +52,12 @@ class DictionaryLocalDataSource {
     await _dictionaryDao.saveSavedWord(word.toSavedWordDto());
   }
 
-  Future<void> deleteWord(int id) async {
-    await _dictionaryDao.deleteSavedWord(id.toString());
+  Future<void> deleteWord(String word) async {
+    await _dictionaryDao.deleteSavedWord(word);
   }
 
   Future<void> clear() async {
-    final words = await getWords();
-    for (var word in words) {
-      await deleteWord(word.id);
-    }
+    await _dictionaryDao.clearAllSavedWords();
   }
 
   void close() async {

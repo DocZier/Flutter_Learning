@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:test_practic/presentation/features/auth/screens/login_screen.dart';
 import 'package:test_practic/presentation/features/auth/screens/register_screen.dart';
 import 'package:test_practic/presentation/features/dictionary/screens/detail_screen.dart';
+import 'package:test_practic/presentation/features/dictionary/screens/kanji_detail_screen.dart';
 import 'package:test_practic/presentation/features/fllashcards/screens/deck_detail_screen.dart';
 import 'package:test_practic/presentation/features/fllashcards/screens/deck_list_screen.dart';
 import 'package:test_practic/presentation/features/fllashcards/screens/add_flashcard_screen.dart';
@@ -57,18 +58,27 @@ class AppRouter {
         },
       ),
       GoRoute(
-          path: '/test',
-          name: 'test',
-          builder: (context, state) {
-            final lessonId = state.extra as Map<String, dynamic>;
-            return TestScreen(lessonId: lessonId['id']);
-          }),
+        path: '/test',
+        name: 'test',
+        builder: (context, state) {
+          final lessonId = state.extra as Map<String, dynamic>;
+          return TestScreen(lessonId: lessonId['id']);
+        },
+      ),
       GoRoute(
         path: '/word',
         name: 'word',
         builder: (context, state) {
-          final wordId = state.extra as Map<String, dynamic>;
-          return WordDetailScreen(wordId: wordId['wordId']);
+          final word = state.extra as Map<String, dynamic>;
+          return WordDetailScreen(word: word['word']);
+          },
+      ),
+      GoRoute(
+        path: '/kanji',
+        name: 'kanji',
+        builder: (context, state) {
+          final kanji = state.extra as Map<String, dynamic>;
+          return KanjiDetailScreen(kanji: kanji['kanji']);
         },
       ),
       GoRoute(

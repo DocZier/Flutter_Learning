@@ -6,7 +6,7 @@ class DeleteWordUseCase {
 
   DeleteWordUseCase(this.repository);
 
-  void execute(int id) {
-    repository.deleteWord(id);
+  void execute(String word) {
+    repository.deleteWord(word);
   }
 }

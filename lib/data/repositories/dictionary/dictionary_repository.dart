@@ -1,39 +1,45 @@
 import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
+import 'package:test_practic/core/models/dictionary/kanji_model.dart';
+import 'package:test_practic/data/datasources/remote/api/kanji_remote_source.dart';
 import 'package:test_practic/domain/interfaces/repositories/dictionary/dictionary_repository.dart';
 
 import '../../datasources/local/dictionary_local_source.dart';
-import '../../datasources/remote/dictionary_remote_source.dart';
+import '../../datasources/remote/api/dictionary_remote_source.dart';
 
 class DictionaryRepositoryImpl implements DictionaryRepository {
   final DictionaryLocalDataSource _localDataSource;
   final DictionaryRemoteDataSource _remoteDataSource;
+  final KanjiRemoteDataSource _kanjiRemoteDataSource;
 
   DictionaryRepositoryImpl({
     required DictionaryLocalDataSource localDataSource,
     required DictionaryRemoteDataSource remoteDataSource,
-  }) : _localDataSource = localDataSource,
-        _remoteDataSource = remoteDataSource;
+    required KanjiRemoteDataSource kanjiRemoteDataSource,
+  })  : _localDataSource = localDataSource,
+        _remoteDataSource = remoteDataSource,
+        _kanjiRemoteDataSource = kanjiRemoteDataSource;
 
   @override
   Future<List<DictionaryWordModel>> getWords() async {
-    return await _remoteDataSource.getWords();
+    return _remoteDataSource.getWords();
   }
 
   @override
-  Future<DictionaryWordModel> getWordById(int id) async {
-    return await _remoteDataSource.getWordById(id);
+  Future<DictionaryWordModel> getWordByWord(String word) async {
+    return _remoteDataSource.getWordByWord(word);
   }
 
   @override
   Future<List<DictionaryWordModel>> getSavedWords() async {
-    return await _localDataSource.getWords();
+    return _localDataSource.getWords();
   }
 
   @override
-  Future<void> saveWord(int id) async {
-    final word = await _remoteDataSource.getWordById(id);
-    await _localDataSource.saveWord(word);
+  Future<void> saveWord(String word) async {
+    final wordModel = await _remoteDataSource.getWordByWord(word);
+    await _localDataSource.saveWord(wordModel);
   }
+
 
   @override
   Future<List<DictionaryWordModel>> search(String query) async {
@@ -41,8 +47,8 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   }
 
   @override
-  Future<void> deleteWord(int id) async {
-    await _localDataSource.deleteWord(id);
+  Future<void> deleteWord(String word) async {
+    await _localDataSource.deleteWord(word);
   }
 
   @override
@@ -63,5 +69,25 @@ class DictionaryRepositoryImpl implements DictionaryRepository {
   @override
   void clearHistory() {
     _localDataSource.clearHistory();
+  }
+
+  @override
+  Future<KanjiDetailModel> getKanjiDetails(String kanji) async {
+    return _kanjiRemoteDataSource.getKanjiDetails(kanji);
+  }
+
+  @override
+  Future<List<KanjiReadingModel>> searchKanjiByReading(String reading) async {
+    return _kanjiRemoteDataSource.searchKanjiByReading(reading);
+  }
+
+  @override
+  Future<List<KanjiWordExampleModel>> getWordExamples(String kanji) async {
+    return _kanjiRemoteDataSource.getWordExamples(kanji);
+  }
+
+  @override
+  Future<KanjiReadingModel> searchKanjiByCharacter(String character) async {
+    return _kanjiRemoteDataSource.searchKanjiByCharacter(character);
   }
 }

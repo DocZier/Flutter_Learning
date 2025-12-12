@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
+import 'package:test_practic/core/models/dictionary/dictionary_model.dart';
 import '../database.dart';
 import '../tables/dictionary_words_table.dart';
 
 part 'dictionary_dao.g.dart';
+
 
 @DriftAccessor(tables: [DictionarySavedWords])
 class DictionaryDao extends DatabaseAccessor<AppDatabase> with _$DictionaryDaoMixin {
@@ -16,8 +20,10 @@ class DictionaryDao extends DatabaseAccessor<AppDatabase> with _$DictionaryDaoMi
     return select(dictionarySavedWords).get();
   }
 
-  Future<DictionarySavedWord?> getSavedWordById(String id) {
-    return (select(dictionarySavedWords)..where((t) => t.id.equals(id))..limit(1))
+  Future<DictionarySavedWord?> getSavedWordById(String id) async {
+    return (select(dictionarySavedWords)
+      ..where((t) => t.id.equals(id))
+      ..limit(1))
         .getSingleOrNull();
   }
 
@@ -25,7 +31,11 @@ class DictionaryDao extends DatabaseAccessor<AppDatabase> with _$DictionaryDaoMi
     return into(dictionarySavedWords).insertOnConflictUpdate(word);
   }
 
-  Future<int> deleteSavedWord(String id) {
-    return (delete(dictionarySavedWords)..where((t) => t.id.equals(id))).go();
+  Future<int> deleteSavedWord(String word) async {
+    return (delete(dictionarySavedWords)..where((t) => t.word.equals(word))).go();
+  }
+
+  Future<void> clearAllSavedWords() async {
+    await delete(dictionarySavedWords).go();
   }
 }

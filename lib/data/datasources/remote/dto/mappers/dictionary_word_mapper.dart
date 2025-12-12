@@ -7,7 +7,7 @@ extension DictionaryWordMapper on DictionaryWordDto {
       id: int.tryParse(id) ?? 0,
       word: word,
       furigana: furigana,
-      romanji: romanji,
+      romanji: romaji,
       meaning: meaning,
       examples: examples,
     );
@@ -20,7 +20,7 @@ extension DictionaryWordModelMapper on DictionaryWordModel {
       id: id.toString(),
       word: word,
       furigana: furigana,
-      romanji: romanji,
+      romaji: romanji,
       meaning: meaning,
       examples: examples,
     );

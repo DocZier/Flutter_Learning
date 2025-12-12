@@ -6,7 +6,7 @@ class SaveWordUseCase {
 
   SaveWordUseCase(this.repository);
 
-  void execute(int id) {
-    repository.saveWord(id);
+  void execute(String word) {
+    repository.saveWord(word);
   }
 }
